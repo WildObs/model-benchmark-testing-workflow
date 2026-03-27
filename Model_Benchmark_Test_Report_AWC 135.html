@@ -1,0 +1,301 @@
+<html><head>
+<style>
+body { font-family: Arial; margin: 40px; }
+h1 { color: #2c3e50; }
+h2 { color: #34495e; margin-top: 30px; }
+h3 { color: #2c3e50; margin-top: 20px; }
+p { max-width: 900px; line-height: 1.5; }
+table { border-collapse: collapse; width: 80%; margin-top: 10px; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+th { background-color: #f2f2f2; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head><body><h1>Model Evaluation Report</h1><h2>Test Details</h2><p><b>Computer Vision (CV) model tested: </b>AWC 135<p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species Evaluated:</b></p><ul><li><i>Felis catus</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Data collation process used: </b>
+Collated 1000 images of each target species.
+Images were manually validated as having at least one detection of the target species and no other species present in the image.
+</p><h2>Purpose and intended use of this report</h2>
+        <ul>
+            <li>Inform the potential suitability of a model for a given location and set of species relevant to the monitoring program.</li>
+            <li>Inform the design of a validation workflow (manual human review) to ensure a sufficient level of accuracy can be reached to meet the goals of the monitoring program.</li>
+            <li>Inform potential gaps in model performance and priorities for provision of additional training images to improve performance.</li>
+        </ul>
+    <h2>Disclaimer / limitations</h2>
+        <ul>
+            <li>The accuracy of the results presented in this report is primairly limited by the quality of the test data used.</li>
+            <li>Please follow the recommended guidelines for collating a representative test dataset.</li>
+            <li>The results presented in this report do not necessarily prove definitively that one model is better than another, but may provide guidence on selecting the most suitable model for your location and the species important to your monitoring program.</li>
+        </ul>
+    <p></p><h2>Understanding the Results</h2><p>Recall, precision, and F1 score are standard metrics used to evaluate the performance of machine learning models. Each metric has a precise definition and corresponding mathematical formula.</p><h3>Recall (Sensitivity)</h3><p>\[ \text{Recall} = \frac{\text{True Positives}}{\text{True Positives + False Negatives}} \]</p><p>Of all the images that actually contain the target species, how many did the model correctly identify?</p><p><b>Example: </b>If there are 100 images of Feral Cat within a dataset, and the model correctly detects 90 of them, recall = 0.9 (90%).</p><p><b>Interpretation:</b> Quantifying recall helps us to understand how many true detections of a given species might be missed by the model.</p><h3>Precision</h3><p>\[ \text{Precision} = \frac{\text{True Positives}}{\text{True Positives + False Positives}} \]</p><p>Of all the images the model predicts as the target species, how many are actually correct?</p><p><b>Example: </b>If the model makes 100 predictions of Feral Cat within a dataset, and only 90 of them are actually detections of Feral Cat, precision = 0.9 (90%).</p><p><b>Interpretation:</b> High precision means predictions are reliable. Low precision means more false detections.</p><h3>F1 Score</h3><p>\[ \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision + Recall}} \]</p><p>A balanced measure that combines both recall and precision.</p><p><b>Interpretation:</b> High F1 score indicates a good balance between detecting animals and avoiding false detections.</p><h3>Definition of Terms</h3>
+    <table>
+        <tr>
+            <th>Term</th>
+            <th>Definition</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><b>True Positive (TP)</b></td>
+            <td>The model correctly predicts the presence of a species.</td>
+            <td>An image contains a fox, and the model predicts "fox".</td>
+        </tr>
+        <tr>
+            <td><b>False Positive (FP)</b></td>
+            <td>The model predicts a species, but that species is not actually present.</td>
+            <td>An image contains a cat, but the model predicts "fox".</td>
+        </tr>
+        <tr>
+            <td><b>False Negative (FN)</b></td>
+            <td>The model fails to detect a species that is actually present.</td>
+            <td>An image contains a fox, but the model predicts something else.</td>
+        </tr>
+    </table>
+    
+    <p><b>Summary:</b></p>
+    <ul>
+        <li><b>True Positive</b> → Correct detection</li>
+        <li><b>False Positive</b> → False alarm</li>
+        <li><b>False Negative</b> → Missed detection</li>
+    </ul>
+    <h3>How to interpret results</h3>
+    <table>
+        <tr><th>Scenario</th><th>Interpretation</th></tr>
+        <tr><td>High Recall, Low Precision</td><td>Finds most animals but includes many false positives</td></tr>
+        <tr><td>Low Recall, High Precision</td><td>Accurate predictions but misses many animals</td></tr>
+        <tr><td>High Recall, High Precision</td><td>Ideal performance</td></tr>
+        <tr><td>Low Recall, Low Precision</td><td>Poor performance</td></tr>
+    </table>
+    
+    <h3>What is a Confusion Matrix?</h3>
+    <ul>
+        <li>A confusion matrix summarises the model’s performance by comparing actual vs predicted labels.</li>
+        <li>In simple terms the confusion matrix shows what the model got right and wrong, broken down by type of error.</li>
+        <li>Inspecting the confusion matrix helps us to understand the direction of error in cases where an image was incorrectly classified.</li>
+        <li>Be aware that not all models define or name species the same way. In some cases a model may also generalise a species detections to a broader group e.g. Genus or Family. If recall is returning a very low number for a given species and model, inspection of confusion matrix may help to reveal inconsistencies in naming or categorisation.</li>
+    </ul>
+    <h2>Recall, Precision, and F1 Results</h2><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>species</th>
+      <th>true_positives</th>
+      <th>false_negatives</th>
+      <th>false_positives</th>
+      <th>recall</th>
+      <th>precision</th>
+      <th>f1_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Felis catus</td>
+      <td>929</td>
+      <td>80</td>
+      <td>16</td>
+      <td>0.9207</td>
+      <td>0.9831</td>
+      <td>0.9509</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>889</td>
+      <td>118</td>
+      <td>7</td>
+      <td>0.8828</td>
+      <td>0.9922</td>
+      <td>0.9343</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>0</td>
+      <td>1011</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+  </tbody>
+</table><h2>Confusion Matrix</h2><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pred_species</th>
+      <th>Anas strepera</th>
+      <th>Antechinus flavipes</th>
+      <th>Aves</th>
+      <th>Bettongia lesueur</th>
+      <th>Bos taurus</th>
+      <th>Canis familiaris</th>
+      <th>Capra hircus</th>
+      <th>Cercartetus nanus</th>
+      <th>Climacteris rufus</th>
+      <th>Crocodylus johnstoni</th>
+      <th>Felis catus</th>
+      <th>Homo sapiens</th>
+      <th>Isoodon obesulus</th>
+      <th>Lagomorpha</th>
+      <th>Lagostrophus fasciatus</th>
+      <th>Lasiorhinus latifrons</th>
+      <th>Macropus dorsalis</th>
+      <th>Macrotis lagotis</th>
+      <th>Myrmecobius fasciatus</th>
+      <th>Nan</th>
+      <th>Notamacropus dorsalis</th>
+      <th>Ocyphaps lophotes</th>
+      <th>Onychogalea fraenata</th>
+      <th>Oreoica gutturalis</th>
+      <th>Petrogale brachyotis</th>
+      <th>Petrogale lateralis</th>
+      <th>Phascolarctos cinereus</th>
+      <th>Scincidae</th>
+      <th>Sus scrofa</th>
+      <th>Tachyglossus aculeatus</th>
+      <th>Trichosurus caninus</th>
+      <th>Vulpes vulpes</th>
+      <th>Wallabia bicolor</th>
+    </tr>
+    <tr>
+      <th>true_species</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Felis catus</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>18</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>929</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>6</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Oryctolagus cuniculus</th>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>0</td>
+      <td>3</td>
+      <td>954</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>10</td>
+      <td>0</td>
+      <td>21</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>Vulpes vulpes</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>30</td>
+      <td>2</td>
+      <td>15</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>35</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>889</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table></body></html>
