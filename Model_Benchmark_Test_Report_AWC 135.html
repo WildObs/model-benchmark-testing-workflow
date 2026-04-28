@@ -11,7 +11,7 @@ th { background-color: #f2f2f2; }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head><body><h1>Model Evaluation Report</h1><h2>Test Details</h2><p><b>Computer Vision (CV) model tested: </b>AWC 135<p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species Evaluated:</b></p><ul><li><i>Felis catus</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Data collation process used: </b>
+</head><body><h1>Model Evaluation Report</h1><h2>Test details</h2><p><b>Computer Vision (CV) model tested: </b>AWC 135<p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species (or labels) evaluated:</b></p><ul><li><i>Blank</i></li><li><i>Dromaius novaehollandiae</i></li><li><i>Felis catus</i></li><li><i>Macropodidae</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Data collation process used: </b>
 Collated 1000 images of each target species.
 Images were manually validated as having at least one detection of the target species and no other species present in the image.
 </p><h2>Purpose and intended use of this report</h2>
@@ -24,6 +24,13 @@ Images were manually validated as having at least one detection of the target sp
         <ul>
             <li>The accuracy of the results presented in this report is primairly limited by the quality of the test data used.</li>
             <li>Please follow the recommended guidelines for collating a representative test dataset.</li>
+            <li>Species name mismatches may be a cause of low values for recall or precision. 
+                <ul>
+                    <li>Models sometimes aggregate multiple species into one label.</li>
+                    <li>Conversely, the input test data used may also contain aggregated labels that are not matched by a model that is splitting by individual species</li>
+                    <li>If there is a species name mismatch, inspection of the confusion matrix will often reveal what name the model is using for that species.</li>
+                </ul>
+            <li>This version of the report is not considering model confidence due to a software bug that is being worked on. This will be fixed in a future version.</li>
             <li>The results presented in this report do not necessarily prove definitively that one model is better than another, but may provide guidence on selecting the most suitable model for your location and the species important to your monitoring program.</li>
         </ul>
     <p></p><h2>Understanding the Results</h2><p>Recall, precision, and F1 score are standard metrics used to evaluate the performance of machine learning models. Each metric has a precise definition and corresponding mathematical formula.</p><h3>Recall (Sensitivity)</h3><p>\[ \text{Recall} = \frac{\text{True Positives}}{\text{True Positives + False Negatives}} \]</p><p>Of all the images that actually contain the target species, how many did the model correctly identify?</p><p><b>Example: </b>If there are 100 images of Feral Cat within a dataset, and the model correctly detects 90 of them, recall = 0.9 (90%).</p><p><b>Interpretation:</b> Quantifying recall helps us to understand how many true detections of a given species might be missed by the model.</p><h3>Precision</h3><p>\[ \text{Precision} = \frac{\text{True Positives}}{\text{True Positives + False Positives}} \]</p><p>Of all the images the model predicts as the target species, how many are actually correct?</p><p><b>Example: </b>If the model makes 100 predictions of Feral Cat within a dataset, and only 90 of them are actually detections of Feral Cat, precision = 0.9 (90%).</p><p><b>Interpretation:</b> High precision means predictions are reliable. Low precision means more false detections.</p><h3>F1 Score</h3><p>\[ \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision + Recall}} \]</p><p>A balanced measure that combines both recall and precision.</p><p><b>Interpretation:</b> High F1 score indicates a good balance between detecting animals and avoiding false detections.</p><h3>Definition of Terms</h3>
@@ -31,31 +38,24 @@ Images were manually validated as having at least one detection of the target sp
         <tr>
             <th>Term</th>
             <th>Definition</th>
-            <th>Example</th>
+            <th>Shorthand definition</th>
         </tr>
         <tr>
             <td><b>True Positive (TP)</b></td>
             <td>The model correctly predicts the presence of a species.</td>
-            <td>An image contains a fox, and the model predicts "fox".</td>
+            <td>Correct detection</td>
         </tr>
         <tr>
             <td><b>False Positive (FP)</b></td>
             <td>The model predicts a species, but that species is not actually present.</td>
-            <td>An image contains a cat, but the model predicts "fox".</td>
+            <td>False alarm</td>
         </tr>
         <tr>
             <td><b>False Negative (FN)</b></td>
             <td>The model fails to detect a species that is actually present.</td>
-            <td>An image contains a fox, but the model predicts something else.</td>
+            <td>Missed detection</td>
         </tr>
     </table>
-    
-    <p><b>Summary:</b></p>
-    <ul>
-        <li><b>True Positive</b> → Correct detection</li>
-        <li><b>False Positive</b> → False alarm</li>
-        <li><b>False Negative</b> → Missed detection</li>
-    </ul>
     <h3>How to interpret results</h3>
     <table>
         <tr><th>Scenario</th><th>Interpretation</th></tr>
@@ -86,22 +86,49 @@ Images were manually validated as having at least one detection of the target sp
   </thead>
   <tbody>
     <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>969</td>
+      <td>61</td>
+      <td>1</td>
+      <td>0.9408</td>
+      <td>0.9990</td>
+      <td>0.9690</td>
+    </tr>
+    <tr>
       <td>Felis catus</td>
       <td>929</td>
       <td>80</td>
-      <td>16</td>
+      <td>20</td>
       <td>0.9207</td>
-      <td>0.9831</td>
-      <td>0.9509</td>
+      <td>0.9789</td>
+      <td>0.9489</td>
     </tr>
     <tr>
       <td>Vulpes vulpes</td>
       <td>889</td>
       <td>118</td>
-      <td>7</td>
+      <td>12</td>
       <td>0.8828</td>
-      <td>0.9922</td>
-      <td>0.9343</td>
+      <td>0.9867</td>
+      <td>0.9319</td>
+    </tr>
+    <tr>
+      <td>Blank</td>
+      <td>0</td>
+      <td>1060</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>0</td>
+      <td>1063</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
     </tr>
     <tr>
       <td>Oryctolagus cuniculus</td>
@@ -113,21 +140,399 @@ Images were manually validated as having at least one detection of the target sp
       <td>0.0000</td>
     </tr>
   </tbody>
-</table><h2>Confusion Matrix</h2><table border="1" class="dataframe">
+</table><h2>Prediction Distribution by Species</h2><p>The outputs below represent simplified confusion matricies highliting the distribution of predictions relevant to each target (test) species. Refer to the full confusion matrix for every combination of True Positive, False Positive, and False Negative.</p><h3>True species (or label): <i>Blank</i></h3><table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th>pred_species</th>
+      <th>Nan</th>
+      <th>Amphibolurus muricatus</th>
+      <th>Capra hircus</th>
+      <th>Equus</th>
+      <th>Bos taurus</th>
+      <th>Aves</th>
+      <th>Myiopsitta monachus</th>
+      <th>Rhipidura leucophrys</th>
+      <th>Varanus gouldii</th>
+      <th>Macropus dorsalis</th>
+      <th>Tachyglossus aculeatus</th>
+      <th>Manorina flavigula</th>
+      <th>Geopelia cuneata</th>
+      <th>Grallina cyanoleuca</th>
+      <th>Bettongia lesueur</th>
+      <th>Sus scrofa</th>
+      <th>Alectura lathami</th>
+      <th>Lasiorhinus latifrons</th>
+      <th>Ocyphaps lophotes</th>
+      <th>Osphranter robustus</th>
+      <th>Pomatostomus superciliosus</th>
+      <th>Canis familiaris</th>
+      <th>Crocodylus johnstoni</th>
+      <th>Corcorax melanorhamphos</th>
+      <th>Rhinella marina</th>
+      <th>Petrogale lateralis</th>
+      <th>Felis catus</th>
+      <th>Vulpes vulpes</th>
+      <th>Dromaius novaehollandiae</th>
+      <th>Geophaps plumifera</th>
+      <th>Scincidae</th>
+      <th>Lagomorpha</th>
+      <th>Myrmecobius fasciatus</th>
+      <th>Wallabia bicolor</th>
+      <th>Isoodon obesulus</th>
+      <th>Homo sapiens</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>count</td>
+      <td>525</td>
+      <td>158</td>
+      <td>99</td>
+      <td>67</td>
+      <td>57</td>
+      <td>38</td>
+      <td>20</td>
+      <td>16</td>
+      <td>9</td>
+      <td>8</td>
+      <td>7</td>
+      <td>6</td>
+      <td>6</td>
+      <td>5</td>
+      <td>5</td>
+      <td>4</td>
+      <td>3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table><h3>True species (or label): <i>Dromaius novaehollandiae</i></h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pred_species</th>
+      <th>Dromaius novaehollandiae</th>
+      <th>Nan</th>
+      <th>Capra hircus</th>
+      <th>Bos taurus</th>
+      <th>Aves</th>
+      <th>Myiopsitta monachus</th>
+      <th>Amphibolurus muricatus</th>
+      <th>Myrmecobius fasciatus</th>
+      <th>Macropus dorsalis</th>
+      <th>Ardeotis australis</th>
+      <th>Tachyglossus aculeatus</th>
+      <th>Burhinus grallarius</th>
+      <th>Isoodon obesulus</th>
+      <th>Rhipidura leucophrys</th>
+      <th>Sus scrofa</th>
+      <th>Canis familiaris</th>
+      <th>Cracticus mentalis</th>
+      <th>Acanthagenys rufogularis</th>
+      <th>Varanus gouldii</th>
+      <th>Geophaps plumifera</th>
+      <th>Climacteris rufus</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>count</td>
+      <td>969</td>
+      <td>14</td>
+      <td>11</td>
+      <td>6</td>
+      <td>4</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table><h3>True species (or label): <i>Felis catus</i></h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pred_species</th>
+      <th>Felis catus</th>
+      <th>Nan</th>
+      <th>Bettongia lesueur</th>
+      <th>Vulpes vulpes</th>
+      <th>Canis familiaris</th>
+      <th>Capra hircus</th>
+      <th>Trichosurus caninus</th>
+      <th>Lasiorhinus latifrons</th>
+      <th>Lagomorpha</th>
+      <th>Onychogalea fraenata</th>
+      <th>Tachyglossus aculeatus</th>
+      <th>Sus scrofa</th>
+      <th>Bos taurus</th>
+      <th>Petrogale lateralis</th>
+      <th>Myrmecobius fasciatus</th>
+      <th>Oreoica gutturalis</th>
+      <th>Crocodylus johnstoni</th>
+      <th>Ocyphaps lophotes</th>
+      <th>Climacteris rufus</th>
+      <th>Wallabia bicolor</th>
+      <th>Petrogale brachyotis</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>count</td>
+      <td>929</td>
+      <td>28</td>
+      <td>18</td>
+      <td>6</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table><h3>True species (or label): <i>Macropodidae</i></h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pred_species</th>
+      <th>Osphranter rufus</th>
+      <th>Macropus dorsalis</th>
+      <th>Canis familiaris</th>
+      <th>Nan</th>
+      <th>Bos taurus</th>
+      <th>Osphranter robustus</th>
+      <th>Bettongia lesueur</th>
+      <th>Capra hircus</th>
+      <th>Phascolarctos cinereus</th>
+      <th>Trichosurus caninus</th>
+      <th>Equus</th>
+      <th>Vulpes vulpes</th>
+      <th>Geophaps plumifera</th>
+      <th>Wallabia bicolor</th>
+      <th>Onychogalea fraenata</th>
+      <th>Crocodylus johnstoni</th>
+      <th>Felis catus</th>
+      <th>Cervidae</th>
+      <th>Notamacropus dorsalis</th>
+      <th>Lasiorhinus latifrons</th>
+      <th>Petrogale lateralis</th>
+      <th>Notamacropus agilis</th>
+      <th>Onychogalea unguifera</th>
+      <th>Aves</th>
+      <th>Pomatostomus superciliosus</th>
+      <th>Climacteris rufus</th>
+      <th>Pseudomys delicatulus</th>
+      <th>Perameles bougainville</th>
+      <th>Corcorax melanorhamphos</th>
+      <th>Notomys alexis</th>
+      <th>Homo sapiens</th>
+      <th>Lagomorpha</th>
+      <th>Macrotis lagotis</th>
+      <th>Corvus</th>
+      <th>Scincidae</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>count</td>
+      <td>694</td>
+      <td>110</td>
+      <td>62</td>
+      <td>45</td>
+      <td>29</td>
+      <td>25</td>
+      <td>18</td>
+      <td>17</td>
+      <td>7</td>
+      <td>5</td>
+      <td>5</td>
+      <td>4</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table><h3>True species (or label): <i>Oryctolagus cuniculus</i></h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pred_species</th>
+      <th>Lagomorpha</th>
+      <th>Nan</th>
+      <th>Macrotis lagotis</th>
+      <th>Felis catus</th>
+      <th>Aves</th>
+      <th>Wallabia bicolor</th>
+      <th>Isoodon obesulus</th>
+      <th>Bettongia lesueur</th>
+      <th>Trichosurus caninus</th>
+      <th>Notamacropus dorsalis</th>
+      <th>Cercartetus nanus</th>
+      <th>Vulpes vulpes</th>
+      <th>Lagostrophus fasciatus</th>
+      <th>Macropus dorsalis</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>count</td>
+      <td>954</td>
+      <td>21</td>
+      <td>10</td>
+      <td>7</td>
+      <td>4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table><h3>True species (or label): <i>Vulpes vulpes</i></h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pred_species</th>
+      <th>Vulpes vulpes</th>
+      <th>Nan</th>
+      <th>Bettongia lesueur</th>
+      <th>Canis familiaris</th>
+      <th>Felis catus</th>
+      <th>Capra hircus</th>
+      <th>Onychogalea fraenata</th>
+      <th>Lasiorhinus latifrons</th>
+      <th>Macropus dorsalis</th>
+      <th>Bos taurus</th>
+      <th>Wallabia bicolor</th>
+      <th>Trichosurus caninus</th>
+      <th>Homo sapiens</th>
+      <th>Notamacropus dorsalis</th>
+      <th>Lagomorpha</th>
+      <th>Oreoica gutturalis</th>
+      <th>Scincidae</th>
+      <th>Anas strepera</th>
+      <th>Aves</th>
+      <th>Tachyglossus aculeatus</th>
+      <th>Antechinus flavipes</th>
+      <th>Phascolarctos cinereus</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>count</td>
+      <td>889</td>
+      <td>35</td>
+      <td>30</td>
+      <td>15</td>
+      <td>9</td>
+      <td>5</td>
+      <td>3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table><h2>Full Confusion Matrix</h2><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pred_species</th>
+      <th>Acanthagenys rufogularis</th>
+      <th>Alectura lathami</th>
+      <th>Amphibolurus muricatus</th>
       <th>Anas strepera</th>
       <th>Antechinus flavipes</th>
+      <th>Ardeotis australis</th>
       <th>Aves</th>
       <th>Bettongia lesueur</th>
       <th>Bos taurus</th>
+      <th>Burhinus grallarius</th>
       <th>Canis familiaris</th>
       <th>Capra hircus</th>
       <th>Cercartetus nanus</th>
+      <th>Cervidae</th>
       <th>Climacteris rufus</th>
+      <th>Corcorax melanorhamphos</th>
+      <th>Corvus</th>
+      <th>Cracticus mentalis</th>
       <th>Crocodylus johnstoni</th>
+      <th>Dromaius novaehollandiae</th>
+      <th>Equus</th>
       <th>Felis catus</th>
+      <th>Geopelia cuneata</th>
+      <th>Geophaps plumifera</th>
+      <th>Grallina cyanoleuca</th>
       <th>Homo sapiens</th>
       <th>Isoodon obesulus</th>
       <th>Lagomorpha</th>
@@ -135,19 +540,32 @@ Images were manually validated as having at least one detection of the target sp
       <th>Lasiorhinus latifrons</th>
       <th>Macropus dorsalis</th>
       <th>Macrotis lagotis</th>
+      <th>Manorina flavigula</th>
+      <th>Myiopsitta monachus</th>
       <th>Myrmecobius fasciatus</th>
       <th>Nan</th>
+      <th>Notamacropus agilis</th>
       <th>Notamacropus dorsalis</th>
+      <th>Notomys alexis</th>
       <th>Ocyphaps lophotes</th>
       <th>Onychogalea fraenata</th>
+      <th>Onychogalea unguifera</th>
       <th>Oreoica gutturalis</th>
+      <th>Osphranter robustus</th>
+      <th>Osphranter rufus</th>
+      <th>Perameles bougainville</th>
       <th>Petrogale brachyotis</th>
       <th>Petrogale lateralis</th>
       <th>Phascolarctos cinereus</th>
+      <th>Pomatostomus superciliosus</th>
+      <th>Pseudomys delicatulus</th>
+      <th>Rhinella marina</th>
+      <th>Rhipidura leucophrys</th>
       <th>Scincidae</th>
       <th>Sus scrofa</th>
       <th>Tachyglossus aculeatus</th>
       <th>Trichosurus caninus</th>
+      <th>Varanus gouldii</th>
       <th>Vulpes vulpes</th>
       <th>Wallabia bicolor</th>
     </tr>
@@ -186,47 +604,294 @@ Images were manually validated as having at least one detection of the target sp
       <th></th>
       <th></th>
       <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th>Blank</th>
+      <td>0</td>
+      <td>3</td>
+      <td>158</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>38</td>
+      <td>5</td>
+      <td>57</td>
+      <td>0</td>
+      <td>2</td>
+      <td>99</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>67</td>
+      <td>1</td>
+      <td>6</td>
+      <td>1</td>
+      <td>5</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>8</td>
+      <td>0</td>
+      <td>6</td>
+      <td>20</td>
+      <td>1</td>
+      <td>525</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>16</td>
+      <td>1</td>
+      <td>4</td>
+      <td>7</td>
+      <td>0</td>
+      <td>9</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Dromaius novaehollandiae</th>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>4</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2</td>
+      <td>1</td>
+      <td>11</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>969</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
     <tr>
       <th>Felis catus</th>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>18</td>
       <td>1</td>
+      <td>0</td>
       <td>3</td>
       <td>3</td>
       <td>0</td>
+      <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
       <td>929</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>2</td>
       <td>0</td>
       <td>3</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
       <td>28</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
       <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
       <td>1</td>
-      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
       <td>2</td>
       <td>3</td>
+      <td>0</td>
       <td>6</td>
       <td>1</td>
     </tr>
     <tr>
+      <th>Macropodidae</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>18</td>
+      <td>29</td>
+      <td>0</td>
+      <td>62</td>
+      <td>17</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>5</td>
+      <td>3</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>110</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>45</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+      <td>0</td>
+      <td>25</td>
+      <td>694</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>7</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>4</td>
+      <td>3</td>
+    </tr>
+    <tr>
       <th>Oryctolagus cuniculus</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>4</td>
@@ -234,10 +899,20 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>7</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>3</td>
       <td>954</td>
@@ -246,54 +921,94 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
       <td>10</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>21</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
       <td>1</td>
       <td>4</td>
     </tr>
     <tr>
       <th>Vulpes vulpes</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
       <td>1</td>
+      <td>0</td>
       <td>1</td>
       <td>30</td>
       <td>2</td>
+      <td>0</td>
       <td>15</td>
       <td>5</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
       <td>3</td>
       <td>2</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>35</td>
+      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
       <td>3</td>
+      <td>0</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
       <td>0</td>
       <td>1</td>
       <td>2</td>
+      <td>0</td>
       <td>889</td>
       <td>2</td>
     </tr>
