@@ -46,6 +46,7 @@ Install dependencies with:
 
 ```bash
 pip install -r requirements.txt
+```
 
 ## Installation
 
@@ -54,6 +55,7 @@ Clone the repository:
 ```bash
 git clone https://github.com/WildObs/model-benchmark-testing-workflow.git
 cd model-benchmark-testing-workflow
+```
 
 ## Data Preparation
 1. Log in to the WildObs image management platform
@@ -82,6 +84,7 @@ Run the workflow from the command line:
 
 ```bash
 python wildObs-CV-model-benchmark-testing-workflow.py
+```
 
 ## Outputs
 #### Misclassified Images
@@ -114,6 +117,7 @@ Run:
 
 ```bash
 pip install -r requirements.txt
+```
 
 #### File not found errors
 Ensure your exported dataset is in the correct directory
