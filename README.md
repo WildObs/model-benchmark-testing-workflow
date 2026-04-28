@@ -87,6 +87,10 @@ Run the workflow from the command line:
 python wildObs-CV-model-benchmark-testing-workflow.py
 ```
 
+OR
+
+Run the workflow from the Python notebook WildObs-CV-model-benchmark-testing-workflow.ipynb
+
 ## Outputs
 #### Misclassified Images
 
@@ -123,8 +127,8 @@ pip install -r requirements.txt
 #### File not found errors
 Ensure your exported dataset is in the correct directory
 
-No outputs generated
-Verify that your dataset follows the Camtrap-DP format
+#### No outputs generated
+Export the data again from the WildObs platform and place the extracted data in the /data folder to make sure that you are using the most recent classification results acquired from WildObs models.
 
 ## Contributing
 
