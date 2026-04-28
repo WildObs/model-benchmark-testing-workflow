@@ -73,6 +73,7 @@ model-benchmark-testing-workflow/
 ├── data/                  # (optional) your exported dataset
 │   ├── observations.csv
 │   ├── media.csv
+│   └── deployments.csv
 │   └── ...
 ```
 
