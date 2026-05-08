@@ -5,9 +5,26 @@ h1 { color: #2c3e50; }
 h2 { color: #34495e; margin-top: 30px; }
 h3 { color: #2c3e50; margin-top: 20px; }
 p { max-width: 900px; line-height: 1.5; }
-table { border-collapse: collapse; width: 80%; margin-top: 10px; }
-th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-th { background-color: #f2f2f2; }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #cccccc;
+    padding: 6px 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -76,6 +93,7 @@ Images were manually validated as having at least one detection of the target sp
   <thead>
     <tr style="text-align: right;">
       <th>species</th>
+      <th>model_confidence</th>
       <th>true_positives</th>
       <th>false_negatives</th>
       <th>false_positives</th>
@@ -86,34 +104,48 @@ Images were manually validated as having at least one detection of the target sp
   </thead>
   <tbody>
     <tr>
-      <td>Oryctolagus cuniculus</td>
-      <td>851</td>
-      <td>168</td>
-      <td>13</td>
-      <td>0.8351</td>
-      <td>0.9850</td>
-      <td>0.9039</td>
-    </tr>
-    <tr>
-      <td>Felis catus</td>
-      <td>840</td>
-      <td>174</td>
-      <td>48</td>
-      <td>0.8284</td>
-      <td>0.9459</td>
-      <td>0.8833</td>
-    </tr>
-    <tr>
-      <td>Vulpes vulpes</td>
-      <td>761</td>
-      <td>259</td>
-      <td>14</td>
-      <td>0.7461</td>
-      <td>0.9819</td>
-      <td>0.8479</td>
+      <td>Blank</td>
+      <td>&gt;=0.5</td>
+      <td>0</td>
+      <td>1060</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
     </tr>
     <tr>
       <td>Blank</td>
+      <td>&gt;=0.6</td>
+      <td>0</td>
+      <td>1060</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Blank</td>
+      <td>&gt;=0.7</td>
+      <td>0</td>
+      <td>1060</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Blank</td>
+      <td>&gt;=0.8</td>
+      <td>0</td>
+      <td>1060</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Blank</td>
+      <td>&gt;=0.9</td>
       <td>0</td>
       <td>1060</td>
       <td>0</td>
@@ -123,6 +155,7 @@ Images were manually validated as having at least one detection of the target sp
     </tr>
     <tr>
       <td>Dromaius novaehollandiae</td>
+      <td>&gt;=0.5</td>
       <td>0</td>
       <td>1126</td>
       <td>0</td>
@@ -131,13 +164,304 @@ Images were manually validated as having at least one detection of the target sp
       <td>0.0000</td>
     </tr>
     <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>&gt;=0.6</td>
+      <td>0</td>
+      <td>1126</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>&gt;=0.7</td>
+      <td>0</td>
+      <td>1126</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>&gt;=0.8</td>
+      <td>0</td>
+      <td>1126</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>&gt;=0.9</td>
+      <td>0</td>
+      <td>1126</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>&gt;=0.5</td>
+      <td>840</td>
+      <td>174</td>
+      <td>48</td>
+      <td>0.8284</td>
+      <td>0.9459</td>
+      <td>0.8833</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>&gt;=0.6</td>
+      <td>840</td>
+      <td>174</td>
+      <td>48</td>
+      <td>0.8284</td>
+      <td>0.9459</td>
+      <td>0.8833</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>&gt;=0.7</td>
+      <td>840</td>
+      <td>174</td>
+      <td>47</td>
+      <td>0.8284</td>
+      <td>0.9470</td>
+      <td>0.8837</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>&gt;=0.8</td>
+      <td>834</td>
+      <td>180</td>
+      <td>44</td>
+      <td>0.8225</td>
+      <td>0.9499</td>
+      <td>0.8816</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>&gt;=0.9</td>
+      <td>824</td>
+      <td>190</td>
+      <td>30</td>
+      <td>0.8126</td>
+      <td>0.9649</td>
+      <td>0.8822</td>
+    </tr>
+    <tr>
       <td>Macropodidae</td>
+      <td>&gt;=0.5</td>
       <td>0</td>
       <td>1116</td>
       <td>0</td>
       <td>0.0000</td>
       <td>0.0000</td>
       <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>&gt;=0.6</td>
+      <td>0</td>
+      <td>1116</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>&gt;=0.7</td>
+      <td>0</td>
+      <td>1116</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>&gt;=0.8</td>
+      <td>0</td>
+      <td>1116</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>&gt;=0.9</td>
+      <td>0</td>
+      <td>1116</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>&gt;=0.5</td>
+      <td>851</td>
+      <td>168</td>
+      <td>13</td>
+      <td>0.8351</td>
+      <td>0.9850</td>
+      <td>0.9039</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>&gt;=0.6</td>
+      <td>851</td>
+      <td>168</td>
+      <td>13</td>
+      <td>0.8351</td>
+      <td>0.9850</td>
+      <td>0.9039</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>&gt;=0.7</td>
+      <td>850</td>
+      <td>169</td>
+      <td>13</td>
+      <td>0.8342</td>
+      <td>0.9849</td>
+      <td>0.9033</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>&gt;=0.8</td>
+      <td>842</td>
+      <td>177</td>
+      <td>11</td>
+      <td>0.8263</td>
+      <td>0.9871</td>
+      <td>0.8996</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>&gt;=0.9</td>
+      <td>822</td>
+      <td>197</td>
+      <td>7</td>
+      <td>0.8067</td>
+      <td>0.9916</td>
+      <td>0.8896</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>&gt;=0.5</td>
+      <td>761</td>
+      <td>259</td>
+      <td>14</td>
+      <td>0.7461</td>
+      <td>0.9819</td>
+      <td>0.8479</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>&gt;=0.6</td>
+      <td>761</td>
+      <td>259</td>
+      <td>14</td>
+      <td>0.7461</td>
+      <td>0.9819</td>
+      <td>0.8479</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>&gt;=0.7</td>
+      <td>751</td>
+      <td>269</td>
+      <td>13</td>
+      <td>0.7363</td>
+      <td>0.9830</td>
+      <td>0.8419</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>&gt;=0.8</td>
+      <td>735</td>
+      <td>285</td>
+      <td>12</td>
+      <td>0.7206</td>
+      <td>0.9839</td>
+      <td>0.8319</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>&gt;=0.9</td>
+      <td>710</td>
+      <td>310</td>
+      <td>8</td>
+      <td>0.6961</td>
+      <td>0.9889</td>
+      <td>0.8170</td>
+    </tr>
+  </tbody>
+</table><h2>Optimal Confidence Threshold by Species</h2>
+    <p>
+    The table below shows the confidence threshold that produced the highest
+    F1 score for each species. This can help identify the optimal balance
+    between recall and precision for operational use.
+    </p>
+    <table class="dataframe styled-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>species</th>
+      <th>model_confidence</th>
+      <th>recall</th>
+      <th>precision</th>
+      <th>f1_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Blank</td>
+      <td>&gt;=0.5</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>&gt;=0.5</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>&gt;=0.7</td>
+      <td>0.8284</td>
+      <td>0.9470</td>
+      <td>0.8837</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>&gt;=0.5</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>&gt;=0.5</td>
+      <td>0.8351</td>
+      <td>0.9850</td>
+      <td>0.9039</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>&gt;=0.5</td>
+      <td>0.7461</td>
+      <td>0.9819</td>
+      <td>0.8479</td>
     </tr>
   </tbody>
 </table><h2>Prediction Distribution by Species</h2><p>The outputs below represent simplified confusion matricies highliting the distribution of predictions relevant to each target (test) species. Refer to the full confusion matrix for every combination of True Positive, False Positive, and False Negative.</p><h3>True species (or label): <i>Blank</i></h3><table border="1" class="dataframe">
@@ -243,10 +567,10 @@ Images were manually validated as having at least one detection of the target sp
       <th>Eopsaltria australis</th>
       <th>Pitta versicolor</th>
       <th>Wallabia bicolor</th>
-      <th>Macropus dorsalis</th>
+      <th>Homo sapiens</th>
       <th>Varanus varius</th>
       <th>Canidae</th>
-      <th>Homo sapiens</th>
+      <th>Macropus dorsalis</th>
       <th>Orthonyx spaldingii</th>
       <th>Wallabia</th>
       <th>Dacelo novaeguineae</th>
