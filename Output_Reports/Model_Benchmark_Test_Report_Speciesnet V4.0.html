@@ -28,7 +28,7 @@ th {
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head><body><h1>Model Evaluation Report</h1><h2>Test details</h2><p><b>Computer Vision (CV) model tested: </b>Speciesnet V4.0<p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species (or labels) evaluated:</b></p><ul><li><i>Blank</i></li><li><i>Dromaius novaehollandiae</i></li><li><i>Felis catus</i></li><li><i>Macropodidae</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Data collation process used: </b>
+</head><body><h1>Model Evaluation Report</h1><h2>Test details</h2><p><b>Computer Vision (CV) model tested: </b>Speciesnet V4.0<p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species (or labels) evaluated:</b></p><ul><li><i>Blank</i></li><li><i>Dromaius novaehollandiae</i></li><li><i>Felis catus</i></li><li><i>Macropodidae</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Confidence thresholds used: </b>[0.5, 0.6, 0.7, 0.8, 0.9]</p><p><b>Data collation process used: </b>
 Collated 1000 images of each target species.
 Images were manually validated as having at least one detection of the target species and no other species present in the image.
 </p><h2>Purpose and intended use of this report</h2>
@@ -1282,188 +1282,260 @@ Images were manually validated as having at least one detection of the target sp
       <td>0.0</td>
     </tr>
   </tbody>
-</table><br><h2>Full Confusion Matrix</h2><table border="1" class="dataframe">
+</table><br><h2>Full Confusion Matrices</h2>
+    <p>
+    The outputs below represent the complete confusion matrix
+    for each confidence threshold.
+    Predictions below the specified threshold are excluded.
+    </p>
+    <h3>Confusion Matrix - Confidence Threshold: >=0.5</h3><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
-      <th>pred_species</th>
-      <th>Acryllium vulturinum</th>
-      <th>Aepyceros melampus</th>
-      <th>Antilocapra americana</th>
-      <th>Ardeotis australis</th>
-      <th>Aves</th>
-      <th>Bison bison</th>
-      <th>Bos taurus</th>
-      <th>Camelus dromedarius</th>
-      <th>Canidae</th>
-      <th>Canis familiaris</th>
-      <th>Canis latrans</th>
-      <th>Capra aegagrus</th>
-      <th>Carnivora</th>
-      <th>Cervidae</th>
-      <th>Cervus elaphus</th>
-      <th>Corvus</th>
-      <th>Dromaius novaehollandiae</th>
-      <th>Felidae</th>
-      <th>Felis</th>
-      <th>Felis catus</th>
-      <th>Homo sapiens</th>
-      <th>Lagorchestes conspicillatus</th>
-      <th>Leopardus pardalis</th>
+      <th>index</th>
+      <th>Vulpes vulpes</th>
       <th>Leporidae</th>
-      <th>Lepus americanus</th>
-      <th>Lepus capensis</th>
-      <th>Lepus saxatilis</th>
-      <th>Lycalopex culpaeus</th>
-      <th>Lynx lynx</th>
-      <th>Lynx rufus</th>
-      <th>Macropus agilis</th>
-      <th>Macropus dorsalis</th>
-      <th>Macropus giganteus</th>
-      <th>Macropus robustus</th>
-      <th>Macropus rufogriseus</th>
-      <th>Madoqua guentheri</th>
-      <th>Mammalia</th>
-      <th>Marmota flaviventris</th>
-      <th>Meleagris gallopavo</th>
+      <th>Felis catus</th>
       <th>Nan</th>
-      <th>Nesotragus moschatus</th>
-      <th>Odocoileus hemionus</th>
-      <th>Odocoileus hemionus columbianus</th>
-      <th>Odocoileus virginianus</th>
-      <th>Oryctolagus cuniculus</th>
+      <th>Dromaius novaehollandiae</th>
+      <th>Mammalia</th>
+      <th>Macropus giganteus</th>
       <th>Osphranter rufus</th>
+      <th>Macropus dorsalis</th>
+      <th>Canidae</th>
+      <th>Felidae</th>
+      <th>Aves</th>
+      <th>Bos taurus</th>
+      <th>Struthio camelus</th>
+      <th>Carnivora</th>
+      <th>Sylvilagus aquaticus</th>
+      <th>Lepus capensis</th>
+      <th>Lynx rufus</th>
+      <th>Canis latrans</th>
+      <th>Rhea americana</th>
+      <th>Oryctolagus cuniculus</th>
       <th>Ovis aries</th>
-      <th>Potos flavus</th>
+      <th>Macropus robustus</th>
+      <th>Lepus americanus</th>
+      <th>Odocoileus virginianus</th>
+      <th>Odocoileus hemionus columbianus</th>
+      <th>Felis</th>
+      <th>Macropus agilis</th>
+      <th>Lynx lynx</th>
+      <th>Madoqua guentheri</th>
+      <th>Sylvilagus audubonii</th>
+      <th>Acryllium vulturinum</th>
+      <th>Canis familiaris</th>
+      <th>Cervidae</th>
+      <th>Sylvilagus brasiliensis</th>
+      <th>Lepus saxatilis</th>
+      <th>Urocyon cinereoargenteus</th>
+      <th>Sylvilagus floridanus</th>
+      <th>Cervus elaphus</th>
+      <th>Odocoileus hemionus</th>
+      <th>Camelus dromedarius</th>
+      <th>Ursus americanus</th>
+      <th>Homo sapiens</th>
+      <th>Sus scrofa</th>
+      <th>Antilocapra americana</th>
+      <th>Leopardus pardalis</th>
+      <th>Capra aegagrus</th>
       <th>Procavia capensis</th>
       <th>Procyon lotor</th>
-      <th>Rhea americana</th>
-      <th>Sciuridae</th>
+      <th>Macropus rufogriseus</th>
+      <th>Bison bison</th>
       <th>Sorex araneus</th>
-      <th>Struthio camelus</th>
-      <th>Sus scrofa</th>
-      <th>Sylvilagus aquaticus</th>
-      <th>Sylvilagus audubonii</th>
-      <th>Sylvilagus brasiliensis</th>
-      <th>Sylvilagus floridanus</th>
-      <th>Urocyon cinereoargenteus</th>
-      <th>Ursus americanus</th>
-      <th>Vulpes vulpes</th>
+      <th>Potos flavus</th>
+      <th>Ardeotis australis</th>
+      <th>Aepyceros melampus</th>
+      <th>Sciuridae</th>
+      <th>Lycalopex culpaeus</th>
+      <th>Corvus</th>
+      <th>Nesotragus moschatus</th>
+      <th>Lagorchestes conspicillatus</th>
+      <th>Meleagris gallopavo</th>
+      <th>Marmota flaviventris</th>
       <th>Wallabia bicolor</th>
-    </tr>
-    <tr>
-      <th>true_species</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Blank</th>
+      <td>Macropodidae</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>213</td>
+      <td>0</td>
+      <td>165</td>
+      <td>212</td>
+      <td>174</td>
+      <td>101</td>
+      <td>2</td>
       <td>0</td>
       <td>0</td>
+      <td>46</td>
       <td>0</td>
-      <td>1</td>
+      <td>4</td>
       <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
+      <td>2</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
+      <td>22</td>
+      <td>20</td>
+      <td>1</td>
+      <td>9</td>
+      <td>12</td>
       <td>0</td>
+      <td>12</td>
       <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
+      <td>2</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>4</td>
       <td>0</td>
       <td>0</td>
-      <td>993</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>823</td>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+      <td>0</td>
+      <td>26</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>60</td>
+      <td>0</td>
+      <td>0</td>
       <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>27</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>0</td>
+      <td>799</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>38</td>
+      <td>34</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>14</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1485,34 +1557,124 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <th>Dromaius novaehollandiae</th>
+      <td>Felis catus</td>
+      <td>0</td>
+      <td>0</td>
+      <td>755</td>
+      <td>5</td>
+      <td>0</td>
+      <td>16</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>57</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>31</td>
+      <td>0</td>
+      <td>2</td>
+      <td>33</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13</td>
+      <td>0</td>
+      <td>9</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>22</td>
+      <td>557</td>
+      <td>19</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>57</td>
+      <td>3</td>
+      <td>52</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>30</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>7</td>
       <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>57</td>
+      <td>0</td>
       <td>2</td>
-      <td>3</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>2</td>
       <td>0</td>
       <td>0</td>
-      <td>3</td>
-      <td>1</td>
-      <td>3</td>
-      <td>0</td>
-      <td>557</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
+      <td>2</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
@@ -1522,178 +1684,1291 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>19</td>
       <td>1</td>
       <td>1</td>
-      <td>324</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Blank</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>314</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table><br><h3>Confusion Matrix - Confidence Threshold: >=0.6</h3><table class="dataframe styled-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>index</th>
+      <th>Vulpes vulpes</th>
+      <th>Leporidae</th>
+      <th>Felis catus</th>
+      <th>Dromaius novaehollandiae</th>
+      <th>Nan</th>
+      <th>Mammalia</th>
+      <th>Macropus giganteus</th>
+      <th>Osphranter rufus</th>
+      <th>Macropus dorsalis</th>
+      <th>Canidae</th>
+      <th>Felidae</th>
+      <th>Aves</th>
+      <th>Bos taurus</th>
+      <th>Struthio camelus</th>
+      <th>Carnivora</th>
+      <th>Sylvilagus aquaticus</th>
+      <th>Lepus capensis</th>
+      <th>Lynx rufus</th>
+      <th>Canis latrans</th>
+      <th>Rhea americana</th>
+      <th>Oryctolagus cuniculus</th>
+      <th>Ovis aries</th>
+      <th>Macropus robustus</th>
+      <th>Lepus americanus</th>
+      <th>Odocoileus virginianus</th>
+      <th>Odocoileus hemionus columbianus</th>
+      <th>Felis</th>
+      <th>Macropus agilis</th>
+      <th>Lynx lynx</th>
+      <th>Madoqua guentheri</th>
+      <th>Sylvilagus audubonii</th>
+      <th>Acryllium vulturinum</th>
+      <th>Canis familiaris</th>
+      <th>Cervidae</th>
+      <th>Sylvilagus brasiliensis</th>
+      <th>Lepus saxatilis</th>
+      <th>Urocyon cinereoargenteus</th>
+      <th>Sylvilagus floridanus</th>
+      <th>Odocoileus hemionus</th>
+      <th>Camelus dromedarius</th>
+      <th>Cervus elaphus</th>
+      <th>Capra aegagrus</th>
+      <th>Sus scrofa</th>
+      <th>Procyon lotor</th>
+      <th>Procavia capensis</th>
+      <th>Bison bison</th>
+      <th>Potos flavus</th>
+      <th>Ursus americanus</th>
+      <th>Antilocapra americana</th>
+      <th>Leopardus pardalis</th>
+      <th>Macropus rufogriseus</th>
+      <th>Sorex araneus</th>
+      <th>Ardeotis australis</th>
+      <th>Aepyceros melampus</th>
+      <th>Sciuridae</th>
+      <th>Lycalopex culpaeus</th>
+      <th>Corvus</th>
+      <th>Homo sapiens</th>
+      <th>Nesotragus moschatus</th>
+      <th>Lagorchestes conspicillatus</th>
+      <th>Meleagris gallopavo</th>
+      <th>Marmota flaviventris</th>
+      <th>Wallabia bicolor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Macropodidae</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>213</td>
+      <td>165</td>
+      <td>212</td>
+      <td>174</td>
+      <td>101</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>46</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>22</td>
+      <td>20</td>
+      <td>1</td>
+      <td>9</td>
+      <td>12</td>
+      <td>0</td>
+      <td>12</td>
+      <td>0</td>
+      <td>2</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>823</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+      <td>26</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>60</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>27</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>0</td>
+      <td>799</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>38</td>
+      <td>34</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>14</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>0</td>
+      <td>0</td>
+      <td>755</td>
+      <td>0</td>
+      <td>1</td>
+      <td>16</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>57</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>31</td>
+      <td>0</td>
+      <td>2</td>
+      <td>33</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13</td>
+      <td>0</td>
+      <td>9</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>557</td>
+      <td>18</td>
+      <td>19</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>57</td>
+      <td>3</td>
+      <td>52</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>30</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Blank</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table><br><h3>Confusion Matrix - Confidence Threshold: >=0.7</h3><table class="dataframe styled-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>index</th>
+      <th>Vulpes vulpes</th>
+      <th>Leporidae</th>
+      <th>Felis catus</th>
+      <th>Dromaius novaehollandiae</th>
+      <th>Macropus giganteus</th>
+      <th>Nan</th>
+      <th>Mammalia</th>
+      <th>Osphranter rufus</th>
+      <th>Macropus dorsalis</th>
+      <th>Canidae</th>
+      <th>Felidae</th>
+      <th>Aves</th>
+      <th>Bos taurus</th>
+      <th>Struthio camelus</th>
+      <th>Lepus capensis</th>
+      <th>Carnivora</th>
+      <th>Lynx rufus</th>
+      <th>Canis latrans</th>
+      <th>Sylvilagus aquaticus</th>
+      <th>Oryctolagus cuniculus</th>
+      <th>Rhea americana</th>
+      <th>Ovis aries</th>
+      <th>Macropus robustus</th>
+      <th>Lepus americanus</th>
+      <th>Odocoileus virginianus</th>
+      <th>Macropus agilis</th>
+      <th>Lynx lynx</th>
+      <th>Odocoileus hemionus columbianus</th>
+      <th>Sylvilagus audubonii</th>
+      <th>Felis</th>
+      <th>Madoqua guentheri</th>
+      <th>Urocyon cinereoargenteus</th>
+      <th>Canis familiaris</th>
+      <th>Sylvilagus brasiliensis</th>
+      <th>Acryllium vulturinum</th>
+      <th>Lepus saxatilis</th>
+      <th>Cervidae</th>
+      <th>Sylvilagus floridanus</th>
+      <th>Cervus elaphus</th>
+      <th>Procyon lotor</th>
+      <th>Bison bison</th>
+      <th>Camelus dromedarius</th>
+      <th>Ursus americanus</th>
+      <th>Odocoileus hemionus</th>
+      <th>Antilocapra americana</th>
+      <th>Leopardus pardalis</th>
+      <th>Potos flavus</th>
+      <th>Sus scrofa</th>
+      <th>Capra aegagrus</th>
+      <th>Corvus</th>
+      <th>Marmota flaviventris</th>
+      <th>Sorex araneus</th>
+      <th>Sciuridae</th>
+      <th>Homo sapiens</th>
+      <th>Meleagris gallopavo</th>
+      <th>Procavia capensis</th>
+      <th>Lycalopex culpaeus</th>
+      <th>Aepyceros melampus</th>
+      <th>Nesotragus moschatus</th>
+      <th>Macropus rufogriseus</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>812</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>19</td>
+      <td>0</td>
+      <td>0</td>
+      <td>58</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>25</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>0</td>
+      <td>0</td>
+      <td>749</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>11</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>53</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>24</td>
+      <td>30</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+      <td>1</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>196</td>
+      <td>180</td>
+      <td>145</td>
+      <td>162</td>
+      <td>80</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>38</td>
+      <td>0</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>21</td>
+      <td>16</td>
+      <td>1</td>
+      <td>8</td>
+      <td>10</td>
+      <td>0</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>0</td>
+      <td>758</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>2</td>
       <td>0</td>
       <td>30</td>
       <td>0</td>
       <td>0</td>
-      <td>52</td>
-      <td>2</td>
+      <td>1</td>
+      <td>29</td>
+      <td>24</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>13</td>
+      <td>1</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
       <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>Felis catus</th>
+      <td>Dromaius novaehollandiae</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>540</td>
+      <td>0</td>
+      <td>10</td>
+      <td>12</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>48</td>
+      <td>3</td>
+      <td>47</td>
       <td>0</td>
-      <td>0</td>
-      <td>2</td>
-      <td>0</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>0</td>
-      <td>31</td>
+      <td>1</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>57</td>
-      <td>13</td>
-      <td>755</td>
+      <td>23</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>2</td>
       <td>0</td>
       <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Blank</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table><br><h3>Confusion Matrix - Confidence Threshold: >=0.8</h3><table class="dataframe styled-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>index</th>
+      <th>Vulpes vulpes</th>
+      <th>Felis catus</th>
+      <th>Leporidae</th>
+      <th>Dromaius novaehollandiae</th>
+      <th>Macropus giganteus</th>
+      <th>Nan</th>
+      <th>Osphranter rufus</th>
+      <th>Mammalia</th>
+      <th>Felidae</th>
+      <th>Canidae</th>
+      <th>Bos taurus</th>
+      <th>Macropus dorsalis</th>
+      <th>Aves</th>
+      <th>Canis latrans</th>
+      <th>Struthio camelus</th>
+      <th>Lynx rufus</th>
+      <th>Lepus capensis</th>
+      <th>Carnivora</th>
+      <th>Ovis aries</th>
+      <th>Sylvilagus aquaticus</th>
+      <th>Oryctolagus cuniculus</th>
+      <th>Macropus robustus</th>
+      <th>Lepus americanus</th>
+      <th>Rhea americana</th>
+      <th>Odocoileus virginianus</th>
+      <th>Odocoileus hemionus columbianus</th>
+      <th>Macropus agilis</th>
+      <th>Urocyon cinereoargenteus</th>
+      <th>Sylvilagus brasiliensis</th>
+      <th>Madoqua guentheri</th>
+      <th>Lynx lynx</th>
+      <th>Ursus americanus</th>
+      <th>Cervidae</th>
+      <th>Odocoileus hemionus</th>
+      <th>Sylvilagus floridanus</th>
+      <th>Sylvilagus audubonii</th>
+      <th>Antilocapra americana</th>
+      <th>Sus scrofa</th>
+      <th>Procyon lotor</th>
+      <th>Leopardus pardalis</th>
+      <th>Camelus dromedarius</th>
+      <th>Felis</th>
+      <th>Cervus elaphus</th>
+      <th>Bison bison</th>
+      <th>Procavia capensis</th>
+      <th>Marmota flaviventris</th>
+      <th>Potos flavus</th>
+      <th>Lepus saxatilis</th>
+      <th>Lycalopex culpaeus</th>
+      <th>Aepyceros melampus</th>
+      <th>Nesotragus moschatus</th>
+      <th>Macropus rufogriseus</th>
+      <th>Acryllium vulturinum</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>792</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>2</td>
       <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>41</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>22</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>0</td>
+      <td>720</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>43</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>22</td>
+      <td>2</td>
+      <td>15</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>0</td>
+      <td>0</td>
+      <td>649</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>15</td>
+      <td>0</td>
+      <td>0</td>
+      <td>14</td>
+      <td>14</td>
       <td>0</td>
       <td>9</td>
-      <td>33</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>163</td>
+      <td>148</td>
+      <td>126</td>
+      <td>77</td>
+      <td>0</td>
+      <td>1</td>
+      <td>32</td>
+      <td>34</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
       <td>2</td>
       <td>16</td>
       <td>0</td>
       <td>0</td>
-      <td>68</td>
+      <td>10</td>
       <td>0</td>
       <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
+      <td>5</td>
+      <td>5</td>
       <td>4</td>
       <td>0</td>
       <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>Macropodidae</th>
-      <td>0</td>
-      <td>1</td>
-      <td>2</td>
+      <td>Dromaius novaehollandiae</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>46</td>
+      <td>482</td>
+      <td>0</td>
       <td>3</td>
-      <td>2</td>
       <td>0</td>
-      <td>1</td>
-      <td>2</td>
-      <td>4</td>
-      <td>4</td>
-      <td>0</td>
-      <td>1</td>
+      <td>7</td>
       <td>0</td>
       <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>2</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>12</td>
-      <td>101</td>
-      <td>212</td>
-      <td>20</td>
-      <td>2</td>
-      <td>2</td>
-      <td>165</td>
-      <td>0</td>
-      <td>0</td>
-      <td>284</td>
-      <td>1</td>
       <td>3</td>
-      <td>12</td>
-      <td>9</td>
       <td>0</td>
-      <td>174</td>
-      <td>22</td>
-      <td>2</td>
+      <td>29</td>
       <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>Oryctolagus cuniculus</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
+      <td>24</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -1702,55 +2977,15 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>799</td>
-      <td>14</td>
-      <td>34</td>
-      <td>5</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>5</td>
-      <td>0</td>
-      <td>0</td>
-      <td>72</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>38</td>
       <td>8</td>
-      <td>5</td>
-      <td>3</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-    </tr>
-    <tr>
-      <th>Vulpes vulpes</th>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1758,13 +2993,13 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
       <td>2</td>
       <td>0</td>
-      <td>60</td>
-      <td>5</td>
-      <td>27</td>
-      <td>0</td>
-      <td>5</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1772,28 +3007,14 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
       <td>0</td>
       <td>1</td>
+    </tr>
+    <tr>
+      <td>Blank</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>3</td>
-      <td>26</td>
-      <td>0</td>
-      <td>0</td>
-      <td>53</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -1809,10 +3030,314 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
       <td>0</td>
-      <td>823</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
     </tr>
   </tbody>
-</table></body></html>
+</table><br><h3>Confusion Matrix - Confidence Threshold: >=0.9</h3><table class="dataframe styled-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>index</th>
+      <th>Vulpes vulpes</th>
+      <th>Felis catus</th>
+      <th>Dromaius novaehollandiae</th>
+      <th>Leporidae</th>
+      <th>Nan</th>
+      <th>Macropus giganteus</th>
+      <th>Osphranter rufus</th>
+      <th>Canidae</th>
+      <th>Felidae</th>
+      <th>Mammalia</th>
+      <th>Bos taurus</th>
+      <th>Canis latrans</th>
+      <th>Macropus dorsalis</th>
+      <th>Aves</th>
+      <th>Lynx rufus</th>
+      <th>Ovis aries</th>
+      <th>Carnivora</th>
+      <th>Struthio camelus</th>
+      <th>Lepus americanus</th>
+      <th>Odocoileus virginianus</th>
+      <th>Oryctolagus cuniculus</th>
+      <th>Sylvilagus aquaticus</th>
+      <th>Macropus robustus</th>
+      <th>Rhea americana</th>
+      <th>Odocoileus hemionus</th>
+      <th>Odocoileus hemionus columbianus</th>
+      <th>Urocyon cinereoargenteus</th>
+      <th>Lepus capensis</th>
+      <th>Procyon lotor</th>
+      <th>Sylvilagus audubonii</th>
+      <th>Sus scrofa</th>
+      <th>Bison bison</th>
+      <th>Ursus americanus</th>
+      <th>Sylvilagus floridanus</th>
+      <th>Sylvilagus brasiliensis</th>
+      <th>Marmota flaviventris</th>
+      <th>Cervidae</th>
+      <th>Macropus agilis</th>
+      <th>Felis</th>
+      <th>Lycalopex culpaeus</th>
+      <th>Lynx lynx</th>
+      <th>Aepyceros melampus</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Vulpes vulpes</td>
+      <td>722</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>31</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Felis catus</td>
+      <td>0</td>
+      <td>657</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>29</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>10</td>
+      <td>0</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Dromaius novaehollandiae</td>
+      <td>0</td>
+      <td>0</td>
+      <td>371</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>11</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Macropodidae</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>117</td>
+      <td>107</td>
+      <td>82</td>
+      <td>0</td>
+      <td>0</td>
+      <td>24</td>
+      <td>20</td>
+      <td>0</td>
+      <td>12</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Oryctolagus cuniculus</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>364</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table><br></body></html>
