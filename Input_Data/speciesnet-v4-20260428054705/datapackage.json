@@ -1,0 +1,818 @@
+{
+  "profile": "https://raw.githubusercontent.com/tdwg/camtrap-dp/1.0/camtrap-dp-profile.json",
+  "name": "model-benchmarking-speciesnet-v4-20260428054705",
+  "id": "7923cb1e-d74d-4dae-a872-670807c5fe0a",
+  "created": "2026-04-28T05:47:05Z",
+  "contributors": [
+    {
+      "title": "Colin Broughton",
+      "email": "colin.broughton@bushheritage.org.au",
+      "role": "contributor"
+    },
+    {
+      "title": "WildObs Admin",
+      "email": "agouti@wur.nl",
+      "role": "contributor"
+    },
+    {
+      "title": "Bush Heritage Australia",
+      "role": "rightsHolder"
+    },
+    {
+      "title": "Colin Broughton",
+      "role": "contact"
+    },
+    {
+      "title": "Colin Broughton",
+      "role": "principalInvestigator"
+    }
+  ],
+  "image": "https://www.agouti.eu/uploads/project-images/b624fa53-9e5d-4140-9af2-c720edfe2d0e.jpg",
+  "sources": [
+    {
+      "title": "Agouti",
+      "path": "https://www.agouti.eu",
+      "email": "agouti@wur.nl",
+      "version": "v4"
+    }
+  ],
+  "project": {
+    "id": "b624fa53-9e5d-4140-9af2-c720edfe2d0e",
+    "title": "Model benchmarking: SpeciesNet v4",
+    "description": "This project is configured as an environment for structured model testing",
+    "samplingDesign": "experimental",
+    "captureMethod": [
+      "activityDetection",
+      "timeLapse"
+    ],
+    "individualAnimals": false,
+    "observationLevel": [
+      "event"
+    ]
+  },
+  "spatial": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          144.94246,
+          -37.64813
+        ],
+        [
+          144.94246,
+          -37.64813
+        ],
+        [
+          144.94246,
+          -37.64813
+        ],
+        [
+          144.94246,
+          -37.64813
+        ],
+        [
+          144.94246,
+          -37.64813
+        ]
+      ]
+    ]
+  },
+  "temporal": {
+    "start": "2016-07-26",
+    "end": "2023-11-08"
+  },
+  "taxonomic": [
+    {
+      "scientificName": "Acryllium vulturinum",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/9RWG",
+      "taxonRank": "species",
+      "order": "galliformes",
+      "family": "numididae",
+      "vernacularNames": {
+        "eng": "Vulturine guineafowl"
+      }
+    },
+    {
+      "scientificName": "Aepyceros melampus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/64ZMM",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Bovidae",
+      "vernacularNames": {
+        "eng": "Impala",
+        "nld": "Impala"
+      }
+    },
+    {
+      "scientificName": "antilocapra americana",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/00804e75-09ef-44e5-8984-85e365377d47",
+      "taxonRank": "species",
+      "order": "cetartiodactyla",
+      "family": "antilocapridae",
+      "vernacularNames": {
+        "eng": "pronghorn"
+      }
+    },
+    {
+      "scientificName": "ardeotis australis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/1df09fe1-e940-4606-9717-a89ef3c0dc41",
+      "taxonRank": "species",
+      "order": "otidiformes",
+      "family": "otididae",
+      "vernacularNames": {
+        "eng": "australian bustard"
+      }
+    },
+    {
+      "scientificName": "Aves",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/V2",
+      "taxonRank": "class",
+      "vernacularNames": {
+        "eng": "Bird sp.",
+        "nld": "Vogel"
+      }
+    },
+    {
+      "scientificName": "Bison bison",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/LWY6",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Bovidae",
+      "vernacularNames": {
+        "eng": "American bison",
+        "nld": "Amerikaanse bizon"
+      }
+    },
+    {
+      "scientificName": "Bos taurus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/MLQ5",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Bovidae",
+      "vernacularNames": {
+        "eng": "Cattle",
+        "nld": "Koe"
+      }
+    },
+    {
+      "scientificName": "Camelus dromedarius",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/Q9XD",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Camelidae",
+      "vernacularNames": {
+        "eng": "Dromedary",
+        "nld": "Dromedaris"
+      }
+    },
+    {
+      "scientificName": "Canidae",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/622J6",
+      "taxonRank": "family",
+      "order": "Carnivora",
+      "family": "Canidae",
+      "vernacularNames": {
+        "eng": "Canids",
+        "nld": "Hondachtige"
+      }
+    },
+    {
+      "scientificName": "canis familiaris",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3d80f1d6-b1df-4966-9ff4-94053c7a902a",
+      "taxonRank": "species",
+      "order": "carnivora",
+      "family": "canidae",
+      "vernacularNames": {
+        "eng": "domestic dog"
+      }
+    },
+    {
+      "scientificName": "Canis latrans",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/QLXJ",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Canidae",
+      "vernacularNames": {
+        "eng": "Coyote",
+        "nld": "Coyote"
+      }
+    },
+    {
+      "scientificName": "Capra aegagrus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/2",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Bovidae",
+      "vernacularNames": {
+        "eng": "Wild goat",
+        "nld": "Bezoargeit"
+      }
+    },
+    {
+      "scientificName": "Carnivora",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/B6L7F",
+      "taxonRank": "order",
+      "order": "Carnivora",
+      "vernacularNames": {
+        "eng": "Carnivores",
+        "nld": "Carnivoren"
+      }
+    },
+    {
+      "scientificName": "Cervidae",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/7XR",
+      "taxonRank": "family",
+      "order": "Artiodactyla",
+      "family": "Cervidae",
+      "vernacularNames": {
+        "eng": "Deer",
+        "nld": "Hertachtigen"
+      }
+    },
+    {
+      "scientificName": "Cervus elaphus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/T56G",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Cervidae",
+      "vernacularNames": {
+        "eng": "Red deer",
+        "nld": "Edelhert"
+      }
+    },
+    {
+      "scientificName": "Corvus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/62LZ4",
+      "taxonRank": "genus",
+      "order": "Passeriformes",
+      "family": "Corvidae",
+      "vernacularNames": {
+        "eng": "Crows, ravens and rooks"
+      }
+    },
+    {
+      "scientificName": "dromaius novaehollandiae",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3e6938fe-1de2-4508-8813-c15793a0f7b7",
+      "taxonRank": "species",
+      "order": "struthioniformes",
+      "family": "casuariidae",
+      "vernacularNames": {
+        "eng": "emu"
+      }
+    },
+    {
+      "scientificName": "Felidae",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/623RM",
+      "taxonRank": "family",
+      "order": "Carnivora",
+      "family": "Felidae",
+      "vernacularNames": {
+        "eng": "Cats",
+        "nld": "Katachtigen"
+      }
+    },
+    {
+      "scientificName": "Felis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/4JQ8",
+      "taxonRank": "genus",
+      "order": "Carnivora",
+      "family": "Felidae",
+      "vernacularNames": {
+        "eng": "Felis sp."
+      }
+    },
+    {
+      "scientificName": "Felis catus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3DXV3",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Felidae",
+      "vernacularNames": {
+        "eng": "Domestic cat",
+        "nld": "Kat"
+      }
+    },
+    {
+      "scientificName": "Homo sapiens",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/6MB3T",
+      "taxonRank": "species",
+      "order": "Primates",
+      "family": "Hominidae",
+      "vernacularNames": {
+        "eng": "Human",
+        "nld": "Mens"
+      }
+    },
+    {
+      "scientificName": "lagorchestes conspicillatus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/eebbc7c1-32e7-4938-9099-b47ad491b6f9",
+      "taxonRank": "species",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "spectacled hare-wallaby"
+      }
+    },
+    {
+      "scientificName": "Leopardus pardalis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3T78D",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Felidae",
+      "vernacularNames": {
+        "eng": "Ocelot",
+        "nld": "Ocelot"
+      }
+    },
+    {
+      "scientificName": "Leporidae",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/BX2",
+      "taxonRank": "family",
+      "order": "Lagomorpha",
+      "family": "Leporidae",
+      "vernacularNames": {
+        "eng": "Rabbits and hares",
+        "nld": "Hazen en konijnen"
+      }
+    },
+    {
+      "scientificName": "Lepus americanus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/6PPXC",
+      "taxonRank": "species",
+      "order": "Lagomorpha",
+      "family": "Leporidae",
+      "vernacularNames": {
+        "eng": "Snowshoe hare",
+        "nld": "Amerikaanse haas"
+      }
+    },
+    {
+      "scientificName": "Lepus capensis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/6PPYS",
+      "taxonRank": "species",
+      "order": "Lagomorpha",
+      "family": "Leporidae",
+      "vernacularNames": {
+        "eng": "Cape hare",
+        "nld": "Kaapse haas"
+      }
+    },
+    {
+      "scientificName": "Lepus saxatilis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/6Q225",
+      "taxonRank": "species",
+      "order": "Lagomorpha",
+      "family": "Leporidae",
+      "vernacularNames": {
+        "eng": "Scrub hare",
+        "nld": "Struikhaas"
+      }
+    },
+    {
+      "scientificName": "Lycalopex culpaeus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3WJ93",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Canidae",
+      "vernacularNames": {
+        "eng": "Andean fox",
+        "nld": "Andesvos"
+      }
+    },
+    {
+      "scientificName": "Lynx lynx",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/6QR9T",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Felidae",
+      "vernacularNames": {
+        "eng": "Eurasian lynx",
+        "nld": "Euraziatische lynx"
+      }
+    },
+    {
+      "scientificName": "Lynx rufus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3WSJW",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Felidae",
+      "vernacularNames": {
+        "eng": "Bobcat",
+        "nld": "Rode lynx"
+      }
+    },
+    {
+      "scientificName": "Macropus agilis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/7VR5B",
+      "taxonRank": "species",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "Agile wallaby"
+      }
+    },
+    {
+      "scientificName": "Macropus dorsalis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/7VR5C",
+      "taxonRank": "species",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "Black-striped wallaby"
+      }
+    },
+    {
+      "scientificName": "macropus giganteus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/4639bc49-6f10-47e6-bdd4-4adf098afbcb",
+      "taxonRank": "species",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "eastern grey kangaroo"
+      }
+    },
+    {
+      "scientificName": "Macropus robustus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/7VR5N",
+      "taxonRank": "species",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "Common wallaroo"
+      }
+    },
+    {
+      "scientificName": "Macropus rufogriseus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/7VR5K",
+      "taxonRank": "species",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "Red-necked wallaby",
+        "nld": "Benett's wallaby"
+      }
+    },
+    {
+      "scientificName": "Madoqua guentheri",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/72TDF",
+      "taxonRank": "species",
+      "order": "cetartiodactyla",
+      "family": "bovidae",
+      "vernacularNames": {
+        "eng": "Guenthers dik-dik"
+      }
+    },
+    {
+      "scientificName": "Mammalia",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/6224G",
+      "taxonRank": "class",
+      "vernacularNames": {
+        "eng": "Mammal sp.",
+        "nld": "Zoogdier"
+      }
+    },
+    {
+      "scientificName": "Marmota flaviventris",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3Y84B",
+      "taxonRank": "species",
+      "order": "Rodentia",
+      "family": "Sciuridae",
+      "vernacularNames": {
+        "eng": "Yellow-bellied marmot",
+        "nld": "Geelbuikmarmot"
+      }
+    },
+    {
+      "scientificName": "Meleagris gallopavo",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3ZDJV",
+      "taxonRank": "species",
+      "order": "Galliformes",
+      "family": "Phasianidae",
+      "vernacularNames": {
+        "eng": "Wild turkey",
+        "nld": "Kalkoen"
+      }
+    },
+    {
+      "scientificName": "Nesotragus moschatus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/QQJWQ",
+      "taxonRank": "species",
+      "order": "cetartiodactyla",
+      "family": "bovidae",
+      "vernacularNames": {
+        "eng": "Suni"
+      }
+    },
+    {
+      "scientificName": "Odocoileus hemionus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/48NBP",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Cervidae",
+      "vernacularNames": {
+        "eng": "Mule deer",
+        "nld": "Muildierhert"
+      }
+    },
+    {
+      "scientificName": "Odocoileus hemionus columbianus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/BNR35",
+      "taxonRank": "subspecies",
+      "order": "Artiodactyla",
+      "family": "Cervidae",
+      "vernacularNames": {
+        "eng": "Black-tailed deer",
+        "nld": "Zwartstaarthert"
+      }
+    },
+    {
+      "scientificName": "Odocoileus virginianus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/48NBQ",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Cervidae",
+      "vernacularNames": {
+        "eng": "White-tailed deer",
+        "nld": "Witstaarthert"
+      }
+    },
+    {
+      "scientificName": "Oryctolagus cuniculus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/74ZBP",
+      "taxonRank": "species",
+      "order": "Lagomorpha",
+      "family": "Leporidae",
+      "vernacularNames": {
+        "eng": "European rabbit",
+        "nld": "Europees konijn"
+      }
+    },
+    {
+      "scientificName": "osphranter rufus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/edd1ca1c-aa03-4321-86fa-edc0fbbd50c7",
+      "taxonRank": "species",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "red kangaroo"
+      }
+    },
+    {
+      "scientificName": "Ovis aries",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/4B9VF",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Bovidae",
+      "vernacularNames": {
+        "eng": "Domestic sheep",
+        "nld": "Schaap"
+      }
+    },
+    {
+      "scientificName": "Potos flavus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/4M6YV",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Procyonidae",
+      "vernacularNames": {
+        "eng": "Kinkajou",
+        "nld": "Rolbeer"
+      }
+    },
+    {
+      "scientificName": "Procavia capensis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/4MMMH",
+      "taxonRank": "species",
+      "order": "Hyracoidea",
+      "family": "Procaviidae",
+      "vernacularNames": {
+        "eng": "Rock hyrax"
+      }
+    },
+    {
+      "scientificName": "Procyon lotor",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/4MPXY",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Procyonidae",
+      "vernacularNames": {
+        "eng": "Raccoon",
+        "nld": "Gewone wasbeer"
+      }
+    },
+    {
+      "scientificName": "Rhea americana",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/4S5KY",
+      "taxonRank": "species",
+      "order": "Struthioniformes",
+      "family": "Rheidae",
+      "vernacularNames": {
+        "eng": "Greater rhea",
+        "nld": "Nandoe"
+      }
+    },
+    {
+      "scientificName": "Sciuridae",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/G48",
+      "taxonRank": "family",
+      "order": "Rodentia",
+      "family": "Sciuridae",
+      "vernacularNames": {
+        "eng": "Squirrels",
+        "nld": "Eekhoorns"
+      }
+    },
+    {
+      "scientificName": "Sorex araneus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/4YBZ2",
+      "taxonRank": "species",
+      "order": "Soricomorpha",
+      "family": "Soricidae",
+      "vernacularNames": {
+        "eng": "Common shrew",
+        "nld": "Bosspitsmuis"
+      }
+    },
+    {
+      "scientificName": "Struthio camelus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/6ZYDX",
+      "taxonRank": "species",
+      "order": "Struthioniformes",
+      "family": "Struthionidae",
+      "vernacularNames": {
+        "eng": "Common ostrich",
+        "nld": "Struisvogel"
+      }
+    },
+    {
+      "scientificName": "Sus scrofa",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/53HGR",
+      "taxonRank": "species",
+      "order": "Artiodactyla",
+      "family": "Suidae",
+      "vernacularNames": {
+        "eng": "Wild boar",
+        "nld": "Everzwijn"
+      }
+    },
+    {
+      "scientificName": "Sylvilagus aquaticus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/53N8N",
+      "taxonRank": "species",
+      "order": "lagomorpha",
+      "family": "leporidae",
+      "vernacularNames": {
+        "eng": "Swamp rabbit"
+      }
+    },
+    {
+      "scientificName": "Sylvilagus audubonii",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/53N8P",
+      "taxonRank": "species",
+      "order": "Lagomorpha",
+      "family": "Leporidae",
+      "vernacularNames": {
+        "eng": "Desert cottontail",
+        "nld": "Woestijnkatoenstaartkonijn"
+      }
+    },
+    {
+      "scientificName": "Sylvilagus brasiliensis",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/53N8R",
+      "taxonRank": "species",
+      "order": "Lagomorpha",
+      "family": "Leporidae",
+      "vernacularNames": {
+        "eng": "Tapeti",
+        "nld": "Braziliaans konijn"
+      }
+    },
+    {
+      "scientificName": "Sylvilagus floridanus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/53N8X",
+      "taxonRank": "species",
+      "order": "Lagomorpha",
+      "family": "Leporidae",
+      "vernacularNames": {
+        "eng": "Eastern cottontail",
+        "nld": "Floridakonijn"
+      }
+    },
+    {
+      "scientificName": "Urocyon cinereoargenteus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/7DTJY",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Canidae",
+      "vernacularNames": {
+        "eng": "Gray fox",
+        "nld": "Grijze vos"
+      }
+    },
+    {
+      "scientificName": "Ursus americanus",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/7F2KC",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Ursidae",
+      "vernacularNames": {
+        "eng": "American black bear",
+        "nld": "Amerikaanse zwarte beer"
+      }
+    },
+    {
+      "scientificName": "Vulpes vulpes",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/5BSG3",
+      "taxonRank": "species",
+      "order": "Carnivora",
+      "family": "Canidae",
+      "vernacularNames": {
+        "eng": "Red fox",
+        "nld": "Vos"
+      }
+    },
+    {
+      "scientificName": "wallabia bicolor",
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/3afdd398-39f2-430c-9301-74659d81044e",
+      "taxonRank": "species",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "swamp wallaby"
+      }
+    },
+    {
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/38Z",
+      "taxonRank": "order",
+      "order": "galliformes",
+      "vernacularNames": {
+        "eng": "Galliformes order"
+      }
+    },
+    {
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/6227M",
+      "taxonRank": "genus",
+      "order": "cetartiodactyla",
+      "family": "tragulidae",
+      "vernacularNames": {
+        "eng": "Mouse-deer family"
+      }
+    },
+    {
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/622G9",
+      "taxonRank": "family",
+      "order": "cetartiodactyla",
+      "family": "bovidae",
+      "vernacularNames": {
+        "eng": "Bovidae family"
+      }
+    },
+    {
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/CBD",
+      "taxonRank": "family",
+      "order": "diprotodontia",
+      "family": "macropodidae",
+      "vernacularNames": {
+        "eng": "Kangaroo family"
+      }
+    },
+    {
+      "taxonID": "https://www.checklistbank.org/dataset/COL2023/taxon/F2C",
+      "taxonRank": "family",
+      "order": "carnivora",
+      "family": "procyonidae",
+      "vernacularNames": {
+        "eng": "Coati family"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "name": "deployments",
+      "path": "deployments.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": "https://raw.githubusercontent.com/tdwg/camtrap-dp/1.0/deployments-table-schema.json"
+    },
+    {
+      "name": "media",
+      "path": "media.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": "https://raw.githubusercontent.com/tdwg/camtrap-dp/1.0/media-table-schema.json"
+    },
+    {
+      "name": "observations",
+      "path": "observations.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": "https://raw.githubusercontent.com/tdwg/camtrap-dp/1.0/observations-table-schema.json"
+    }
+  ]
+}
