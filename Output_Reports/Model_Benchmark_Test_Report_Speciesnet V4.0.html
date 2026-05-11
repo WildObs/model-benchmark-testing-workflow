@@ -464,86 +464,234 @@ Images were manually validated as having at least one detection of the target sp
       <td>0.8980</td>
     </tr>
   </tbody>
-</table><h2>Prediction Distribution by Species</h2><p>The outputs below represent simplified confusion matricies highliting the distribution of predictions relevant to each target (test) species. Refer to the full confusion matrix for every combination of True Positive, False Positive, and False Negative.</p><h3>True species (or label): <i>Blank</i></h3><table border="1" class="dataframe">
+</table><h2>Prediction Distribution by Species</h2>
+    <p>
+    The outputs below represent simplified confusion matrices highlighting
+    the distribution of predictions relevant to each target (test) species
+    across multiple confidence thresholds.
+    Refer to the full confusion matrix for every combination of
+    True Positive, False Positive, and False Negative.
+    </p>
+    <h3>True species (or label): <i>Blank</i></h3><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
       <th>pred_species</th>
+      <th>confidence_threshold</th>
       <th>Nan</th>
       <th>Mammalia</th>
       <th>Odocoileus virginianus</th>
       <th>Bos taurus</th>
-      <th>Odocoileus hemionus columbianus</th>
       <th>Homo sapiens</th>
+      <th>Odocoileus hemionus columbianus</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>count</td>
-      <td>993</td>
-      <td>4</td>
-      <td>2</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
+      <td>&gt;=0.5</td>
+      <td>314.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.6</td>
+      <td>1.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.7</td>
+      <td>1.0</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.8</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.9</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
-</table><h3>True species (or label): <i>Dromaius novaehollandiae</i></h3><table border="1" class="dataframe">
+</table><h3>True species (or label): <i>Dromaius novaehollandiae</i></h3><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
       <th>pred_species</th>
+      <th>confidence_threshold</th>
       <th>Dromaius novaehollandiae</th>
-      <th>Nan</th>
       <th>Aves</th>
       <th>Struthio camelus</th>
       <th>Rhea americana</th>
       <th>Mammalia</th>
+      <th>Nan</th>
       <th>Acryllium vulturinum</th>
-      <th>Ovis aries</th>
       <th>Bos taurus</th>
-      <th>Carnivora</th>
+      <th>Ovis aries</th>
       <th>Cervus elaphus</th>
       <th>Sus scrofa</th>
       <th>Bison bison</th>
+      <th>Carnivora</th>
       <th>Procavia capensis</th>
-      <th>Meleagris gallopavo</th>
-      <th>Lynx rufus</th>
-      <th>Cervidae</th>
       <th>Marmota flaviventris</th>
       <th>Ursus americanus</th>
+      <th>Lynx rufus</th>
+      <th>Meleagris gallopavo</th>
+      <th>Cervidae</th>
       <th>Ardeotis australis</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>count</td>
+      <td>&gt;=0.5</td>
       <td>557</td>
-      <td>324</td>
       <td>57</td>
       <td>52</td>
       <td>30</td>
       <td>19</td>
+      <td>22.0</td>
+      <td>7.0</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.6</td>
+      <td>557</td>
+      <td>57</td>
+      <td>52</td>
+      <td>30</td>
+      <td>19</td>
+      <td>18.0</td>
+      <td>7.0</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.7</td>
+      <td>540</td>
+      <td>48</td>
+      <td>47</td>
+      <td>23</td>
+      <td>12</td>
+      <td>10.0</td>
+      <td>4.0</td>
+      <td>3</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.8</td>
+      <td>482</td>
+      <td>29</td>
+      <td>24</td>
+      <td>8</td>
       <td>7</td>
-      <td>4</td>
+      <td>3.0</td>
+      <td>1.0</td>
       <td>3</td>
-      <td>3</td>
-      <td>3</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.9</td>
+      <td>371</td>
+      <td>11</td>
+      <td>6</td>
       <td>2</td>
       <td>2</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>2</td>
       <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>1</td>
       <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
-</table><h3>True species (or label): <i>Felis catus</i></h3><table border="1" class="dataframe">
+</table><h3>True species (or label): <i>Felis catus</i></h3><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
       <th>pred_species</th>
+      <th>confidence_threshold</th>
       <th>Felis catus</th>
-      <th>Nan</th>
       <th>Felidae</th>
       <th>Lynx rufus</th>
       <th>Carnivora</th>
@@ -551,23 +699,24 @@ Images were manually validated as having at least one detection of the target sp
       <th>Felis</th>
       <th>Lynx lynx</th>
       <th>Urocyon cinereoargenteus</th>
-      <th>Lepus capensis</th>
-      <th>Canis familiaris</th>
-      <th>Leopardus pardalis</th>
       <th>Canis latrans</th>
-      <th>Canidae</th>
-      <th>Madoqua guentheri</th>
+      <th>Lepus capensis</th>
+      <th>Leopardus pardalis</th>
+      <th>Nan</th>
       <th>Bos taurus</th>
+      <th>Madoqua guentheri</th>
       <th>Procyon lotor</th>
-      <th>Cervidae</th>
+      <th>Canis familiaris</th>
+      <th>Canidae</th>
       <th>Sciuridae</th>
+      <th>Cervidae</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>count</td>
+      <td>&gt;=0.5</td>
       <td>755</td>
-      <td>68</td>
       <td>57</td>
       <td>33</td>
       <td>31</td>
@@ -576,59 +725,154 @@ Images were manually validated as having at least one detection of the target sp
       <td>9</td>
       <td>4</td>
       <td>2</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>5.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.6</td>
+      <td>755</td>
+      <td>57</td>
+      <td>33</td>
+      <td>31</td>
+      <td>16</td>
+      <td>13</td>
+      <td>9</td>
+      <td>4</td>
       <td>2</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.7</td>
+      <td>749</td>
+      <td>53</td>
+      <td>30</td>
+      <td>24</td>
+      <td>11</td>
+      <td>6</td>
+      <td>8</td>
+      <td>4</td>
       <td>2</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.8</td>
+      <td>720</td>
+      <td>43</td>
+      <td>22</td>
+      <td>15</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>4</td>
       <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.9</td>
+      <td>657</td>
+      <td>29</td>
+      <td>10</td>
+      <td>8</td>
       <td>1</td>
       <td>1</td>
       <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
-</table><h3>True species (or label): <i>Macropodidae</i></h3><table border="1" class="dataframe">
+</table><h3>True species (or label): <i>Macropodidae</i></h3><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
       <th>pred_species</th>
-      <th>Nan</th>
+      <th>confidence_threshold</th>
       <th>Macropus giganteus</th>
+      <th>Nan</th>
       <th>Osphranter rufus</th>
       <th>Mammalia</th>
       <th>Macropus dorsalis</th>
       <th>Bos taurus</th>
       <th>Ovis aries</th>
       <th>Macropus robustus</th>
-      <th>Macropus agilis</th>
       <th>Odocoileus hemionus columbianus</th>
+      <th>Macropus agilis</th>
       <th>Odocoileus virginianus</th>
       <th>Cervidae</th>
       <th>Carnivora</th>
       <th>Odocoileus hemionus</th>
       <th>Camelus dromedarius</th>
+      <th>Antilocapra americana</th>
+      <th>Madoqua guentheri</th>
+      <th>Potos flavus</th>
+      <th>Lepus capensis</th>
+      <th>Canidae</th>
+      <th>Macropus rufogriseus</th>
       <th>Capra aegagrus</th>
       <th>Sorex araneus</th>
-      <th>Canidae</th>
-      <th>Madoqua guentheri</th>
-      <th>Macropus rufogriseus</th>
-      <th>Lepus capensis</th>
-      <th>Potos flavus</th>
-      <th>Antilocapra americana</th>
-      <th>Canis latrans</th>
-      <th>Wallabia bicolor</th>
-      <th>Lepus americanus</th>
-      <th>Homo sapiens</th>
-      <th>Ursus americanus</th>
-      <th>Corvus</th>
       <th>Aepyceros melampus</th>
+      <th>Canis latrans</th>
+      <th>Ursus americanus</th>
       <th>Nesotragus moschatus</th>
+      <th>Lepus americanus</th>
+      <th>Corvus</th>
+      <th>Wallabia bicolor</th>
+      <th>Homo sapiens</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>count</td>
-      <td>284</td>
+      <td>&gt;=0.5</td>
       <td>212</td>
+      <td>213</td>
       <td>174</td>
       <td>165</td>
       <td>101</td>
@@ -639,33 +883,173 @@ Images were manually validated as having at least one detection of the target sp
       <td>12</td>
       <td>9</td>
       <td>4</td>
+      <td>4.0</td>
+      <td>3</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.6</td>
+      <td>212</td>
+      <td>213</td>
+      <td>174</td>
+      <td>165</td>
+      <td>101</td>
+      <td>46</td>
+      <td>22</td>
+      <td>20</td>
+      <td>12</td>
+      <td>12</td>
+      <td>9</td>
       <td>4</td>
+      <td>4.0</td>
       <td>3</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.7</td>
+      <td>196</td>
+      <td>180</td>
+      <td>162</td>
+      <td>145</td>
+      <td>80</td>
+      <td>38</td>
+      <td>21</td>
+      <td>16</td>
+      <td>8</td>
+      <td>10</td>
+      <td>8</td>
+      <td>3</td>
+      <td>3.0</td>
+      <td>2</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.8</td>
+      <td>163</td>
+      <td>148</td>
+      <td>126</td>
+      <td>77</td>
+      <td>34</td>
+      <td>32</td>
+      <td>16</td>
+      <td>10</td>
+      <td>5</td>
+      <td>4</td>
+      <td>5</td>
+      <td>2</td>
+      <td>2.0</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.9</td>
+      <td>107</td>
+      <td>117</td>
+      <td>82</td>
+      <td>24</td>
+      <td>12</td>
+      <td>20</td>
+      <td>9</td>
       <td>3</td>
       <td>2</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0.0</td>
       <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
-</table><h3>True species (or label): <i>Oryctolagus cuniculus</i></h3><table border="1" class="dataframe">
+</table><h3>True species (or label): <i>Oryctolagus cuniculus</i></h3><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
       <th>pred_species</th>
+      <th>confidence_threshold</th>
       <th>Leporidae</th>
-      <th>Nan</th>
       <th>Sylvilagus aquaticus</th>
       <th>Lepus capensis</th>
       <th>Oryctolagus cuniculus</th>
@@ -677,6 +1061,7 @@ Images were manually validated as having at least one detection of the target sp
       <th>Sylvilagus floridanus</th>
       <th>Bos taurus</th>
       <th>Odocoileus virginianus</th>
+      <th>Nan</th>
       <th>Madoqua guentheri</th>
       <th>Canis latrans</th>
     </tr>
@@ -684,39 +1069,117 @@ Images were manually validated as having at least one detection of the target sp
   <tbody>
     <tr>
       <td>count</td>
+      <td>&gt;=0.5</td>
       <td>799</td>
-      <td>72</td>
       <td>38</td>
       <td>34</td>
       <td>28</td>
       <td>14</td>
       <td>8</td>
       <td>5</td>
+      <td>5.0</td>
+      <td>5.0</td>
+      <td>3</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.6</td>
+      <td>799</td>
+      <td>38</td>
+      <td>34</td>
+      <td>28</td>
+      <td>14</td>
+      <td>8</td>
       <td>5</td>
-      <td>5</td>
+      <td>5.0</td>
+      <td>5.0</td>
+      <td>3</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.7</td>
+      <td>758</td>
+      <td>29</td>
+      <td>30</td>
+      <td>24</td>
+      <td>13</td>
+      <td>7</td>
+      <td>4</td>
+      <td>4.0</td>
+      <td>5.0</td>
+      <td>3</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.8</td>
+      <td>649</td>
+      <td>14</td>
+      <td>15</td>
+      <td>14</td>
+      <td>9</td>
+      <td>2</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.9</td>
+      <td>364</td>
       <td>3</td>
       <td>2</td>
+      <td>3</td>
+      <td>5</td>
+      <td>2</td>
       <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>1</td>
-      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
-</table><h3>True species (or label): <i>Vulpes vulpes</i></h3><table border="1" class="dataframe">
+</table><h3>True species (or label): <i>Vulpes vulpes</i></h3><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
       <th>pred_species</th>
+      <th>confidence_threshold</th>
       <th>Vulpes vulpes</th>
       <th>Canidae</th>
-      <th>Nan</th>
       <th>Canis latrans</th>
       <th>Mammalia</th>
+      <th>Nan</th>
       <th>Canis familiaris</th>
       <th>Carnivora</th>
       <th>Madoqua guentheri</th>
       <th>Bos taurus</th>
-      <th>Urocyon cinereoargenteus</th>
       <th>Lycalopex culpaeus</th>
       <th>Procyon lotor</th>
+      <th>Urocyon cinereoargenteus</th>
       <th>Odocoileus virginianus</th>
       <th>Macropus agilis</th>
       <th>Lagorchestes conspicillatus</th>
@@ -725,24 +1188,101 @@ Images were manually validated as having at least one detection of the target sp
   <tbody>
     <tr>
       <td>count</td>
+      <td>&gt;=0.5</td>
       <td>823</td>
       <td>60</td>
-      <td>53</td>
       <td>27</td>
-      <td>26</td>
-      <td>5</td>
-      <td>5</td>
-      <td>3</td>
+      <td>26.0</td>
+      <td>6.0</td>
+      <td>5.0</td>
+      <td>5.0</td>
+      <td>3.0</td>
       <td>2</td>
       <td>1</td>
       <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.6</td>
+      <td>823</td>
+      <td>60</td>
+      <td>27</td>
+      <td>26.0</td>
+      <td>6.0</td>
+      <td>5.0</td>
+      <td>5.0</td>
+      <td>3.0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.7</td>
+      <td>812</td>
+      <td>58</td>
+      <td>25</td>
+      <td>19.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.8</td>
+      <td>792</td>
+      <td>41</td>
+      <td>22</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
       <td>1</td>
       <td>1</td>
       <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>&gt;=0.9</td>
+      <td>722</td>
+      <td>31</td>
+      <td>10</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
-</table><h2>Full Confusion Matrix</h2><table border="1" class="dataframe">
+</table><br><h2>Full Confusion Matrix</h2><table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th>pred_species</th>
