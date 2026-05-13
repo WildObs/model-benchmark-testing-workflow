@@ -1,28 +1,49 @@
 <html><head>
 <style>
-body { font-family: Arial; margin: 40px; }
-h1 { color: #2c3e50; }
-h2 { color: #34495e; margin-top: 30px; }
-h3 { color: #2c3e50; margin-top: 20px; }
-p { max-width: 900px; line-height: 1.5; }
 
-table {
+body {
+    font-family: Arial;
+    margin: 40px;
+}
+
+h1 {
+    color: #2c3e50;
+}
+
+h2 {
+    color: #34495e;
+    margin-top: 30px;
+}
+
+h3 {
+    color: #2c3e50;
+    margin-top: 20px;
+}
+
+p {
+    max-width: 900px;
+    line-height: 1.5;
+}
+
+.styled-table {
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 20px;
 }
 
-th, td {
+.styled-table th,
+.styled-table td {
     border: 1px solid #cccccc;
     padding: 6px 10px;
     text-align: center;
 }
 
-th {
+.styled-table th {
     background-color: #f2f2f2;
     position: sticky;
     top: 0;
     z-index: 2;
+    font-weight: bold;
 }
 
 </style>
@@ -51,7 +72,7 @@ Images were manually validated as having at least one detection of the target sp
             <li>The results presented in this report do not necessarily prove definitively that one model is better than another, but may provide guidence on selecting the most suitable model for your location and the species important to your monitoring program.</li>
         </ul>
     <p></p><h2>Understanding the Results</h2><p>Recall, precision, and F1 score are standard metrics used to evaluate the performance of machine learning models. Each metric has a precise definition and corresponding mathematical formula.</p><h3>Recall (Sensitivity)</h3><p>\[ \text{Recall} = \frac{\text{True Positives}}{\text{True Positives + False Negatives}} \]</p><p>Of all the images that actually contain the target species, how many did the model correctly identify?</p><p><b>Example: </b>If there are 100 images of Feral Cat within a dataset, and the model correctly detects 90 of them, recall = 0.9 (90%).</p><p><b>Interpretation:</b> Quantifying recall helps us to understand how many true detections of a given species might be missed by the model.</p><h3>Precision</h3><p>\[ \text{Precision} = \frac{\text{True Positives}}{\text{True Positives + False Positives}} \]</p><p>Of all the images the model predicts as the target species, how many are actually correct?</p><p><b>Example: </b>If the model makes 100 predictions of Feral Cat within a dataset, and only 90 of them are actually detections of Feral Cat, precision = 0.9 (90%).</p><p><b>Interpretation:</b> High precision means predictions are reliable. Low precision means more false detections.</p><h3>F1 Score</h3><p>\[ \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision + Recall}} \]</p><p>A balanced measure that combines both recall and precision.</p><p><b>Interpretation:</b> High F1 score indicates a good balance between detecting animals and avoiding false detections.</p><h3>Definition of Terms</h3>
-    <table>
+    <table classes="styled-table">
         <tr>
             <th>Term</th>
             <th>Definition</th>
@@ -74,7 +95,7 @@ Images were manually validated as having at least one detection of the target sp
         </tr>
     </table>
     <h3>How to interpret results</h3>
-    <table>
+    <table classes="styled-table">
         <tr><th>Scenario</th><th>Interpretation</th></tr>
         <tr><td>High Recall, Low Precision</td><td>Finds most animals but includes many false positives</td></tr>
         <tr><td>Low Recall, High Precision</td><td>Accurate predictions but misses many animals</td></tr>
@@ -89,7 +110,7 @@ Images were manually validated as having at least one detection of the target sp
         <li>Inspecting the confusion matrix helps us to understand the direction of error in cases where an image was incorrectly classified.</li>
         <li>Be aware that not all models define or name species the same way. In some cases a model may also generalise a species detections to a broader group e.g. Genus or Family. If recall is returning a very low number for a given species and model, inspection of confusion matrix may help to reveal inconsistencies in naming or categorisation.</li>
     </ul>
-    <h2>Recall, Precision, and F1 Results</h2><table border="1" class="dataframe">
+    <h2>Recall, Precision, and F1 Results</h2><table border="1" class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
       <th>species</th>
