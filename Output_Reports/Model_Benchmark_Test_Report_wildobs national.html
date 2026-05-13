@@ -72,7 +72,7 @@ Images were manually validated as having at least one detection of the target sp
             <li>The results presented in this report do not necessarily prove definitively that one model is better than another, but may provide guidence on selecting the most suitable model for your location and the species important to your monitoring program.</li>
         </ul>
     <p></p><h2>Understanding the Results</h2><p>Recall, precision, and F1 score are standard metrics used to evaluate the performance of machine learning models. Each metric has a precise definition and corresponding mathematical formula.</p><h3>Recall (Sensitivity)</h3><p>\[ \text{Recall} = \frac{\text{True Positives}}{\text{True Positives + False Negatives}} \]</p><p>Of all the images that actually contain the target species, how many did the model correctly identify?</p><p><b>Example: </b>If there are 100 images of Feral Cat within a dataset, and the model correctly detects 90 of them, recall = 0.9 (90%).</p><p><b>Interpretation:</b> Quantifying recall helps us to understand how many true detections of a given species might be missed by the model.</p><h3>Precision</h3><p>\[ \text{Precision} = \frac{\text{True Positives}}{\text{True Positives + False Positives}} \]</p><p>Of all the images the model predicts as the target species, how many are actually correct?</p><p><b>Example: </b>If the model makes 100 predictions of Feral Cat within a dataset, and only 90 of them are actually detections of Feral Cat, precision = 0.9 (90%).</p><p><b>Interpretation:</b> High precision means predictions are reliable. Low precision means more false detections.</p><h3>F1 Score</h3><p>\[ \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision + Recall}} \]</p><p>A balanced measure that combines both recall and precision.</p><p><b>Interpretation:</b> High F1 score indicates a good balance between detecting animals and avoiding false detections.</p><h3>Definition of Terms</h3>
-    <table classes="styled-table">
+    <table class="styled-table">
         <tr>
             <th>Term</th>
             <th>Definition</th>
@@ -95,7 +95,7 @@ Images were manually validated as having at least one detection of the target sp
         </tr>
     </table>
     <h3>How to interpret results</h3>
-    <table classes="styled-table">
+    <table class="styled-table">
         <tr><th>Scenario</th><th>Interpretation</th></tr>
         <tr><td>High Recall, Low Precision</td><td>Finds most animals but includes many false positives</td></tr>
         <tr><td>Low Recall, High Precision</td><td>Accurate predictions but misses many animals</td></tr>
@@ -496,8 +496,8 @@ Images were manually validated as having at least one detection of the target sp
     <h3>True species (or label): <i>Blank</i></h3><div style="overflow-x:auto;"><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
-      <th>pred_species</th>
       <th>confidence_threshold</th>
+      <th>pred_species</th>
       <th>Gymnorhina tibicen</th>
       <th>Passeriformes</th>
       <th>Blank</th>
@@ -535,8 +535,8 @@ Images were manually validated as having at least one detection of the target sp
   </thead>
   <tbody>
     <tr>
-      <td>count</td>
       <td>&gt;=0.5</td>
+      <td>count</td>
       <td>107</td>
       <td>108</td>
       <td>312</td>
@@ -572,8 +572,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.6</td>
+      <td>count</td>
       <td>107</td>
       <td>108</td>
       <td>0</td>
@@ -609,8 +609,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.7</td>
+      <td>count</td>
       <td>106</td>
       <td>92</td>
       <td>0</td>
@@ -646,8 +646,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.8</td>
+      <td>count</td>
       <td>101</td>
       <td>62</td>
       <td>0</td>
@@ -683,8 +683,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.9</td>
+      <td>count</td>
       <td>69</td>
       <td>35</td>
       <td>0</td>
@@ -723,8 +723,8 @@ Images were manually validated as having at least one detection of the target sp
 </table></div><h3>True species (or label): <i>Dromaius novaehollandiae</i></h3><div style="overflow-x:auto;"><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
-      <th>pred_species</th>
       <th>confidence_threshold</th>
+      <th>pred_species</th>
       <th>Casuarius casuarius</th>
       <th>Macropus giganteus</th>
       <th>Mammalia</th>
@@ -763,8 +763,8 @@ Images were manually validated as having at least one detection of the target sp
   </thead>
   <tbody>
     <tr>
-      <td>count</td>
       <td>&gt;=0.5</td>
+      <td>count</td>
       <td>807</td>
       <td>57</td>
       <td>51</td>
@@ -801,8 +801,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.6</td>
+      <td>count</td>
       <td>807</td>
       <td>57</td>
       <td>51</td>
@@ -839,8 +839,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.7</td>
+      <td>count</td>
       <td>797</td>
       <td>54</td>
       <td>39</td>
@@ -877,8 +877,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.8</td>
+      <td>count</td>
       <td>763</td>
       <td>46</td>
       <td>21</td>
@@ -915,8 +915,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.9</td>
+      <td>count</td>
       <td>706</td>
       <td>31</td>
       <td>9</td>
@@ -956,8 +956,8 @@ Images were manually validated as having at least one detection of the target sp
 </table></div><h3>True species (or label): <i>Felis catus</i></h3><div style="overflow-x:auto;"><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
-      <th>pred_species</th>
       <th>confidence_threshold</th>
+      <th>pred_species</th>
       <th>Felis catus</th>
       <th>Mammalia</th>
       <th>Homo sapiens</th>
@@ -992,8 +992,8 @@ Images were manually validated as having at least one detection of the target sp
   </thead>
   <tbody>
     <tr>
-      <td>count</td>
       <td>&gt;=0.5</td>
+      <td>count</td>
       <td>840</td>
       <td>28</td>
       <td>16</td>
@@ -1026,8 +1026,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.6</td>
+      <td>count</td>
       <td>840</td>
       <td>28</td>
       <td>16</td>
@@ -1060,8 +1060,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.7</td>
+      <td>count</td>
       <td>840</td>
       <td>25</td>
       <td>16</td>
@@ -1094,8 +1094,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.8</td>
+      <td>count</td>
       <td>834</td>
       <td>23</td>
       <td>16</td>
@@ -1128,8 +1128,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.9</td>
+      <td>count</td>
       <td>824</td>
       <td>16</td>
       <td>9</td>
@@ -1165,8 +1165,8 @@ Images were manually validated as having at least one detection of the target sp
 </table></div><h3>True species (or label): <i>Macropodidae</i></h3><div style="overflow-x:auto;"><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
-      <th>pred_species</th>
       <th>confidence_threshold</th>
+      <th>pred_species</th>
       <th>Macropus giganteus</th>
       <th>Mammalia</th>
       <th>Canis lupus dingo</th>
@@ -1198,8 +1198,8 @@ Images were manually validated as having at least one detection of the target sp
   </thead>
   <tbody>
     <tr>
-      <td>count</td>
       <td>&gt;=0.5</td>
+      <td>count</td>
       <td>510</td>
       <td>129</td>
       <td>136</td>
@@ -1229,8 +1229,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.6</td>
+      <td>count</td>
       <td>510</td>
       <td>129</td>
       <td>136</td>
@@ -1260,8 +1260,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.7</td>
+      <td>count</td>
       <td>493</td>
       <td>127</td>
       <td>121</td>
@@ -1291,8 +1291,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.8</td>
+      <td>count</td>
       <td>466</td>
       <td>122</td>
       <td>97</td>
@@ -1322,8 +1322,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.9</td>
+      <td>count</td>
       <td>405</td>
       <td>108</td>
       <td>72</td>
@@ -1356,8 +1356,8 @@ Images were manually validated as having at least one detection of the target sp
 </table></div><h3>True species (or label): <i>Oryctolagus cuniculus</i></h3><div style="overflow-x:auto;"><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
-      <th>pred_species</th>
       <th>confidence_threshold</th>
+      <th>pred_species</th>
       <th>Oryctolagus cuniculus</th>
       <th>Perameles nasuta</th>
       <th>Mammalia</th>
@@ -1385,8 +1385,8 @@ Images were manually validated as having at least one detection of the target sp
   </thead>
   <tbody>
     <tr>
-      <td>count</td>
       <td>&gt;=0.5</td>
+      <td>count</td>
       <td>851</td>
       <td>33</td>
       <td>27</td>
@@ -1412,8 +1412,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.6</td>
+      <td>count</td>
       <td>851</td>
       <td>33</td>
       <td>27</td>
@@ -1439,8 +1439,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.7</td>
+      <td>count</td>
       <td>850</td>
       <td>30</td>
       <td>26</td>
@@ -1466,8 +1466,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.8</td>
+      <td>count</td>
       <td>842</td>
       <td>24</td>
       <td>24</td>
@@ -1493,8 +1493,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>0</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.9</td>
+      <td>count</td>
       <td>822</td>
       <td>15</td>
       <td>20</td>
@@ -1523,8 +1523,8 @@ Images were manually validated as having at least one detection of the target sp
 </table></div><h3>True species (or label): <i>Vulpes vulpes</i></h3><div style="overflow-x:auto;"><table class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
-      <th>pred_species</th>
       <th>confidence_threshold</th>
+      <th>pred_species</th>
       <th>Vulpes vulpes</th>
       <th>Canis lupus dingo</th>
       <th>Felis catus</th>
@@ -1552,8 +1552,8 @@ Images were manually validated as having at least one detection of the target sp
   </thead>
   <tbody>
     <tr>
-      <td>count</td>
       <td>&gt;=0.5</td>
+      <td>count</td>
       <td>761</td>
       <td>51</td>
       <td>36</td>
@@ -1579,8 +1579,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.6</td>
+      <td>count</td>
       <td>761</td>
       <td>51</td>
       <td>36</td>
@@ -1606,8 +1606,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.7</td>
+      <td>count</td>
       <td>751</td>
       <td>49</td>
       <td>35</td>
@@ -1633,8 +1633,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.8</td>
+      <td>count</td>
       <td>735</td>
       <td>36</td>
       <td>32</td>
@@ -1660,8 +1660,8 @@ Images were manually validated as having at least one detection of the target sp
       <td>1</td>
     </tr>
     <tr>
-      <td>count</td>
       <td>&gt;=0.9</td>
+      <td>count</td>
       <td>710</td>
       <td>31</td>
       <td>22</td>
