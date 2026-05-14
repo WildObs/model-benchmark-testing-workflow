@@ -44,6 +44,7 @@ import os
 import re
 from IPython.display import display, HTML
 from pathlib import Path
+from datetime import datetime
 
 # -------- USER INPUT --------
 
@@ -71,6 +72,9 @@ export_errors = True
 
 
 # ----------------------------
+
+# Get current timestamp
+timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 # Create input and output folders
 os.makedirs(input_path, exist_ok=True)
@@ -213,29 +217,35 @@ merged = pd.merge(merged, deployments, on="deploymentID", how="left")
 # -----------------------------
 # Normalize species names
 # -----------------------------
+
+
 merged["true_species"] = (
     merged["deploymentTags"]
+    .fillna("")
     .astype(str)
     .str.strip()
     .str.lower()
 )
+
+merged.loc[
+    merged["true_species"] == "",
+    "true_species"
+] = "blank"
+
 
 merged["pred_species"] = (
     merged["scientificName"]
+    .fillna("")
     .astype(str)
     .str.strip()
     .str.lower()
 )
 
+merged.loc[
+    merged["pred_species"] == "",
+    "pred_species"
+] = "blank"
 
-# -----------------------------
-# Apply a minimum confidence confidence threshold (optional)
-# -----------------------------
-
-confidence_threshold = None  # e.g. 0.8 or None to disable
-
-if confidence_threshold is not None:
-    merged = merged[merged["confidence"] >= confidence_threshold]
 
 
 # -----------------------------
@@ -607,9 +617,17 @@ h3 {
     margin-top: 20px;
 }
 
-p {
+p,
+ul,
+ol {
     max-width: 900px;
-    line-height: 1.5;
+    line-height: 1.6;
+}
+
+ul,
+ol {
+    padding-left: 25px;
+    margin-bottom: 16px;
 }
 
 .styled-table {
@@ -657,7 +675,8 @@ with open(html_file, "w", encoding="utf-8") as f:
     f.write("<h1>Model Evaluation Report</h1>")
     
     f.write(f"<h2>Test details</h2>")
-    f.write(f"<p><b>Computer Vision (CV) model tested: </b>{model_name}<p>")
+    f.write(f"<p><b>Timestamp of report: </b>{timestamp}</p>")
+    f.write(f"<p><b>Computer Vision (CV) model tested: </b>{model_name}</p>")
     f.write(f"<p><b>Source location of test images: </b>{data_source_location}</p>")
     f.write("<p><b>Species (or labels) evaluated:</b></p>")
     f.write("<ul>")
@@ -673,25 +692,29 @@ with open(html_file, "w", encoding="utf-8") as f:
 
     f.write("<h2>Purpose and intended use of this report</h2>")
     f.write("""
-        <ul>
+        <ol>
             <li>Inform the potential suitability of a model for a given location and set of species relevant to the monitoring program.</li>
             <li>Inform the design of a validation workflow (manual human review) to ensure a sufficient level of accuracy can be reached to meet the goals of the monitoring program.</li>
             <li>Inform potential gaps in model performance and priorities for provision of additional training images to improve performance.</li>
-        </ul>
+        </ol>
     """)
-    f.write("<h2>Disclaimer / limitations</h2>")
+    
+    f.write("<h2>Limitations</h2>")
+
     f.write("""
-        <ul>
-            <li>The accuracy of the results presented in this report is primairly limited by the quality of the test data used.</li>
-            <li>Please follow the recommended guidelines for collating a representative test dataset.</li>
-            <li>Species name mismatches may be a cause of low values for recall or precision. 
-                <ul>
-                    <li>Models sometimes aggregate multiple species into one label.</li>
-                    <li>Conversely, the input test data used may also contain aggregated labels that are not matched by a model that is splitting by individual species</li>
-                    <li>If there is a species name mismatch, inspection of the confusion matrix will often reveal what name the model is using for that species.</li>
-                </ul>
-            <li>The results presented in this report do not necessarily prove definitively that one model is better than another, but may provide guidence on selecting the most suitable model for your location and the species important to your monitoring program.</li>
-        </ul>
+    <p>
+    The accuracy of the results presented in this report is primarily limited by the quality of the test data used. If the input dataset is not representative of real-world conditions, model performance metrics may be misleading.
+    It is important to follow recommended guidelines when constructing a test dataset to ensure it is balanced, representative, and consistent across species and environments.
+    </p>
+
+    <p>
+    Species name mismatches can also significantly affect recall and precision scores. Some models may aggregate multiple taxonomic species into a single prediction label. Conversely, the test dataset may contain fine-grained species labels that do not directly match the model’s output taxonomy.
+    Where mismatches occur, inspection of the confusion matrix will often help identify the label conventions used by the model and clarify how predictions are being grouped.
+    </p>
+
+    <p>
+    Finally, the results presented in this report should not be interpreted as definitive proof that one model is superior to another. Instead, they are intended to support informed selection of the most appropriate model for a given location, application, and set of target species.
+    </p>
     """)
     f.write("<p></p>")
     f.write("<h2>Understanding the Results</h2>")
@@ -750,14 +773,20 @@ with open(html_file, "w", encoding="utf-8") as f:
         <tr><td>Low Recall, Low Precision</td><td>Poor performance</td></tr>
     </table>
     """)
+
     f.write("""
     <h3>What is a Confusion Matrix?</h3>
-    <ul>
-        <li>A confusion matrix summarises the model’s performance by comparing actual vs predicted labels.</li>
-        <li>In simple terms the confusion matrix shows what the model got right and wrong, broken down by type of error.</li>
-        <li>Inspecting the confusion matrix helps us to understand the direction of error in cases where an image was incorrectly classified.</li>
-        <li>Be aware that not all models define or name species the same way. In some cases a model may also generalise a species detections to a broader group e.g. Genus or Family. If recall is returning a very low number for a given species and model, inspection of confusion matrix may help to reveal inconsistencies in naming or categorisation.</li>
-    </ul>
+
+    <p>
+    A confusion matrix summarises model performance by comparing the true species labels against the species predicted by the model.
+    In simple terms, the confusion matrix shows what the model classified correctly and where errors occurred, broken down by type of misclassification.
+    </p>
+
+    <p>
+    Inspecting the confusion matrix can help identify the direction of error in cases where images were classified incorrectly. This is often useful for understanding which species are being confused with one another.
+    It is also important to recognise that not all models define or name species in the same way. Some models may group multiple species into broader taxonomic categories such as Genus or Family, while others may use highly specific species labels.
+    If recall or precision values are unexpectedly low for a particular species, inspection of the confusion matrix may help reveal inconsistencies in naming conventions, taxonomy, or label aggregation used by the model.
+    </p>
     """)
 
     # -----------------------------
@@ -770,9 +799,7 @@ with open(html_file, "w", encoding="utf-8") as f:
 
     f.write("""
     <p>
-    The table below shows the confidence threshold that produced the highest
-    F1 score for each species. This can help identify the optimal balance
-    between recall and precision for operational use.
+    The table below shows the confidence threshold that produced the highest F1 score for each species. This can help identify the optimal balance between recall and precision for operational use.
     </p>
     """)
 
