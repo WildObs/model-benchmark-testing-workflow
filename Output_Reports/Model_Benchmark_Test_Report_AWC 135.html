@@ -56,27 +56,35 @@ p {
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head><body><div class="report-container"><h1>Model Evaluation Report</h1><h2>Test details</h2><p><b>Timestamp of report: </b>2026-05-14 14:11:20</p><p><b>Computer Vision (CV) model tested: </b>AWC 135</p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species (or labels) evaluated:</b></p><ul><li><i>Blank</i></li><li><i>Dromaius novaehollandiae</i></li><li><i>Felis catus</i></li><li><i>Macropodidae</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Confidence thresholds used: </b>[0.5, 0.6, 0.7, 0.8, 0.9]</p><p><b>Data collation process used: </b>
+</head><body><div class="report-container"><h1>Model Evaluation Report</h1><h2>Test details</h2><p><b>Timestamp of report: </b>2026-05-14 14:31:49</p><p><b>Computer Vision (CV) model tested: </b>AWC 135</p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species (or labels) evaluated:</b></p><ul><li><i>Blank</i></li><li><i>Dromaius novaehollandiae</i></li><li><i>Felis catus</i></li><li><i>Macropodidae</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Confidence thresholds used: </b>[0.5, 0.6, 0.7, 0.8, 0.9]</p><p><b>Data collation process used: </b>
 Collated 1000 images of each target species.
 Images were manually validated as having at least one detection of the target species and no other species present in the image.
 </p><h2>Purpose and intended use of this report</h2>
-        <ul>
+        <ol>
             <li>Inform the potential suitability of a model for a given location and set of species relevant to the monitoring program.</li>
             <li>Inform the design of a validation workflow (manual human review) to ensure a sufficient level of accuracy can be reached to meet the goals of the monitoring program.</li>
             <li>Inform potential gaps in model performance and priorities for provision of additional training images to improve performance.</li>
-        </ul>
-    <h2>Disclaimer / limitations</h2>
-        <ul>
-            <li>The accuracy of the results presented in this report is primairly limited by the quality of the test data used.</li>
-            <li>Please follow the recommended guidelines for collating a representative test dataset.</li>
-            <li>Species name mismatches may be a cause of low values for recall or precision. 
-                <ul>
-                    <li>Models sometimes aggregate multiple species into one label.</li>
-                    <li>Conversely, the input test data used may also contain aggregated labels that are not matched by a model that is splitting by individual species</li>
-                    <li>If there is a species name mismatch, inspection of the confusion matrix will often reveal what name the model is using for that species.</li>
-                </ul>
-            <li>The results presented in this report do not necessarily prove definitively that one model is better than another, but may provide guidence on selecting the most suitable model for your location and the species important to your monitoring program.</li>
-        </ul>
+        </ol>
+    <h2>Limitations</h2>
+    <p>
+    The accuracy of the results presented in this report is primarily limited by the quality of the test data used. If the input dataset is not representative of real-world conditions, model performance metrics may be misleading.
+    </p>
+
+    <p>
+    It is important to follow recommended guidelines when constructing a test dataset to ensure it is balanced, representative, and consistent across species and environments.
+    </p>
+
+    <p>
+    Species name mismatches can also significantly affect recall and precision scores. Some models may aggregate multiple taxonomic species into a single prediction label. Conversely, the test dataset may contain fine-grained species labels that do not directly match the model’s output taxonomy.
+    </p>
+
+    <p>
+    Where mismatches occur, inspection of the confusion matrix will often help identify the label conventions used by the model and clarify how predictions are being grouped.
+    </p>
+
+    <p>
+    Finally, the results presented in this report should not be interpreted as definitive proof that one model is superior to another. Instead, they are intended to support informed selection of the most appropriate model for a given location, application, and set of target species.
+    </p>
     <p></p><h2>Understanding the Results</h2><p>Recall, precision, and F1 score are standard metrics used to evaluate the performance of machine learning models. Each metric has a precise definition and corresponding mathematical formula.</p><h3>Recall (Sensitivity)</h3><p>\[ \text{Recall} = \frac{\text{True Positives}}{\text{True Positives + False Negatives}} \]</p><p>Of all the images that actually contain the target species, how many did the model correctly identify?</p><p><b>Example: </b>If there are 100 images of Feral Cat within a dataset, and the model correctly detects 90 of them, recall = 0.9 (90%).</p><p><b>Interpretation:</b> Quantifying recall helps us to understand how many true detections of a given species might be missed by the model.</p><h3>Precision</h3><p>\[ \text{Precision} = \frac{\text{True Positives}}{\text{True Positives + False Positives}} \]</p><p>Of all the images the model predicts as the target species, how many are actually correct?</p><p><b>Example: </b>If the model makes 100 predictions of Feral Cat within a dataset, and only 90 of them are actually detections of Feral Cat, precision = 0.9 (90%).</p><p><b>Interpretation:</b> High precision means predictions are reliable. Low precision means more false detections.</p><h3>F1 Score</h3><p>\[ \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision + Recall}} \]</p><p>A balanced measure that combines both recall and precision.</p><p><b>Interpretation:</b> High F1 score indicates a good balance between detecting animals and avoiding false detections.</p><h3>Definition of Terms</h3>
     <table class="styled-table">
         <tr>
@@ -110,12 +118,17 @@ Images were manually validated as having at least one detection of the target sp
     </table>
     
     <h3>What is a Confusion Matrix?</h3>
-    <ul>
-        <li>A confusion matrix summarises the model’s performance by comparing actual vs predicted labels.</li>
-        <li>In simple terms the confusion matrix shows what the model got right and wrong, broken down by type of error.</li>
-        <li>Inspecting the confusion matrix helps us to understand the direction of error in cases where an image was incorrectly classified.</li>
-        <li>Be aware that not all models define or name species the same way. In some cases a model may also generalise a species detections to a broader group e.g. Genus or Family. If recall is returning a very low number for a given species and model, inspection of confusion matrix may help to reveal inconsistencies in naming or categorisation.</li>
-    </ul>
+
+    <p>
+    A confusion matrix summarises model performance by comparing the true species labels against the species predicted by the model.
+    In simple terms, the confusion matrix shows what the model classified correctly and where errors occurred, broken down by type of misclassification.
+    </p>
+
+    <p>
+    Inspecting the confusion matrix can help identify the direction of error in cases where images were classified incorrectly. This is often useful for understanding which species are being confused with one another.
+    It is also important to recognise that not all models define or name species in the same way. Some models may group multiple species into broader taxonomic categories such as Genus or Family, while others may use highly specific species labels.
+    If recall or precision values are unexpectedly low for a particular species, inspection of the confusion matrix may help reveal inconsistencies in naming conventions, taxonomy, or label aggregation used by the model.
+    </p>
     <h2>Recall, Precision, and F1 Results</h2><table border="1" class="dataframe styled-table">
   <thead>
     <tr style="text-align: right;">
@@ -433,9 +446,7 @@ Images were manually validated as having at least one detection of the target sp
   </tbody>
 </table><h2>Optimal Confidence Threshold by Species</h2>
     <p>
-    The table below shows the confidence threshold that produced the highest
-    F1 score for each species. This can help identify the optimal balance
-    between recall and precision for operational use.
+    The table below shows the confidence threshold that produced the highest F1 score for each species. This can help identify the optimal balance between recall and precision for operational use.
     </p>
     <table class="dataframe styled-table">
   <thead>
