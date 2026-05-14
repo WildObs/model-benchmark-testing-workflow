@@ -27,9 +27,17 @@ h3 {
     margin-top: 20px;
 }
 
-p {
+p,
+ul,
+ol {
     max-width: 900px;
-    line-height: 1.5;
+    line-height: 1.6;
+}
+
+ul,
+ol {
+    padding-left: 25px;
+    margin-bottom: 16px;
 }
 
 .styled-table {
@@ -56,7 +64,7 @@ p {
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head><body><div class="report-container"><h1>Model Evaluation Report</h1><h2>Test details</h2><p><b>Timestamp of report: </b>2026-05-14 14:31:43</p><p><b>Computer Vision (CV) model tested: </b>Speciesnet V4.0</p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species (or labels) evaluated:</b></p><ul><li><i>Blank</i></li><li><i>Dromaius novaehollandiae</i></li><li><i>Felis catus</i></li><li><i>Macropodidae</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Confidence thresholds used: </b>[0.5, 0.6, 0.7, 0.8, 0.9]</p><p><b>Data collation process used: </b>
+</head><body><div class="report-container"><h1>Model Evaluation Report</h1><h2>Test details</h2><p><b>Timestamp of report: </b>2026-05-14 14:40:49</p><p><b>Computer Vision (CV) model tested: </b>Speciesnet V4.0</p><p><b>Source location of test images: </b>Bon Bon Reserve, SA</p><p><b>Species (or labels) evaluated:</b></p><ul><li><i>Blank</i></li><li><i>Dromaius novaehollandiae</i></li><li><i>Felis catus</i></li><li><i>Macropodidae</i></li><li><i>Oryctolagus cuniculus</i></li><li><i>Vulpes vulpes</i></li></ul><p><b>Confidence thresholds used: </b>[0.5, 0.6, 0.7, 0.8, 0.9]</p><p><b>Data collation process used: </b>
 Collated 1000 images of each target species.
 Images were manually validated as having at least one detection of the target species and no other species present in the image.
 </p><h2>Purpose and intended use of this report</h2>
@@ -68,17 +76,11 @@ Images were manually validated as having at least one detection of the target sp
     <h2>Limitations</h2>
     <p>
     The accuracy of the results presented in this report is primarily limited by the quality of the test data used. If the input dataset is not representative of real-world conditions, model performance metrics may be misleading.
-    </p>
-
-    <p>
     It is important to follow recommended guidelines when constructing a test dataset to ensure it is balanced, representative, and consistent across species and environments.
     </p>
 
     <p>
     Species name mismatches can also significantly affect recall and precision scores. Some models may aggregate multiple taxonomic species into a single prediction label. Conversely, the test dataset may contain fine-grained species labels that do not directly match the model’s output taxonomy.
-    </p>
-
-    <p>
     Where mismatches occur, inspection of the confusion matrix will often help identify the label conventions used by the model and clarify how predictions are being grouped.
     </p>
 
