@@ -374,7 +374,6 @@ conf_matrix = pd.crosstab(
 )
 
 
-#dev
 
 full_confusion_matrices = {}
 
@@ -440,19 +439,17 @@ for threshold, matrix in full_confusion_matrices.items():
         for x in matrix.columns
     ]
 
+
+    # Set index name before reset
+    matrix.index.name = "predicted_species→\ntrue_species↓"
+
     # Reset index for HTML display
     matrix_reset = matrix.reset_index()
-
-    matrix_reset.rename(
-        columns={"true_species": "true_species"},
-        inplace=True
-    )
 
     formatted_full_confusion_matrices[
         threshold
     ] = matrix_reset
 
-#end dev
 
 single_row_matrices = {}
 
@@ -488,7 +485,7 @@ for species in species_list:
         row["confidence_threshold"] = f">={threshold:.1f}"
 
         # Add row label
-        row["pred_species"] = "count"
+        #row["pred_species"] = "count"
 
         rows.append(row)
 
@@ -500,7 +497,7 @@ for species in species_list:
 
     # Convert numeric columns to integers
     numeric_cols = sub_matrix.columns.difference(
-        ["pred_species", "confidence_threshold"]
+        ["confidence_threshold"]
     )
 
     sub_matrix[numeric_cols] = (
@@ -509,14 +506,15 @@ for species in species_list:
     )
 
 
-
     # Reorder columns
-    fixed_cols = ["pred_species", "confidence_threshold"]
+    fixed_cols = ["confidence_threshold"]
 
     other_cols = [
         c for c in sub_matrix.columns
         if c not in fixed_cols
     ]
+
+    
 
     # Sort prediction columns by total occurrence
     other_cols = (
@@ -531,8 +529,13 @@ for species in species_list:
         fixed_cols + other_cols
     ]
 
+    # define formatted name for confidence threshold column
+    confidence_threshold_formatted_name = "predicted_species→\nconfidence_threshold↓"
+    sub_matrix = sub_matrix.rename(columns={"confidence_threshold": confidence_threshold_formatted_name})
+
     single_row_matrices[species] = sub_matrix
 
+    
 
 formatted_single_row = {}
 
@@ -543,7 +546,7 @@ for species, matrix in single_row_matrices.items():
 
     for col in matrix.columns:
 
-        if col not in ["pred_species", "confidence_threshold"]:
+        if col not in [confidence_threshold_formatted_name]:
 
             renamed_cols[col] = format_species_name(col)
 
@@ -580,7 +583,14 @@ style = """
 
 body {
     font-family: Arial;
-    margin: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+.report-container {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 20px;
 }
 
 h1 {
@@ -637,6 +647,7 @@ with open(html_file, "w", encoding="utf-8") as f:
     f.write(style)
     f.write(mathjax)
     f.write("</head><body>")
+    f.write('<div class="report-container">')
 
 
     # -----------------------------
@@ -679,7 +690,6 @@ with open(html_file, "w", encoding="utf-8") as f:
                     <li>Conversely, the input test data used may also contain aggregated labels that are not matched by a model that is splitting by individual species</li>
                     <li>If there is a species name mismatch, inspection of the confusion matrix will often reveal what name the model is using for that species.</li>
                 </ul>
-            <li>This version of the report is not considering model confidence due to a software bug that is being worked on. This will be fixed in a future version.</li>
             <li>The results presented in this report do not necessarily prove definitively that one model is better than another, but may provide guidence on selecting the most suitable model for your location and the species important to your monitoring program.</li>
         </ul>
     """)
@@ -706,7 +716,7 @@ with open(html_file, "w", encoding="utf-8") as f:
     f.write("<h3>Definition of Terms</h3>")
 
     f.write("""
-    <table classes="styled-table">
+    <table class="styled-table">
         <tr>
             <th>Term</th>
             <th>Definition</th>
@@ -732,7 +742,7 @@ with open(html_file, "w", encoding="utf-8") as f:
     
     f.write("<h3>How to interpret results</h3>")
     f.write("""
-    <table classes="styled-table">
+    <table class="styled-table">
         <tr><th>Scenario</th><th>Interpretation</th></tr>
         <tr><td>High Recall, Low Precision</td><td>Finds most animals but includes many false positives</td></tr>
         <tr><td>Low Recall, High Precision</td><td>Accurate predictions but misses many animals</td></tr>
@@ -836,6 +846,7 @@ with open(html_file, "w", encoding="utf-8") as f:
 
         f.write("<br>")
 
+    f.write("</div>")
     f.write("</body></html>")
 
 file_path = Path(html_file).resolve()
