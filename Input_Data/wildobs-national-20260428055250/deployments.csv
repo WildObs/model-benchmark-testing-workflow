@@ -1,8 +1,0 @@
-deploymentID,locationID,locationName,latitude,longitude,coordinateUncertainty,deploymentStart,deploymentEnd,setupBy,cameraID,cameraModel,cameraDelay,cameraHeight,cameraDepth,cameraTilt,cameraHeading,detectionDistance,timestampIssues,baitUse,featureType,habitat,deploymentGroups,deploymentTags,deploymentComments
-44e1d969-84b0-4df9-a821-81be2e5e6de0,3f15e3fd-ddd5-43a9-b7b7-037012e1a442,dummy location,-37.481760198656595,144.91013046165938,,2016-07-26T20:23:41+10:00,2023-11-04T17:19:58+10:00,,,,,,,,,,,,,,,Felis catus,
-4fec35a0-7bfd-4063-932f-38ec7f0c1897,3f15e3fd-ddd5-43a9-b7b7-037012e1a442,dummy location,-37.481760198656595,144.91013046165938,,2021-03-09T14:38:00+10:00,2023-11-08T11:39:02+10:00,,,,,,,,,,,,,,,Blank,
-67a4eb1c-cf25-48a5-8056-e8b71f85b9a7,3f15e3fd-ddd5-43a9-b7b7-037012e1a442,dummy location,-37.481760198656595,144.91013046165938,,+10:00,+10:00,,,,,,,,,,,,,,,Oryctolagus cuniculus,
-a08539a7-cd64-46c8-9471-21114490de2b,,,,,,,,,,,,,,,,,,,,,,,
-aabfbddb-8d50-42d8-b52e-0b4719b83f51,3f15e3fd-ddd5-43a9-b7b7-037012e1a442,dummy location,-37.481760198656595,144.91013046165938,,2021-05-18T23:38:46+10:00,2021-11-09T06:53:34+10:00,,,,,,,,,,,,,,,Macropodidae,
-d360b2f1-63f5-4bc7-98da-25a7b403ee90,3f15e3fd-ddd5-43a9-b7b7-037012e1a442,dummy location,-37.481760198656595,144.91013046165938,,2016-07-27T05:34:29+10:00,2023-11-08T03:17:48+10:00,,,,,,,,,,,,,,,Vulpes vulpes,
-d7ff3617-d344-4482-8121-871812847326,3f15e3fd-ddd5-43a9-b7b7-037012e1a442,dummy location,-37.481760198656595,144.91013046165938,,2021-03-10T15:17:50+10:00,2023-10-27T08:14:31+10:00,,,,,,,,,,,,,,,Dromaius novaehollandiae,
