@@ -1,4 +1,4 @@
-# Model evaluation workflow designed for WildObs Image Management Platform https://wildobs.org.au/
+# Model evaluation workflow: alternative version designed for eVorta (in development)
 
 ## Description
 - This script can be used for benchmarking an ai species recognition model with a local dataset to get an independent assessment of Recall, Precision and F1 Score for a given location
