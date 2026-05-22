@@ -5,7 +5,7 @@
 - The purpose is to evaluate the most suitable or best performing model for a given location and inform an appropriate validation workflow to ensure accuracy requirements are met
 
 ## Setup instructions:
-1) Prepare the testing dataset. Start by organising camera trap images into folders by species on your local computer. The quality of the testing dataset will determine the accuracy of the report generated. Here are a few tips:
+1) Prepare the testing dataset. Start by organising camera trap images into folders by species on your local computer. Match the names of the folders to the label classes used by eVorta. These are generally the common names of the species e.g. cat, fox, emu. The quality of the testing dataset will determine the accuracy of the report generated. Here are a few tips:
 - Use a representive number of images of each species e.g. at least 1000 if possible
 - Avoid using images that have been used as part of the model training dataset as these will create a biased result
 - If possible, select a random subset of testing images from a larger pool aiming to get a wide range of images over space and time
@@ -21,21 +21,11 @@
 | Emu             | 1000     | Non-target species but abundant at this location. Impact on Precision. |
 | Blank           | 1000     | Impact on Precision. |
 
-2) Establish new Project/s in the WildObs WIMP for benchmarking purposes:
--  You will need a separate Project for each model you are testing. 
--  Name the project based on the model that will be tested e.g. "Model benchmark testing: WildObs National".
--  Set the Sequence cutoff to 0 seconds. This aims to prevent the software from creating sequences so that each image is assessed independently.
--  Define Tags in the project based on the scientific names of the species you are testing. Tags need to match with the species names used in the WIMP.
--  Configure the project to use the model you want to test
-3) Create Deployments:
-- You will need to create a Deployment for each of the species you are testing.
-- Upload the relevant images into each deployment.
-- Use the tags created earlier to assign to the deployment so you know which species it is supposed to be. This will be used by the script to match the species to the model predictions
-- Repeat for each Project, uploading the same set of images to each
-4) Run the uploaded images through the AI species recognition model
-5) Once model processing is complete for all deployments, export the project data in Camtrap DP format
-6) Download and extract (unzip) the exported data to a folder on your local computer
-7) Use the folder path as input to this script
+2) Before processing the images on eVorta, make sure your images have unique file names. The methodology of this workflow relies on matching images based on their names. An optional pre-processing step is available to generate unique file names.
+3) Upload the images to eVorta and process through the model/s that you wish to test. 
+4) Once processing is complete, export the eVorta model predictions to csv. Before exporting, use the filter options to set the confidence threshold to "0". This will ensure all predictions with a confidence of 0 or higher will be included in the export. Check other filters to make sure all relevant records are being included in the export.
+5) Download and extract (unzip) the exported data to a folder on your local computer
+6) Use the file path as input to this script
 
 ## Prerequisites
 
