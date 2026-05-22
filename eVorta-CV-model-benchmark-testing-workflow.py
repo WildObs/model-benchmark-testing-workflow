@@ -33,11 +33,9 @@
 
 import pandas as pd
 import os
-import re
 from IPython.display import display, HTML
 from pathlib import Path
 from datetime import datetime
-import uuid
 
 # Set display options for pandas DataFrames
 pd.set_option('display.max_rows', None)
@@ -45,103 +43,19 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', None)
 
 # %%
-# -----------------------------
-# OPTIONAL PRE-PROCESSING STEP: RENAME IMAGES TO ENSURE UNIQUE FILE NAMES
-# note: this should be done prior to uploading to eVorta. The names will be used to match later to the images.
-# -----------------------------
-
-# Set the input folder containing the images to rename
-input_folder = r"E:\BHA_Camera_Data_Backup\Evelyn_Downs_eVorta_formatted\Test_File_Rename"
-
-# Set False to preview only
-rename_files = False
-
-# -----------------------------
-# PROCESS
-# -----------------------------
-
-image_extensions = [
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".tif",
-    ".tiff"
-]
-
-renamed_count = 0
-
-preview_rows = []
-
-for root, dirs, files in os.walk(input_folder):
-
-    for file in files:
-
-        ext = Path(file).suffix.lower()
-
-        if ext not in image_extensions:
-            continue
-
-        old_path = os.path.join(root, file)
-
-        stem = Path(file).stem
-
-        # Avoid double-processing
-        parts = stem.split("~")
-
-        last_part = parts[-1]
-
-        already_has_guid = False
-
-        try:
-            uuid.UUID(last_part)
-            already_has_guid = True
-        except:
-            pass
-
-        if already_has_guid:
-            continue
-
-        # Generate GUID
-        guid = str(uuid.uuid4())
-
-        # Create new filename
-        new_name = f"{stem}~{guid}{ext}"
-
-        new_path = os.path.join(root, new_name)
-
-        
-
-        preview_rows.append({
-        "original_name": file,
-        "new_name": new_name
-        })
-
-        if rename_files:
-            os.rename(old_path, new_path)
-
-        renamed_count += 1
-
-print(f"Completed: {renamed_count} files processed.")
-
-preview_df = pd.DataFrame(preview_rows)
-
-preview_df.head(20)
+# -------- OPTIONAL PRE-PROCESSING STEP--------
+# If input files names are not unique, please use the separate notebook "Pre-processing-unique-filenames.ipynb" to rename files with unique identifiers before running this workflow.
+#-----------------------------------------
 
 # %%
-display(preview_df.head(20))
 
-# %%
 
 # -------- USER INPUT --------
 
 output_path = "./Output_Reports"
-input_path = "./Input_Data"
+#input_path = "./Input_Data"
+
 input_csv = r"E:\BHA_Camera_Data_Backup\Evelyn_Downs_eVorta_formatted\eVorta_detections_fenrir_conf_0_plus\eVorta_detections_fenrir_conf_0_plus.csv"
-
-#input_camtrap_folder_name = "speciesnet-v4-20260428054705"
-#input_camtrap_folder_name = "awc-135-20260428055153"
-input_camtrap_folder_name = "wildobs-national-20260428055250"
-
 
 data_source_location = "Evelyn Downs, SA"
 data_collation_process = """
@@ -159,16 +73,30 @@ export_errors = True
 
 # ----------------------------
 
+
+
+# %%
+# -----------------------------
+# PROCESSING AND EVALUATION
+# -----------------------------
+
+
+
+# Get current timestamp
+timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# Create input and output folders
+os.makedirs(input_path, exist_ok=True)
+os.makedirs(output_path, exist_ok=True)
+
+
 # import the evorta predictions csv
-
-
 
 predictions = pd.read_csv(
     input_csv,
     dtype=str,
     encoding="utf-8"
 )
-
 
 # standardise column names for easier merging with the truth data and calculating performance metrics
 
@@ -255,19 +183,6 @@ merged["true_species"] = (
     merged["true_species"]
     .replace("empty", "blank")
 )
-
-# %%
-
-
-
-
-# Get current timestamp
-timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-# Create input and output folders
-os.makedirs(input_path, exist_ok=True)
-os.makedirs(output_path, exist_ok=True)
-
 
 
 
@@ -633,6 +548,9 @@ misclassified_images_report = output_path + "/" + f"Misclassified_Images_{model_
 if export_errors:
     errors = merged[merged["true_species"] != merged["pred_species"]]
     errors.to_csv(misclassified_images_report, index=False)
+
+
+# %%
 
 
 # %%
