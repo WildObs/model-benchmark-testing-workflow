@@ -1,7 +1,0 @@
-deploymentID,locationID,locationName,latitude,longitude,coordinateUncertainty,deploymentStart,deploymentEnd,setupBy,cameraID,cameraModel,cameraDelay,cameraHeight,cameraDepth,cameraTilt,cameraHeading,detectionDistance,timestampIssues,baitUse,featureType,habitat,deploymentGroups,deploymentTags,deploymentComments
-21329e72-d28a-48a3-86cc-5905a095f47d,0e29001d-9994-405d-9b70-ee177a7f21a4,Dummy location,-37.64812786616922,144.9424604132471,,2016-07-26T20:23:41+10:00,2023-11-04T17:19:58+10:00,,,,,,,,,,,,,,,Felis catus,
-35ccaddd-e045-44f0-a0ed-fd07d9fe60b7,0e29001d-9994-405d-9b70-ee177a7f21a4,Dummy location,-37.64812786616922,144.9424604132471,,2021-03-09T14:38:00+10:00,2023-11-08T11:39:02+10:00,,,,,,,,,,,,,,,Blank,
-5dc708e5-5e28-4573-9db2-7065ca779db1,0e29001d-9994-405d-9b70-ee177a7f21a4,Dummy location,-37.64812786616922,144.9424604132471,,+10:00,+10:00,,,,,,,,,,,,,,,Vulpes vulpes,
-76964d69-9d4d-4bdf-9610-6019d0738127,0e29001d-9994-405d-9b70-ee177a7f21a4,Dummy location,-37.64812786616922,144.9424604132471,,2021-03-10T15:17:50+10:00,2023-10-27T08:14:31+10:00,,,,,,,,,,,,,,,Dromaius novaehollandiae,
-d311f586-96df-4473-84d2-3722e20c2045,0e29001d-9994-405d-9b70-ee177a7f21a4,Dummy location,-37.64812786616922,144.9424604132471,,2021-05-18T23:38:46+10:00,2021-11-09T06:53:34+10:00,,,,,,,,,,,,,,,Macropodidae,
-dd11ce5c-7f54-4dde-bc14-55bda9a854b6,0e29001d-9994-405d-9b70-ee177a7f21a4,Dummy location,-37.64812786616922,144.9424604132471,,2021-06-01T18:58:01+10:00,2022-06-20T05:26:51+10:00,,,,,,,,,,,,,,,Oryctolagus cuniculus,
