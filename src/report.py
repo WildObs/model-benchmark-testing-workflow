@@ -1,5 +1,6 @@
 """Assemble and save the HTML report and the misclassified-images export."""
 
+import base64
 import logging
 from pathlib import Path
 
@@ -12,10 +13,28 @@ from .templating import load_style, render_template, resolve_template
 
 logger = logging.getLogger(__name__)
 
-FONTS = (
-    '<link rel="preconnect" href="https://fonts.googleapis.com">'
-    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">'
+FONT_FILES = (
+    ("Poppins-Regular.woff2", "normal", 400),
+    ("Poppins-SemiBold.woff2", "normal", 600),
+    ("Poppins-Italic.woff2", "italic", 400),
 )
+
+
+def embedded_font_css(templates_dir) -> str:
+    """@font-face rules with Poppins embedded as base64, so reports render the same offline."""
+    rules = []
+    for filename, style, weight in FONT_FILES:
+        path = Path(templates_dir) / "fonts" / filename
+        if not path.is_file():
+            logger.warning("Font file not found: %s; falling back to system fonts", path)
+            continue
+        data = base64.b64encode(path.read_bytes()).decode("ascii")
+        rules.append(
+            f"@font-face{{font-family:'Poppins';font-style:{style};font-weight:{weight};"
+            f"font-display:swap;src:url(data:font/woff2;base64,{data}) format('woff2');}}"
+        )
+    return "".join(rules)
+
 MATHJAX = '<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>'
 
 
@@ -38,7 +57,7 @@ def write_html_report(
     document = (
         "<!DOCTYPE html><html><head><meta charset=\"utf-8\">"
         f"<title>Model Evaluation Report - {model_name}</title>"
-        f"{FONTS}<style>{style}</style>{MATHJAX}</head>"
+        f"<style>{embedded_font_css(config.templates_path)}{style}</style>{MATHJAX}</head>"
         f'<body><div class="report-container">{body}</div></body></html>'
     )
 

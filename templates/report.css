@@ -1,4 +1,4 @@
-/* WildObs brand font (Poppins) as used on wildobs.org.au; loaded via <link> in the report head */
+/* WildObs brand font (Poppins) as used on wildobs.org.au; embedded into each report by src/report.py (templates/fonts) */
 
 body {
     font-family: 'Poppins', Arial, sans-serif;
