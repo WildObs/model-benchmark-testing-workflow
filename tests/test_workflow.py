@@ -135,10 +135,10 @@ def test_taxonomy_table_blank_for_no_match():
 
     table = build_taxonomy_table(["Macropus rufus", "Blank", "Boom"], search_taxa=fake_search)
     assert list(table["Species (or label)"]) == ["Macropus rufus", "Blank", "Boom"]
-    assert table.loc[0, "Matched scientific name"] == "Osphranter rufus"
+    assert table.loc[0, "Matched scientific name (ALA)"] == "Osphranter rufus"
     assert table.loc[0, "Family"] == "Macropodidae"
     assert table.loc[0, "Kingdom"] == ""
-    assert (table.loc[1:, "Matched scientific name"] == "").all()
+    assert (table.loc[1:, "Matched scientific name (ALA)"] == "").all()
 
 
 def test_end_to_end_with_taxonomy(tmp_path, monkeypatch):

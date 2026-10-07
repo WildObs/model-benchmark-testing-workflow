@@ -9,9 +9,8 @@ logger = logging.getLogger(__name__)
 
 # Output column -> galah column. Columns galah does not return are left blank.
 TAXONOMY_COLUMNS = {
-    "Matched scientific name": "scientificName",
-    "Authority": "scientificNameAuthorship",
-    "Rank": "rank",
+    "Matched scientific name (ALA)": "scientificName",
+    "Taxonomic Rank": "rank",
     "Kingdom": "kingdom",
     "Phylum": "phylum",
     "Order": "order",
@@ -56,7 +55,7 @@ def build_taxonomy_table(species_labels: List[str], search_taxa=None) -> pd.Data
             row[column] = "" if pd.isna(value) else str(value)
         rows.append(row)
     table = pd.DataFrame(rows)
-    matched = int((table["Matched scientific name"] != "").sum())
+    matched = int((table["Matched scientific name (ALA)"] != "").sum())
     logger.info("Taxonomy lookup matched %d of %d labels", matched, len(table))
     return table
 
