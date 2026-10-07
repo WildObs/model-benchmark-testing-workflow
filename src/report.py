@@ -12,6 +12,10 @@ from .templating import load_style, render_template, resolve_template
 
 logger = logging.getLogger(__name__)
 
+FONTS = (
+    '<link rel="preconnect" href="https://fonts.googleapis.com">'
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">'
+)
 MATHJAX = '<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>'
 
 
@@ -34,7 +38,7 @@ def write_html_report(
     document = (
         "<!DOCTYPE html><html><head><meta charset=\"utf-8\">"
         f"<title>Model Evaluation Report - {model_name}</title>"
-        f"<style>{style}</style>{MATHJAX}</head>"
+        f"{FONTS}<style>{style}</style>{MATHJAX}</head>"
         f'<body><div class="report-container">{body}</div></body></html>'
     )
 
