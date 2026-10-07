@@ -9,6 +9,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.config import BenchmarkConfig  # noqa: E402
 from src.data_loader import extract_sequence  # noqa: E402
 from src.metrics import compute_metrics  # noqa: E402
+from src.model_comparison import (  # noqa: E402
+    _EvaluationReportParser,
+    _build_summary,
+    create_model_comparison_report,
+)
 from src.pipeline import run_benchmark  # noqa: E402
 from src.report import _sanitize_filename_component  # noqa: E402
 from src.templating import Placeholder, list_sections, list_templates, render_template, resolve_template  # noqa: E402
@@ -175,3 +180,73 @@ def test_end_to_end_with_taxonomy(tmp_path, monkeypatch):
     )
     report = run_benchmark(config).report_path.read_text(encoding="utf-8")
     assert "TestFamily" in report
+
+
+def _write_evaluation_report(path, model_name, f1_rows):
+    rows = "".join(
+        f"<tr><td>{species}</td><td>&gt;=0.5</td><td>0.8</td><td>0.8</td><td>{score}</td></tr>"
+        for species, score in f1_rows
+    )
+    path.write_text(
+        "<html><head><title>Model Evaluation Report</title></head><body>"
+        f"<p><strong>Computer Vision (CV) model tested:</strong> {model_name}</p>"
+        "<h2>Optimal Confidence Threshold by Species</h2>"
+        "<table><thead><tr><th>species</th><th>model_confidence</th><th>recall</th>"
+        f"<th>precision</th><th>f1_score</th></tr></thead><tbody>{rows}</tbody></table>"
+        "</body></html>",
+        encoding="utf-8",
+    )
+
+
+def test_model_comparison_extracts_optimal_threshold_f1_scores(tmp_path):
+    report_path = tmp_path / "evaluation.html"
+    _write_evaluation_report(report_path, "Camera Model A", [("Cat", "0.8123")])
+
+    parser = _EvaluationReportParser()
+    parser.feed(report_path.read_text(encoding="utf-8"))
+
+    assert parser.optimal_f1_scores(report_path) == ("Camera Model A", {"Cat": 0.8123})
+
+
+def test_model_comparison_summary_handles_ties_and_missing_species():
+    summary = _build_summary([
+        ("Model A", {"Cat": 0.8, "Fox": 0.5}),
+        ("Model B", {"Cat": 0.8, "Fox": 0.7}),
+        ("Model C", {"Cat": 0.7, "Owl": 0.9}),
+    ])
+
+    cat = summary.set_index("Species").loc["Cat"]
+    fox = summary.set_index("Species").loc["Fox"]
+    owl = summary.set_index("Species").loc["Owl"]
+    assert cat["Best performing model"] == "N/A"
+    assert fox["Best performing model"] == "Model B"
+    assert owl["Best performing model"] == "Model C"
+    assert pd.isna(owl["f1 score Model A"])
+    assert list(summary.columns) == [
+        "Species", "f1 score Model A", "f1 score Model B", "f1 score Model C",
+        "Best performing model",
+    ]
+
+
+def test_model_comparison_report_reads_folder_and_uses_shared_style(tmp_path):
+    reports_dir = tmp_path / "reports"
+    reports_dir.mkdir()
+    _write_evaluation_report(
+        reports_dir / "WildObs_CV_Model_Evaluation_Report_Location_Model_A_20261008.html",
+        "Model A",
+        [("Cat", "0.8")],
+    )
+    _write_evaluation_report(
+        reports_dir / "WildObs_CV_Model_Evaluation_Report_Location_Model_B_20261008.html",
+        "Model B",
+        [("Cat", "0.9")],
+    )
+
+    report_path = create_model_comparison_report(str(reports_dir), str(tmp_path / "out"))
+    report = report_path.read_text(encoding="utf-8")
+
+    assert report_path.name.startswith("WildObs_CV_Model_Evaluation_Comparison_Report_")
+    assert "f1 score Model A" in report and "f1 score Model B" in report
+    assert "Model B" in report and "0.9" in report
+    assert "font-family:'Poppins'" in report
+    assert "styled-table" in report

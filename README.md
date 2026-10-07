@@ -63,6 +63,7 @@ cd model-benchmark-testing-workflow
 model-benchmark-testing-workflow/
 ├── scripts/
 │   ├── WildObs-CV-model-benchmark-testing-workflow.ipynb   # notebook: set preferences and run
+│   ├── WildObs-CV-model-comparison.ipynb                   # notebook: compare model reports
 │   └── run_benchmark.py                                    # command line version
 ├── src/                  # functional code (config, data loading, metrics, templating, reports, logging)
 ├── templates/            # report templates (full, minimal, or your own) and stylesheet
@@ -82,6 +83,8 @@ model-benchmark-testing-workflow/
 
 ### Notebook
 Open `scripts/WildObs-CV-model-benchmark-testing-workflow.ipynb`, edit the configuration cell (input folder, thresholds, template, etc.) and run the cells.
+
+To compare multiple evaluation reports, open `scripts/WildObs-CV-model-comparison.ipynb`, set the folder containing the generated HTML evaluation reports, and run the notebook. It creates an HTML summary report with each species' F1 score by model and the uniquely best-performing model where applicable.
 
 ### Command line
 
@@ -105,6 +108,7 @@ Set `lookup_taxonomy=True` (notebook) or pass `--lookup-taxonomy` (command line)
 Every run has a timestamp so earlier results are never overwritten.
 
 - `Output_Reports/WildObs_CV_Model_Evaluation_Report_<data_source_location>_<Model_Name>_<TimeStamp>.html`: the HTML report. Spaces and special characters in the location and model name are replaced with underscores.
+- `Output_Reports/Comparisons/WildObs_CV_Model_Evaluation_Comparison_Report_<TimeStamp>.html`: the multi-model comparison report
 - `Output_Reports/Misclassified_Images_<model>_<timestamp>.csv`: records of incorrectly classified images, useful for error analysis (optional)
 - `logs/benchmark_<timestamp>.log`: detailed log of the run, including warnings about data issues such as untagged deployments or images without a matching observation
 
