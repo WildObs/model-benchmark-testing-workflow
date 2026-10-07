@@ -10,6 +10,7 @@ from src.config import BenchmarkConfig  # noqa: E402
 from src.data_loader import extract_sequence  # noqa: E402
 from src.metrics import compute_metrics  # noqa: E402
 from src.pipeline import run_benchmark  # noqa: E402
+from src.report import _sanitize_filename_component  # noqa: E402
 from src.templating import Placeholder, list_sections, list_templates, render_template, resolve_template  # noqa: E402
 from src.utils import threshold_label  # noqa: E402
 
@@ -65,6 +66,11 @@ def test_config_validation(tmp_path):
     assert config.thresholds == [0.5, 0.9]
 
 
+def test_report_filename_component_replaces_spaces_and_special_characters():
+    assert _sanitize_filename_component("North-West / Plot #2") == "North_West_Plot_2"
+    assert _sanitize_filename_component("Model (v2)!") == "Model_v2"
+
+
 def test_metrics():
     merged = pd.DataFrame({
         "true_species": ["cat", "cat", "fox", "fox"],
@@ -108,10 +114,14 @@ def test_resolve_template():
 def test_end_to_end(tmp_path, template, has_limitations):
     make_camtrap(tmp_path / "in" / "export")
     config = BenchmarkConfig(
-        "export", thresholds=[0.5], template=template,
+        "export", data_source_location="North-West / Plot #2", thresholds=[0.5], template=template,
         input_path=tmp_path / "in", output_path=tmp_path / "out", log_path=tmp_path / "logs",
     )
     run = run_benchmark(config)
+    run_id = run.log_path.stem.removeprefix("benchmark_")
+    assert run.report_path.name == (
+        f"WildObs_CV_Model_Evaluation_Report_North_West_Plot_2_test_model_{run_id}.html"
+    )
     report = run.report_path.read_text(encoding="utf-8")
     assert ("Limitations" in report) is has_limitations
     assert "Felis catus" in report and "test model" in report

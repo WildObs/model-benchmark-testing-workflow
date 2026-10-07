@@ -104,7 +104,7 @@ Set `lookup_taxonomy=True` (notebook) or pass `--lookup-taxonomy` (command line)
 ## Outputs
 Every run has a timestamp so earlier results are never overwritten.
 
-- `Output_Reports/Model_Benchmark_Test_Report_<model>_<template>_<timestamp>.html`: the HTML report
+- `Output_Reports/WildObs_CV_Model_Evaluation_Report_<data_source_location>_<Model_Name>_<TimeStamp>.html`: the HTML report. Spaces and special characters in the location and model name are replaced with underscores.
 - `Output_Reports/Misclassified_Images_<model>_<timestamp>.csv`: records of incorrectly classified images, useful for error analysis (optional)
 - `logs/benchmark_<timestamp>.log`: detailed log of the run, including warnings about data issues such as untagged deployments or images without a matching observation
 

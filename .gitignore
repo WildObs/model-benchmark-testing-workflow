@@ -58,6 +58,7 @@ venv.bak/
 .pyre/
 .pytype/
 .idea/
+.vscode/
 
 # Generated input and report data (retain directory markers)
 Input_Data/*

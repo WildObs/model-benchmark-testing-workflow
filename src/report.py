@@ -2,6 +2,7 @@
 
 import base64
 import logging
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -38,6 +39,10 @@ def embedded_font_css(templates_dir) -> str:
 MATHJAX = '<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>'
 
 
+def _sanitize_filename_component(value: str) -> str:
+    return re.sub(r"[^A-Za-z0-9]+", "_", value).strip("_")
+
+
 def write_html_report(
     config: BenchmarkConfig,
     model_name: str,
@@ -65,7 +70,12 @@ def write_html_report(
     )
 
     Path(config.output_path).mkdir(parents=True, exist_ok=True)
-    report_path = Path(config.output_path) / f"Model_Benchmark_Test_Report_{model_name}_{template_path.stem}_{run_id}.html"
+    data_source_location = config.data_source_location.strip() or "Not specified"
+    report_path = Path(config.output_path) / (
+        "WildObs_CV_Model_Evaluation_Report_"
+        f"{_sanitize_filename_component(data_source_location)}_"
+        f"{_sanitize_filename_component(model_name)}_{run_id}.html"
+    )
     report_path.write_text(document, encoding="utf-8")
     logger.info("Report saved to %s", report_path)
     return report_path
