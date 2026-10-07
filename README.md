@@ -1,4 +1,4 @@
-# Model evaluation workflow designed for WildObs Image Management Platform https://wildobs.org.au/
+﻿# Model evaluation workflow designed for WildObs Image Management Platform https://wildobs.org.au/
 
 ## Description
 - This script can be used for benchmarking an ai species recognition model with a local dataset to get an independent assessment of Recall, Precision and F1 Score for a given location
@@ -57,63 +57,61 @@ git clone https://github.com/WildObs/model-benchmark-testing-workflow.git
 cd model-benchmark-testing-workflow
 ```
 
+## Project structure
+
+```
+model-benchmark-testing-workflow/
+├── scripts/
+│   ├── WildObs-CV-model-benchmark-testing-workflow.ipynb   # notebook: set preferences and run
+│   └── run_benchmark.py                                    # command line version
+├── src/                  # functional code (config, data loading, metrics, templating, reports, logging)
+├── templates/            # report templates (full, minimal, or your own) and stylesheet
+├── tests/
+├── Input_Data/           # extracted Camtrap DP exports (not tracked)
+├── Output_Reports/       # generated reports (not tracked)
+├── logs/                 # run logs (not tracked)
+└── requirements.txt
+```
+
 ## Data Preparation
 1. Log in to the WildObs image management platform
 2. Export your dataset in Camtrap-DP format
-3. Place the exported files in the root directory of this repository
-
-Example structure:
-
-```bash
-model-benchmark-testing-workflow/
-│
-├── wildObs-CV-model-benchmark-testing-workflow.py
-├── requirements.txt
-├── README.md
-├── data/                  # (optional) your exported dataset
-│   ├── observations.csv
-│   ├── media.csv
-│   └── deployments.csv
-│   └── ...
-```
-
-Note: Adjust paths in the script if your data is stored in a different location.
+3. Extract the export into a new folder inside `Input_Data/`. The folder must contain `observations.csv`, `media.csv` and `deployments.csv`.
 
 ## Usage
 
-Run the workflow from the command line:
+### Notebook
+Open `scripts/WildObs-CV-model-benchmark-testing-workflow.ipynb`, edit the configuration cell (input folder, thresholds, template, etc.) and run the cells.
+
+### Command line
 
 ```bash
-python wildObs-CV-model-benchmark-testing-workflow.py
+python scripts/run_benchmark.py <input_folder_name> --template minimal
+python scripts/run_benchmark.py --list-templates
+python scripts/run_benchmark.py --help
 ```
 
-OR
+## Choosing the report format
+Reports are generated from Markdown templates in `templates/`:
 
-Run the workflow from the Python notebook WildObs-CV-model-benchmark-testing-workflow.ipynb
+- `full`: test details, purpose, limitations, explanations of the metrics and all results
+- `minimal`: test details and results only
+
+Individual sections of any template can be switched off with `exclude_sections` (notebook) or `--exclude-sections` (command line), for example `Limitations` or `Full_Confusion_Matrices`. To create your own template, copy an existing one and see [templates/README.md](templates/README.md).
 
 ## Outputs
-#### Misclassified Images
+Every run has a timestamp so earlier results are never overwritten.
 
-misclassified_images.csv
-
-- Contains records of incorrectly classified images
-- Useful for error analysis and model comparison
-
-#### Model Benchmark Reports
-
-model_Benchmarking_Report_Exports/
-
-- Directory containing HTML reports for each model
-- Each report includes performance metrics and visual summaries
+- `Output_Reports/Model_Benchmark_Test_Report_<model>_<template>_<timestamp>.html`: the HTML report
+- `Output_Reports/Misclassified_Images_<model>_<timestamp>.csv`: records of incorrectly classified images, useful for error analysis (optional)
+- `logs/benchmark_<timestamp>.log`: detailed log of the run, including warnings about data issues such as untagged deployments or images without a matching observation
 
 ## Example Workflow
 1. Export dataset from WildObs (Camtrap-DP format)
-2. Place data in project folder
+2. Extract it into `Input_Data/`
 3. Install dependencies
-4. Run the script
-5. Review outputs:
-- misclassified_images.csv
-- HTML reports in model_Benchmarking_Report_Exports/
+4. Choose a template and run the notebook or script
+5. Review the report and the misclassified images CSV. Check the log if anything looks unexpected.
 
 ## Troubleshooting
 
@@ -125,11 +123,20 @@ pip install -r requirements.txt
 ```
 
 #### File not found errors
-Ensure your exported dataset is in the correct directory
+Ensure your exported dataset is extracted in `Input_Data/` and that the folder name matches the configuration. The error message lists the folders that were found.
+
+#### Unexpected results
+Open the latest file in `logs/`. Set `log_level` to `DEBUG` for more detail on screen.
 
 #### No outputs generated
-Export the data again from the WildObs platform and place the extracted data in the /data folder to make sure that you are using the most recent classification results acquired from WildObs models.
+Export the data again from the WildObs platform and extract it into `Input_Data/` to make sure that you are using the most recent classification results acquired from WildObs models.
 
+## Development
+Run the tests with:
+
+```bash
+python -m pytest tests
+```
 ## Contributing
 
 Contributions are welcome:

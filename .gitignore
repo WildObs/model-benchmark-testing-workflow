@@ -64,3 +64,6 @@ Input_Data/*
 !Input_Data/.gitkeep
 Output_Reports/*
 !Output_Reports/.gitkeep
+# Run logs (retain directory marker)
+logs/*
+!logs/.gitkeep
