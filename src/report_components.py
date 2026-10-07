@@ -27,11 +27,12 @@ def build_placeholders(
     species_display: list,
     metrics: BenchmarkMetrics,
     image_count: int,
+    image_counts: Dict[str, int],
     timestamp: str,
 ) -> Dict[str, Placeholder]:
     """All placeholders available to templates. Keep in sync with templates/README.md."""
     if config.lookup_taxonomy:
-        species_list = Placeholder(_table(build_taxonomy_table(species_display)), "html")
+        species_list = Placeholder(_table(build_taxonomy_table(species_display, image_counts)), "html")
     else:
         species_list = Placeholder("\n".join(f"- *{s}*" for s in species_display), "markdown")
 

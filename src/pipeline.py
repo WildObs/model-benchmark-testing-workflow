@@ -38,7 +38,7 @@ def run_benchmark(config: BenchmarkConfig) -> BenchmarkRun:
         Path(config.input_path).mkdir(parents=True, exist_ok=True)
         Path(config.output_path).mkdir(parents=True, exist_ok=True)
 
-        merged, model_name, species_display = load_benchmark_table(config.camtrap_folder)
+        merged, model_name, species_display, image_counts = load_benchmark_table(config.camtrap_folder)
         metrics = compute_metrics(merged, config.thresholds)
 
         misclassified_path = None
@@ -46,7 +46,7 @@ def run_benchmark(config: BenchmarkConfig) -> BenchmarkRun:
             misclassified_path = export_misclassified(config, merged, model_name, run_id)
 
         report_path = write_html_report(
-            config, model_name, species_display, metrics, len(merged),
+            config, model_name, species_display, metrics, len(merged), image_counts,
             now.strftime("%Y-%m-%d %H:%M:%S"), run_id,
         )
     except Exception:

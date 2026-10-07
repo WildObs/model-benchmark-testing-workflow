@@ -44,13 +44,16 @@ def write_html_report(
     species_display: list,
     metrics: BenchmarkMetrics,
     image_count: int,
+    image_counts: dict,
     timestamp: str,
     run_id: str,
 ) -> Path:
     template_path = resolve_template(config.template, config.templates_path)
     logger.info("Rendering report with template '%s'", template_path.name)
 
-    placeholders = build_placeholders(config, model_name, species_display, metrics, image_count, timestamp)
+    placeholders = build_placeholders(
+        config, model_name, species_display, metrics, image_count, image_counts, timestamp
+    )
     body = render_template(template_path, placeholders, config.exclude_sections)
     style = load_style(template_path, config.templates_path)
 

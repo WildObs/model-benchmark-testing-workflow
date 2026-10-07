@@ -3,7 +3,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 
@@ -16,7 +16,7 @@ REQUIRED_COLUMNS = {
         "eventID", "deploymentID", "observationType", "scientificName",
         "classificationProbability", "classifiedBy",
     ],
-    "media.csv": ["mediaID", "mediaComments"],
+    "media.csv": ["mediaID", "deploymentID", "mediaComments"],
     "deployments.csv": ["deploymentID", "deploymentTags"],
 }
 
@@ -130,18 +130,30 @@ def get_species_display_list(deployments: pd.DataFrame) -> List[str]:
     return [format_species_name(s) for s in sorted(tags)]
 
 
+def count_images_per_species(media: pd.DataFrame, deployments: pd.DataFrame) -> Dict[str, int]:
+    """Number of images (media rows) per species, using each image's deployment tag."""
+    tags = deployments[["deploymentID", "deploymentTags"]].copy()
+    tags["species"] = tags["deploymentTags"].fillna("").astype(str).str.strip().str.lower()
+    images = media[["mediaID", "deploymentID"]].drop_duplicates("mediaID").merge(
+        tags[["deploymentID", "species"]], on="deploymentID", how="left"
+    )
+    counts = images.loc[images["species"].fillna("") != "", "species"].value_counts()
+    return {format_species_name(name): int(n) for name, n in counts.items()}
+
+
 def load_benchmark_table(folder: Path):
     """Load and merge everything needed for metrics.
 
-    Returns (merged, model_name, species_display_list).
+    Returns (merged, model_name, species_display_list, image_counts).
     """
     observations, media, deployments = load_camtrap_data(folder)
     observations = prepare_observations(observations)
     model_name = get_model_name(observations)
     species_display = get_species_display_list(deployments)
+    image_counts = count_images_per_species(media, deployments)
     merged = build_merged_table(observations, media, deployments)
     logger.info(
         "Model: %s | %d images | %d species/labels in deployment tags",
         model_name, len(merged), len(species_display),
     )
-    return merged, model_name, species_display
+    return merged, model_name, species_display, image_counts

@@ -36,20 +36,21 @@ def _lookup_one(label: str, search_taxa) -> dict:
     return row.to_dict()
 
 
-def build_taxonomy_table(species_labels: List[str], search_taxa=None) -> pd.DataFrame:
+def build_taxonomy_table(species_labels: List[str], image_counts=None, search_taxa=None) -> pd.DataFrame:
     """One row per label. Unmatched labels keep their name and have blank lookup values."""
+    image_counts = image_counts or {}
     if search_taxa is None:
         try:
             import galah
         except ImportError:
             logger.warning("The 'galah' package is not installed (pip install galah); skipping taxonomy lookup")
-            return _blank_table(species_labels)
+            return _blank_table(species_labels, image_counts)
         search_taxa = galah.search_taxa
 
     rows = []
     for label in species_labels:
         match = _lookup_one(label, search_taxa)
-        row = {"Species (or label)": label}
+        row = {"Species (or label)": label, "Number of images": image_counts.get(label, 0)}
         for column, source in TAXONOMY_COLUMNS.items():
             value = match.get(source, "")
             row[column] = "" if pd.isna(value) else str(value)
@@ -60,8 +61,8 @@ def build_taxonomy_table(species_labels: List[str], search_taxa=None) -> pd.Data
     return table
 
 
-def _blank_table(species_labels: List[str]) -> pd.DataFrame:
-    table = pd.DataFrame({"Species (or label)": species_labels})
+def _blank_table(species_labels: List[str], image_counts: dict) -> pd.DataFrame:
+    table = pd.DataFrame({"Species (or label)": species_labels, "Number of images": [image_counts.get(s, 0) for s in species_labels]})
     for column in TAXONOMY_COLUMNS:
         table[column] = ""
     return table

@@ -24,6 +24,7 @@ def make_camtrap(folder: Path):
     }).to_csv(folder / "deployments.csv", index=False)
     pd.DataFrame({
         "mediaID": ["m1", "m2", "m3", "m4"],
+        "deploymentID": ["d1", "d1", "d2", "d2"],
         "mediaComments": [f"sequenceID:e{i}" for i in range(1, 5)],
     }).to_csv(folder / "media.csv", index=False)
     pd.DataFrame({
@@ -34,6 +35,14 @@ def make_camtrap(folder: Path):
         "classificationProbability": ["0.9", "0.8", "0.95", "0.4"],
         "classifiedBy": ["test model"] * 4,
     }).to_csv(folder / "observations.csv", index=False)
+
+
+def test_count_images_per_species(tmp_path):
+    from src.data_loader import count_images_per_species, load_camtrap_data
+
+    make_camtrap(tmp_path / "export")
+    _, media, deployments = load_camtrap_data(tmp_path / "export")
+    assert count_images_per_species(media, deployments) == {"Felis catus": 2, "Vulpes vulpes": 2}
 
 
 def test_extract_sequence():
@@ -133,10 +142,11 @@ def test_taxonomy_table_blank_for_no_match():
             raise RuntimeError("network down")
         return pd.DataFrame()
 
-    table = build_taxonomy_table(["Macropus rufus", "Blank", "Boom"], search_taxa=fake_search)
+    table = build_taxonomy_table(["Macropus rufus", "Blank", "Boom"], image_counts={"Macropus rufus": 12}, search_taxa=fake_search)
     assert list(table["Species (or label)"]) == ["Macropus rufus", "Blank", "Boom"]
     assert table.loc[0, "Matched scientific name (ALA)"] == "Osphranter rufus"
     assert table.loc[0, "Family"] == "Macropodidae"
+    assert list(table["Number of images"]) == [12, 0, 0]
     assert table.loc[0, "Kingdom"] == ""
     assert (table.loc[1:, "Matched scientific name (ALA)"] == "").all()
 
@@ -146,7 +156,7 @@ def test_end_to_end_with_taxonomy(tmp_path, monkeypatch):
 
     monkeypatch.setattr(
         rc, "build_taxonomy_table",
-        lambda labels: pd.DataFrame({"Species (or label)": labels, "Family": ["TestFamily"] * len(labels)}),
+        lambda labels, counts: pd.DataFrame({"Species (or label)": labels, "Family": ["TestFamily"] * len(labels)}),
     )
     make_camtrap(tmp_path / "in" / "export")
     config = BenchmarkConfig(
