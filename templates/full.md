@@ -1,6 +1,6 @@
 <!-- description: Complete report including purpose, limitations, metric explanations and all results. -->
 
-# Model Evaluation Report
+# WildObs: Computer Vision Model Evaluation Report
 
 <!-- BEGIN:Test_Details -->
 ## Test details
