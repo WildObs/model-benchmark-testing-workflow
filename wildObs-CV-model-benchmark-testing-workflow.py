@@ -586,7 +586,7 @@ if export_errors:
 # %%
 # generate a nicely formatted report that can be shared with others as a .html file
 
-html_file = output_path + "/" + f"Model_Benchmark_Test_Report_{model_name}.html"
+html_file = output_path + "/" + f"Model_Benchmark_Test_Report_{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
 
 style = """
 <style>
