@@ -2,6 +2,7 @@
 
 import logging
 import re
+from dataclasses import dataclass
 from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
@@ -18,15 +19,32 @@ REPORT_PREFIX = "WildObs_CV_Model_Evaluation_Report_"
 COMPARISON_TEMPLATE = Path(__file__).resolve().parents[1] / "templates" / "model_comparison.md"
 
 
+DETAIL_LABELS = {
+    "computer vision (cv) model tested:": "model_name",
+    "timestamp of report:": "timestamp",
+    "source location of test images:": "source_location",
+}
+
+
+@dataclass
+class EvaluationReport:
+    model_name: str
+    timestamp: str
+    source_location: str
+    scores: Dict[str, float]
+
+
 class _EvaluationReportParser(HTMLParser):
-    """Extract the model name and optimal-threshold F1 table from a report."""
+    """Extract the test details and optimal-threshold F1 table from a report."""
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.model_name = ""
+        self.timestamp = ""
+        self.source_location = ""
         self._in_strong = False
         self._strong_parts: List[str] = []
-        self._expect_model_name = False
+        self._pending_detail = ""
         self._in_section_heading = False
         self._section_heading_parts: List[str] = []
         self._in_best_threshold_section = False
@@ -58,8 +76,7 @@ class _EvaluationReportParser(HTMLParser):
         if tag == "strong":
             self._in_strong = False
             label = " ".join("".join(self._strong_parts).split()).lower()
-            if label == "computer vision (cv) model tested:":
-                self._expect_model_name = True
+            self._pending_detail = DETAIL_LABELS.get(label, "")
         elif tag == "h2":
             heading = " ".join("".join(self._section_heading_parts).split()).lower()
             self._in_best_threshold_section = heading == "optimal confidence threshold by species"
@@ -77,9 +94,10 @@ class _EvaluationReportParser(HTMLParser):
     def handle_data(self, data):
         if self._in_strong:
             self._strong_parts.append(data)
-        elif self._expect_model_name and not self.model_name and data.strip():
-            self.model_name = data.strip()
-            self._expect_model_name = False
+        elif self._pending_detail and data.strip():
+            if not getattr(self, self._pending_detail):
+                setattr(self, self._pending_detail, data.strip())
+            self._pending_detail = ""
         if self._in_section_heading:
             self._section_heading_parts.append(data)
         if self._in_cell:
@@ -125,10 +143,29 @@ class _EvaluationReportParser(HTMLParser):
         )
 
 
-def _read_evaluation_report(report_path: Path) -> Tuple[str, Dict[str, float]]:
+def _read_evaluation_report(report_path: Path) -> EvaluationReport:
     parser = _EvaluationReportParser()
     parser.feed(report_path.read_text(encoding="utf-8"))
-    return parser.optimal_f1_scores(report_path)
+    model_name, scores = parser.optimal_f1_scores(report_path)
+    return EvaluationReport(
+        model_name,
+        parser.timestamp or "Not specified",
+        parser.source_location or "Not specified",
+        scores,
+    )
+
+
+def _unique_joined(values: List[str]) -> str:
+    return ", ".join(dict.fromkeys(values))
+
+
+def _build_test_details(reports: List[EvaluationReport]) -> Dict[str, str]:
+    """Aggregate the test details of every report for the template placeholders."""
+    return {
+        "Report_Timestamp": _unique_joined(sorted(r.timestamp for r in reports)),
+        "Model_Names": _unique_joined([r.model_name for r in reports]),
+        "Data_Source_Location": _unique_joined([r.source_location for r in reports]),
+    }
 
 
 def _build_summary(reports: List[Tuple[str, Dict[str, float]]]) -> pd.DataFrame:
@@ -179,11 +216,12 @@ def create_model_comparison_report(
         )
 
     reports = [_read_evaluation_report(path) for path in report_paths]
-    summary = _build_summary(reports)
+    summary = _build_summary([(r.model_name, r.scores) for r in reports])
     summary_html = summary.to_html(
         index=False, classes="styled-table", border=0, na_rep="N/A", escape=True
     )
     placeholders = {"Comparison_Summary_Table": Placeholder(summary_html, "html")}
+    placeholders.update({name: Placeholder(value) for name, value in _build_test_details(reports).items()})
     template = COMPARISON_TEMPLATE
     body = render_template(template, placeholders)
     templates_dir = template.parent

@@ -182,14 +182,18 @@ def test_end_to_end_with_taxonomy(tmp_path, monkeypatch):
     assert "TestFamily" in report
 
 
-def _write_evaluation_report(path, model_name, f1_rows):
+def _write_evaluation_report(
+    path, model_name, f1_rows, timestamp="2026-10-08 10:14:05", location="Edgbaston Reserve, QLD"
+):
     rows = "".join(
         f"<tr><td>{species}</td><td>&gt;=0.5</td><td>0.8</td><td>0.8</td><td>{score}</td></tr>"
         for species, score in f1_rows
     )
     path.write_text(
         "<html><head><title>Model Evaluation Report</title></head><body>"
+        f"<p><strong>Timestamp of report:</strong> {timestamp}</p>"
         f"<p><strong>Computer Vision (CV) model tested:</strong> {model_name}</p>"
+        f"<p><strong>Source location of test images:</strong> {location}</p>"
         "<h2>Optimal Confidence Threshold by Species</h2>"
         "<table><thead><tr><th>species</th><th>model_confidence</th><th>recall</th>"
         f"<th>precision</th><th>f1_score</th></tr></thead><tbody>{rows}</tbody></table>"
@@ -235,6 +239,7 @@ def test_model_comparison_report_reads_folder_and_uses_shared_style(tmp_path):
         reports_dir / "WildObs_CV_Model_Evaluation_Report_Location_Model_A_20261008.html",
         "Model A",
         [("Cat", "0.8")],
+        timestamp="2026-10-08 10:20:00",
     )
     _write_evaluation_report(
         reports_dir / "WildObs_CV_Model_Evaluation_Report_Location_Model_B_20261008.html",
@@ -250,3 +255,6 @@ def test_model_comparison_report_reads_folder_and_uses_shared_style(tmp_path):
     assert "Model B" in report and "0.9" in report
     assert "font-family:'Poppins'" in report
     assert "styled-table" in report
+    assert "<strong>Timestamp of report:</strong> 2026-10-08 10:14:05, 2026-10-08 10:20:00" in report
+    assert "<strong>Computer Vision (CV) model/s tested:</strong> Model A, Model B" in report
+    assert "<strong>Source location of test images:</strong> Edgbaston Reserve, QLD</p>" in report
