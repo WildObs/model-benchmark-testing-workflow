@@ -23,6 +23,7 @@ class BenchmarkConfig:
     data_collation_process: str = ""
     thresholds: List[float] = field(default_factory=lambda: list(DEFAULT_THRESHOLDS))
     export_errors: bool = True
+    lookup_taxonomy: bool = False  # look up full taxonomy for each species using ALA galah (needs internet)
 
     # Report formatting
     template: str = "full"  # template name in templates_path, or a path to a .md file

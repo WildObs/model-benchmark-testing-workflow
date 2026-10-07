@@ -1,4 +1,4 @@
-﻿# Model evaluation workflow designed for WildObs Image Management Platform https://wildobs.org.au/
+# Model evaluation workflow designed for WildObs Image Management Platform https://wildobs.org.au/
 
 ## Description
 - This script can be used for benchmarking an ai species recognition model with a local dataset to get an independent assessment of Recall, Precision and F1 Score for a given location
@@ -98,6 +98,8 @@ Reports are generated from Markdown templates in `templates/`:
 - `minimal`: test details and results only
 
 Individual sections of any template can be switched off with `exclude_sections` (notebook) or `--exclude-sections` (command line), for example `Limitations` or `Full_Confusion_Matrices`. To create your own template, copy an existing one and see [templates/README.md](templates/README.md).
+
+Set `lookup_taxonomy=True` (notebook) or pass `--lookup-taxonomy` (command line) to replace the species list in the report with a taxonomy table (matched name, authority, rank, kingdom to genus, common name) looked up from the Atlas of Living Australia using the [galah](https://galah.ala.org.au/Python/) package. This needs an internet connection and `pip install galah`. Labels with no valid match (such as `blank`) are kept with empty lookup values, and a failed lookup never stops the report.
 
 ## Outputs
 Every run has a timestamp so earlier results are never overwritten.

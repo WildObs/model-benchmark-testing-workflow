@@ -6,6 +6,7 @@ import pandas as pd
 
 from .config import BenchmarkConfig
 from .metrics import BenchmarkMetrics
+from .taxonomy import build_taxonomy_table
 from .templating import Placeholder
 from .utils import threshold_label
 
@@ -29,7 +30,10 @@ def build_placeholders(
     timestamp: str,
 ) -> Dict[str, Placeholder]:
     """All placeholders available to templates. Keep in sync with templates/README.md."""
-    species_md = "\n".join(f"- *{s}*" for s in species_display)
+    if config.lookup_taxonomy:
+        species_list = Placeholder(_table(build_taxonomy_table(species_display)), "html")
+    else:
+        species_list = Placeholder("\n".join(f"- *{s}*" for s in species_display), "markdown")
 
     prediction_distribution = "\n".join(
         f"<h3>True species (or label): <i>{species}</i></h3>{_scrollable(matrix)}"
@@ -46,7 +50,7 @@ def build_placeholders(
         "Data_Source_Location": Placeholder(config.data_source_location.strip() or "Not specified"),
         "Data_Collation_Process": Placeholder(config.data_collation_process.strip() or "Not specified"),
         "Confidence_Thresholds": Placeholder(", ".join(threshold_label(t)[2:] for t in config.thresholds)),
-        "Species_List": Placeholder(species_md, "markdown"),
+        "Species_List": species_list,
         "Species_Count": Placeholder(str(len(species_display))),
         "Image_Count": Placeholder(str(image_count)),
         "Results_Table": Placeholder(_table(metrics.results, border=1), "html"),

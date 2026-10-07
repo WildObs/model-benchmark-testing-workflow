@@ -121,3 +121,37 @@ def test_exclude_sections_end_to_end(tmp_path):
     assert "Limitations" not in report
     assert "Full Confusion Matrices" not in report
     assert "Purpose and intended use" in report
+
+
+def test_taxonomy_table_blank_for_no_match():
+    from src.taxonomy import build_taxonomy_table
+
+    def fake_search(taxa):
+        if taxa == ["Macropus rufus"]:
+            return pd.DataFrame({"scientificName": ["Osphranter rufus"], "family": ["Macropodidae"], "issues": ["noIssue"]})
+        if taxa == ["Boom"]:
+            raise RuntimeError("network down")
+        return pd.DataFrame()
+
+    table = build_taxonomy_table(["Macropus rufus", "Blank", "Boom"], search_taxa=fake_search)
+    assert list(table["Species (or label)"]) == ["Macropus rufus", "Blank", "Boom"]
+    assert table.loc[0, "Matched scientific name"] == "Osphranter rufus"
+    assert table.loc[0, "Family"] == "Macropodidae"
+    assert table.loc[0, "Kingdom"] == ""
+    assert (table.loc[1:, "Matched scientific name"] == "").all()
+
+
+def test_end_to_end_with_taxonomy(tmp_path, monkeypatch):
+    import src.report_components as rc
+
+    monkeypatch.setattr(
+        rc, "build_taxonomy_table",
+        lambda labels: pd.DataFrame({"Species (or label)": labels, "Family": ["TestFamily"] * len(labels)}),
+    )
+    make_camtrap(tmp_path / "in" / "export")
+    config = BenchmarkConfig(
+        "export", thresholds=[0.5], lookup_taxonomy=True,
+        input_path=tmp_path / "in", output_path=tmp_path / "out", log_path=tmp_path / "logs",
+    )
+    report = run_benchmark(config).report_path.read_text(encoding="utf-8")
+    assert "TestFamily" in report

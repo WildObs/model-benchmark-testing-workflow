@@ -27,7 +27,7 @@ Write `{Placeholder_Name}` where generated content should appear.
 | `{Data_Source_Location}` | Source location of test images |
 | `{Data_Collation_Process}` | Description of how the test data was collated |
 | `{Confidence_Thresholds}` | Thresholds evaluated |
-| `{Species_List}` | Bulleted list of species/labels evaluated |
+| `{Species_List}` | Bulleted list of species/labels evaluated, or a full taxonomy table when `lookup_taxonomy` is on |
 | `{Species_Count}` | Number of species/labels evaluated |
 | `{Image_Count}` | Number of images evaluated |
 | `{Results_Table}` | Recall, precision and F1 by species and threshold |
