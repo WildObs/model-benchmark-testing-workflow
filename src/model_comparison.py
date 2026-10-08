@@ -10,7 +10,7 @@ from typing import Dict, List, Tuple, Union
 
 import pandas as pd
 
-from .report import embedded_font_css
+from .report import embedded_font_css, embedded_logo_html
 from .templating import Placeholder, load_style, render_template
 
 logger = logging.getLogger(__name__)
@@ -236,7 +236,7 @@ def create_model_comparison_report(
         "<!DOCTYPE html><html><head><meta charset=\"utf-8\">"
         "<title>WildObs: CV Model Evaluation Comparison Report</title>"
         f"<style>{fonts}{style}</style></head>"
-        f'<body><div class="report-container">{body}</div></body></html>'
+        f'<body><div class="report-container">{embedded_logo_html(templates_dir)}{body}</div></body></html>'
     )
     report_path.write_text(document, encoding="utf-8")
     logger.info("Model comparison report saved to %s", report_path)

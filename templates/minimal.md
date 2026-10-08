@@ -1,6 +1,6 @@
 <!-- description: Focused report with test details and results only; no interpretive or explanatory text. -->
 
-# WildObs: Computer Vision Model Evaluation Report
+# AI Computer Vision Model Evaluation Report
 
 <!-- BEGIN:Test_Details -->
 ## Test details

@@ -129,6 +129,7 @@ def test_end_to_end(tmp_path, template, has_limitations):
     )
     report = run.report_path.read_text(encoding="utf-8")
     assert ("Limitations" in report) is has_limitations
+    assert report.index('class="report-logo"') < report.index("<h1>")
     assert "Felis catus" in report and "test model" in report
     assert "{Model_Name}" not in report
     assert run.misclassified_path.is_file()
@@ -255,6 +256,8 @@ def test_model_comparison_report_reads_folder_and_uses_shared_style(tmp_path):
     assert "Model B" in report and "0.9" in report
     assert "font-family:'Poppins'" in report
     assert "styled-table" in report
-    assert "<strong>Timestamp of report:</strong> 2026-10-08 10:14:05, 2026-10-08 10:20:00" in report
-    assert "<strong>Computer Vision (CV) model/s tested:</strong> Model A, Model B" in report
+    assert 'class="report-logo"' in report and "data:image/avif;base64," in report
+    assert report.index("report-logo") < report.index("<h1>")
+    assert "<strong>Timestamps of input evaluation reports:</strong> 2026-10-08 10:14:05, 2026-10-08 10:20:00" in report
+    assert "<strong>Computer Vision (CV) models tested:</strong> Model A, Model B" in report
     assert "<strong>Source location of test images:</strong> Edgbaston Reserve, QLD</p>" in report

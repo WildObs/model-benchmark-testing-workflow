@@ -13,6 +13,13 @@ body {
     padding: 20px;
 }
 
+.report-logo {
+    display: block;
+    max-height: 80px;
+    width: auto;
+    margin-bottom: 20px;
+}
+
 h1 {
     color: #2c3e50;
 }

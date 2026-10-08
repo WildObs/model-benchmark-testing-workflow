@@ -36,6 +36,19 @@ def embedded_font_css(templates_dir) -> str:
         )
     return "".join(rules)
 
+LOGO_FILE = Path("images") / "WildObs Logo(cropped+transparent).avif"
+
+
+def embedded_logo_html(templates_dir) -> str:
+    """WildObs logo as an inline base64 image, so reports stay a single portable file."""
+    path = Path(templates_dir) / LOGO_FILE
+    if not path.is_file():
+        logger.warning("Logo file not found: %s; report will have no logo", path)
+        return ""
+    data = base64.b64encode(path.read_bytes()).decode("ascii")
+    return f'<img class="report-logo" alt="WildObs logo" src="data:image/avif;base64,{data}">'
+
+
 MATHJAX = '<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>'
 
 
@@ -66,7 +79,7 @@ def write_html_report(
         "<!DOCTYPE html><html><head><meta charset=\"utf-8\">"
         f"<title>Model Evaluation Report - {model_name}</title>"
         f"<style>{embedded_font_css(config.templates_path)}{style}</style>{MATHJAX}</head>"
-        f'<body><div class="report-container">{body}</div></body></html>'
+        f'<body><div class="report-container">{embedded_logo_html(config.templates_path)}{body}</div></body></html>'
     )
 
     Path(config.output_path).mkdir(parents=True, exist_ok=True)

@@ -1,17 +1,17 @@
 <!-- description: Per-species comparison of F1 scores at each model's optimal confidence threshold. -->
 
-# WildObs: Computer Vision Model Evaluation Comparison Report
+# AI Computer Vision Model Evaluation Comparison Report
 
 ## Introduction
 This report aggregates multiple individual model evaluation reports and generates a comparison by species.
 
 ## Test details
 
-**Computer Vision (CV) model/s tested:** {Model_Names}
+**Computer Vision (CV) models tested:** {Model_Names}
 
-**Timestamp/s of input evaluation report/s:** {Report_Timestamp}
+**Timestamps of input evaluation reports:** {Report_Timestamp}
 
-**Source location/s of test images:** {Data_Source_Location}
+**Source location of test images:** {Data_Source_Location}
 
 ## F1 score by species and model
 
