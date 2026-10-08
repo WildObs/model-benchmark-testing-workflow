@@ -1,1 +1,3 @@
 pandas
+markdown
+galah  # optional: only needed for lookup_taxonomy

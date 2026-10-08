@@ -58,9 +58,13 @@ venv.bak/
 .pyre/
 .pytype/
 .idea/
+.vscode/
 
 # Generated input and report data (retain directory markers)
 Input_Data/*
 !Input_Data/.gitkeep
 Output_Reports/*
 !Output_Reports/.gitkeep
+# Run logs (retain directory marker)
+logs/*
+!logs/.gitkeep
