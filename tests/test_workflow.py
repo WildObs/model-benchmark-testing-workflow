@@ -228,7 +228,14 @@ def test_model_comparison_summary_handles_ties_and_missing_species():
     assert owl["Best performing model"] == "Model C"
     assert pd.isna(owl["f1 score Model A"])
     assert list(summary.columns) == [
-        "Species", "f1 score Model A", "f1 score Model B", "f1 score Model C",
+        "Species",
+        "Number of images",
+        "Matched scientific name (ALA)",
+        "Taxonomic Rank",
+        "Common name",
+        "f1 score Model A",
+        "f1 score Model B",
+        "f1 score Model C",
         "Best performing model",
     ]
 
@@ -261,6 +268,53 @@ def test_model_comparison_report_reads_folder_and_uses_shared_style(tmp_path):
     assert "<strong>Timestamps of input evaluation reports:</strong> 2026-10-08 10:14:05, 2026-10-08 10:20:00" in report
     assert "<strong>Computer Vision (CV) models tested:</strong> Model A, Model B" in report
     assert "<strong>Source location of test images:</strong> Edgbaston Reserve, QLD</p>" in report
+    assert "<th>Number of images</th>" in report
+    assert "<th>Matched scientific name (ALA)</th>" in report
+    assert "<th>Taxonomic Rank</th>" in report
+    assert "<th>Common name</th>" in report
+
+
+def test_model_comparison_extracts_and_populates_species_metadata(tmp_path):
+    def _write_rich_report(path, model_name, f1_score):
+        path.write_text(
+            "<html><body>"
+            f"<p><strong>Computer Vision (CV) model tested:</strong> {model_name}</p>"
+            "<p><strong>Timestamp of report:</strong> 2026-10-13 10:00:00</p>"
+            "<p><strong>Source location of test images:</strong> Test Location</p>"
+            "<p><strong>Species (or labels) evaluated:</strong></p>"
+            '<table class="styled-table">'
+            "<thead><tr>"
+            "<th>Species (or label)</th><th>Number of images</th>"
+            "<th>Matched scientific name (ALA)</th><th>Taxonomic Rank</th><th>Common name</th>"
+            "</tr></thead><tbody>"
+            "<tr><td>Felis catus</td><td>25</td><td>Felis catus</td><td>species</td><td>Cat</td></tr>"
+            "<tr><td>Vulpes vulpes</td><td>10</td><td>Vulpes vulpes</td><td>species</td><td>Red Fox</td></tr>"
+            "</tbody></table>"
+            "<h2>Optimal Confidence Threshold by Species</h2>"
+            "<table><thead><tr><th>species</th><th>f1_score</th></tr></thead><tbody>"
+            f"<tr><td>Felis catus</td><td>{f1_score}</td></tr>"
+            "<tr><td>Vulpes vulpes</td><td>0.75</td></tr>"
+            "</tbody></table>"
+            "</body></html>",
+            encoding="utf-8",
+        )
+
+    r1 = tmp_path / "WildObs_CV_Model_Evaluation_Report_Loc_M1_20261013.html"
+    r2 = tmp_path / "WildObs_CV_Model_Evaluation_Report_Loc_M2_20261013.html"
+    _write_rich_report(r1, "Model 1", 0.90)
+    _write_rich_report(r2, "Model 2", 0.85)
+
+    report_path = create_model_comparison_report([r1, r2], tmp_path / "out")
+    content = report_path.read_text(encoding="utf-8")
+
+    assert "<td>Felis catus</td>" in content
+    assert "<td>25</td>" in content
+    assert "<td>Cat</td>" in content
+    assert "<td>Vulpes vulpes</td>" in content
+    assert "<td>10</td>" in content
+    assert "<td>Red Fox</td>" in content
+    assert "<td>0.9</td>" in content or "<td>0.90" in content
+    assert "<td>Model 1</td>" in content
 
 
 def test_batch_run_multiple_models_in_set(tmp_path):
