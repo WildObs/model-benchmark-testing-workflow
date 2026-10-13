@@ -32,7 +32,18 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument("--collation-process", default="", help="How the test dataset was collated")
     parser.add_argument("--thresholds", nargs="+", type=float, default=DEFAULT_THRESHOLDS, help="Confidence thresholds")
     parser.add_argument("--lookup-taxonomy", action="store_true", help="Show a full taxonomy table (ALA galah, needs internet)")
-    parser.add_argument("--no-export-errors", action="store_true", help="Skip the misclassified images CSV")
+    parser.add_argument(
+        "--export-errors",
+        action="store_true",
+        default=False,
+        help="Save a CSV of misclassified images (default: False)",
+    )
+    parser.add_argument(
+        "--no-export-errors",
+        action="store_false",
+        dest="export_errors",
+        help="Do not save the misclassified images CSV",
+    )
     parser.add_argument(
         "--clear-existing",
         "--clear-existing-outputs",
@@ -72,7 +83,7 @@ def main(argv=None) -> int:
         data_source_location=args.source_location,
         data_collation_process=args.collation_process,
         thresholds=args.thresholds,
-        export_errors=not args.no_export_errors,
+        export_errors=args.export_errors,
         lookup_taxonomy=args.lookup_taxonomy,
         clear_existing_outputs=args.clear_existing_outputs,
         template=args.template,

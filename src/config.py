@@ -23,7 +23,7 @@ class BenchmarkConfig:
     data_source_location: str = ""
     data_collation_process: str = ""
     thresholds: List[float] = field(default_factory=lambda: list(DEFAULT_THRESHOLDS))
-    export_errors: bool = True
+    export_errors: bool = False  # optional: save a CSV of misclassified images
     lookup_taxonomy: bool = False  # look up full taxonomy for each species using ALA galah (needs internet)
     clear_existing_outputs: bool = False  # clear existing reports/outputs in the set folder before generating new ones
     clear_existing: bool = False  # alias for clear_existing_outputs

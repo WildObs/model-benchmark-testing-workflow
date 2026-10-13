@@ -134,7 +134,7 @@ Outputs are organized into matching set subfolders:
 
 - `Output_Reports/<test_set_name>/WildObs_CV_Model_Evaluation_Report_<data_source_location>_<Model_Name>_<TimeStamp>.html`: the HTML evaluation report for each model in the set.
 - `Output_Reports/<test_set_name>/WildObs_CV_Model_Evaluation_Comparison_Report_<TimeStamp>.html`: the multi-model comparison report for the set (generated when the set contains 2 or more models).
-- `Output_Reports/<test_set_name>/Misclassified_Images_<model>_<timestamp>.csv`: records of incorrectly classified images, useful for error analysis (optional).
+- `Output_Reports/<test_set_name>/Misclassified_Images_<model>_<timestamp>.csv`: records of incorrectly classified images, useful for error analysis (optional, disabled by default; enable with `export_errors=True` or `--export-errors`).
 - `logs/benchmark_<timestamp>.log`: detailed log of the run, including warnings about data issues such as untagged deployments or images without a matching observation.
 
 ## Example Workflow

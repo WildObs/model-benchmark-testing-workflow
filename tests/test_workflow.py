@@ -120,6 +120,7 @@ def test_end_to_end(tmp_path, template, has_limitations):
     make_camtrap(tmp_path / "in" / "export")
     config = BenchmarkConfig(
         "export", data_source_location="North-West / Plot #2", thresholds=[0.5], template=template,
+        export_errors=True,
         input_path=tmp_path / "in", output_path=tmp_path / "out", log_path=tmp_path / "logs",
     )
     run = run_benchmark(config)
@@ -469,5 +470,38 @@ def test_batch_run_with_clear_existing_outputs(tmp_path):
     assert not stale_report.exists()
     assert not stale_csv.exists()
     assert result.runs[0].report_path.is_file()
+
+
+def test_export_errors_default_is_false(tmp_path):
+    set_name = "Set_Export_Errors_Default"
+    set_dir = tmp_path / "in" / set_name
+    make_camtrap(set_dir / "export_1", model_name="Model 1")
+
+    # Default export_errors should be False
+    config = BenchmarkConfig(
+        test_set_name=set_name,
+        input_path=tmp_path / "in",
+        output_path=tmp_path / "out",
+        log_path=tmp_path / "logs",
+    )
+    assert config.export_errors is False
+
+    result = run_benchmark(config)
+    assert result.runs[0].misclassified_path is None
+    csv_files = list((tmp_path / "out" / set_name).glob("Misclassified_Images_*.csv"))
+    assert len(csv_files) == 0
+
+    # Explicitly enabling export_errors creates the CSV
+    config_enabled = BenchmarkConfig(
+        test_set_name=set_name,
+        export_errors=True,
+        input_path=tmp_path / "in",
+        output_path=tmp_path / "out",
+        log_path=tmp_path / "logs",
+    )
+    result_enabled = run_benchmark(config_enabled)
+    assert result_enabled.runs[0].misclassified_path is not None
+    assert result_enabled.runs[0].misclassified_path.is_file()
+
 
 
