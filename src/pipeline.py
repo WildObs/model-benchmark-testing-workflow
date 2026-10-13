@@ -1,13 +1,14 @@
 """End-to-end benchmark run: load data, compute metrics, write outputs."""
 
 import logging
+import shutil
 import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from .config import BenchmarkConfig
+from .config import PROJECT_ROOT, BenchmarkConfig
 from .data_loader import load_benchmark_table
 from .logging_setup import setup_logging
 from .metrics import BenchmarkMetrics, compute_metrics
@@ -110,6 +111,25 @@ def discover_export_folders(folder: Path) -> List[Path]:
     return export_dirs
 
 
+def clear_output_folder(folder: Union[str, Path]) -> int:
+    """Remove all files and directories inside a folder, leaving the folder itself."""
+    folder = Path(folder)
+    removed_count = 0
+    if not folder.is_dir():
+        return removed_count
+    for item in list(folder.iterdir()):
+        try:
+            if item.is_file() or item.is_symlink():
+                item.unlink()
+                removed_count += 1
+            elif item.is_dir():
+                shutil.rmtree(item)
+                removed_count += 1
+        except Exception as exc:
+            logger.warning("Failed to remove '%s' during output folder cleanup: %s", item, exc)
+    return removed_count
+
+
 def run_benchmark(config: BenchmarkConfig) -> BenchmarkBatchRun:
     """Run the full workflow for a test set containing one or more Camtrap DP exports."""
     now = datetime.now()
@@ -122,6 +142,16 @@ def run_benchmark(config: BenchmarkConfig) -> BenchmarkBatchRun:
         logger.debug("Config: %s", config)
         Path(config.input_path).mkdir(parents=True, exist_ok=True)
         set_output_dir = config.set_output_folder
+        if config.clear_existing_outputs and set_output_dir.is_dir():
+            if set_output_dir.resolve() in (config.output_path.resolve(), PROJECT_ROOT.resolve()):
+                logger.warning(
+                    "Skipping output cleanup: set_output_folder '%s' matches output_path or project root",
+                    set_output_dir,
+                )
+            else:
+                logger.info("Clearing existing outputs in '%s'", set_output_dir)
+                removed = clear_output_folder(set_output_dir)
+                logger.info("Cleared %d existing output file(s)/folder(s)", removed)
         set_output_dir.mkdir(parents=True, exist_ok=True)
 
         export_folders = discover_export_folders(config.set_folder)

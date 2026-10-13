@@ -112,7 +112,7 @@ To independently compare multiple evaluation reports from an existing folder, op
 
 ```bash
 python scripts/run_benchmark.py Edgbaston_2026_10 --template minimal
-python scripts/run_benchmark.py Wychitella_2026_09
+python scripts/run_benchmark.py Wychitella_2026_09 --clear-existing
 python scripts/run_benchmark.py --list-templates
 python scripts/run_benchmark.py --help
 ```
@@ -128,7 +128,9 @@ Individual sections of any template can be switched off with `exclude_sections` 
 Set `lookup_taxonomy=True` (notebook) or pass `--lookup-taxonomy` (command line) to replace the species list in the report with a taxonomy table (number of images, matched name, taxonomic rank, kingdom to genus, common name) looked up from the Atlas of Living Australia using the [galah](https://galah.ala.org.au/Python/) package. This needs an internet connection and `pip install galah`. Labels with no valid match (such as `blank`) are kept with empty lookup values, and a failed lookup never stops the report.
 
 ## Outputs
-Every run has a timestamp so earlier results are never overwritten. Outputs are organized into matching set subfolders:
+Every run has a timestamp. To prevent reports from accumulating across multiple runs, set `clear_existing_outputs=True` in the notebook configuration or pass `--clear-existing` on the command line to clear existing reports and outputs in the set folder before generating new ones.
+
+Outputs are organized into matching set subfolders:
 
 - `Output_Reports/<test_set_name>/WildObs_CV_Model_Evaluation_Report_<data_source_location>_<Model_Name>_<TimeStamp>.html`: the HTML evaluation report for each model in the set.
 - `Output_Reports/<test_set_name>/WildObs_CV_Model_Evaluation_Comparison_Report_<TimeStamp>.html`: the multi-model comparison report for the set (generated when the set contains 2 or more models).

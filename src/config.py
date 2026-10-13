@@ -25,6 +25,8 @@ class BenchmarkConfig:
     thresholds: List[float] = field(default_factory=lambda: list(DEFAULT_THRESHOLDS))
     export_errors: bool = True
     lookup_taxonomy: bool = False  # look up full taxonomy for each species using ALA galah (needs internet)
+    clear_existing_outputs: bool = False  # clear existing reports/outputs in the set folder before generating new ones
+    clear_existing: bool = False  # alias for clear_existing_outputs
 
     # Report formatting
     template: str = "full"  # template name in templates_path, or a path to a .md file
@@ -42,6 +44,11 @@ class BenchmarkConfig:
             self.test_set_name = self.input_camtrap_folder_name
         elif not self.input_camtrap_folder_name and self.test_set_name:
             self.input_camtrap_folder_name = self.test_set_name
+
+        if self.clear_existing and not self.clear_existing_outputs:
+            self.clear_existing_outputs = self.clear_existing
+        elif self.clear_existing_outputs and not self.clear_existing:
+            self.clear_existing = self.clear_existing_outputs
 
         for name in ("input_path", "output_path", "templates_path", "log_path"):
             setattr(self, name, _resolve(getattr(self, name)))

@@ -33,6 +33,13 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument("--thresholds", nargs="+", type=float, default=DEFAULT_THRESHOLDS, help="Confidence thresholds")
     parser.add_argument("--lookup-taxonomy", action="store_true", help="Show a full taxonomy table (ALA galah, needs internet)")
     parser.add_argument("--no-export-errors", action="store_true", help="Skip the misclassified images CSV")
+    parser.add_argument(
+        "--clear-existing",
+        "--clear-existing-outputs",
+        action="store_true",
+        dest="clear_existing_outputs",
+        help="Clear existing reports and outputs in the set folder before generating new ones",
+    )
     parser.add_argument("--template", default="full", help="Template name or path to a .md template")
     parser.add_argument("--exclude-sections", nargs="*", default=[], help="Template sections to leave out")
     parser.add_argument("--input-path", default="Input_Data")
@@ -67,6 +74,7 @@ def main(argv=None) -> int:
         thresholds=args.thresholds,
         export_errors=not args.no_export_errors,
         lookup_taxonomy=args.lookup_taxonomy,
+        clear_existing_outputs=args.clear_existing_outputs,
         template=args.template,
         exclude_sections=args.exclude_sections,
         input_path=args.input_path,

@@ -415,3 +415,59 @@ def test_create_model_comparison_report_accepts_file_sequence(tmp_path):
     assert "Model A" in content and "Model B" in content
     assert "0.85" in content and "0.92" in content
 
+
+def test_clear_output_folder(tmp_path):
+    from src.pipeline import clear_output_folder
+
+    target_dir = tmp_path / "test_clear"
+    target_dir.mkdir()
+    (target_dir / "report1.html").write_text("dummy", encoding="utf-8")
+    (target_dir / "data.csv").write_text("dummy", encoding="utf-8")
+    sub = target_dir / "sub_folder"
+    sub.mkdir()
+    (sub / "nested.txt").write_text("dummy", encoding="utf-8")
+
+    removed = clear_output_folder(target_dir)
+    assert removed == 3
+    assert target_dir.is_dir()
+    assert list(target_dir.iterdir()) == []
+
+
+def test_batch_run_with_clear_existing_outputs(tmp_path):
+    set_name = "Set_Clear_Test"
+    set_dir = tmp_path / "in" / set_name
+    make_camtrap(set_dir / "export_1", model_name="Model 1")
+
+    out_set_dir = tmp_path / "out" / set_name
+    out_set_dir.mkdir(parents=True)
+    stale_report = out_set_dir / "WildObs_CV_Model_Evaluation_Report_Old_20260101.html"
+    stale_report.write_text("old report", encoding="utf-8")
+    stale_csv = out_set_dir / "Misclassified_Images_Old.csv"
+    stale_csv.write_text("old csv", encoding="utf-8")
+
+    # Run without clear_existing_outputs -> stale files should still be present
+    config_keep = BenchmarkConfig(
+        test_set_name=set_name,
+        clear_existing_outputs=False,
+        input_path=tmp_path / "in",
+        output_path=tmp_path / "out",
+        log_path=tmp_path / "logs",
+    )
+    run_benchmark(config_keep)
+    assert stale_report.is_file()
+    assert stale_csv.is_file()
+
+    # Run with clear_existing_outputs -> stale files should be cleared
+    config_clear = BenchmarkConfig(
+        test_set_name=set_name,
+        clear_existing_outputs=True,
+        input_path=tmp_path / "in",
+        output_path=tmp_path / "out",
+        log_path=tmp_path / "logs",
+    )
+    result = run_benchmark(config_clear)
+    assert not stale_report.exists()
+    assert not stale_csv.exists()
+    assert result.runs[0].report_path.is_file()
+
+
