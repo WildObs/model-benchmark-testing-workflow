@@ -10,7 +10,9 @@ from src.config import BenchmarkConfig  # noqa: E402
 from src.data_loader import extract_sequence  # noqa: E402
 from src.metrics import compute_metrics  # noqa: E402
 from src.model_comparison import (  # noqa: E402
+    EvaluationReport,
     _EvaluationReportParser,
+    _build_model_performance_summary,
     _build_summary,
     create_model_comparison_report,
 )
@@ -273,6 +275,60 @@ def test_model_comparison_report_reads_folder_and_uses_shared_style(tmp_path):
     assert "<th>Matched scientific name (ALA)</th>" in report
     assert "<th>Taxonomic Rank</th>" in report
     assert "<th>Common name</th>" in report
+    assert "Model performance summary" in report
+    assert "<th>Average Recall</th>" in report
+    assert "<th>Average Precision</th>" in report
+    assert "<th>Average F1 Score</th>" in report
+    assert "0.8000" in report
+
+
+def test_build_model_performance_summary_computes_averages():
+    rep_a = EvaluationReport(
+        model_name="Model A",
+        timestamp="2026-10-08 10:00:00",
+        source_location="Location A",
+        scores={"Cat": 0.8, "Fox": 0.6},
+        species_metadata={},
+        species_metrics={
+            "Cat": {"recall": 0.8, "precision": 0.8, "f1_score": 0.8},
+            "Fox": {"recall": 0.6, "precision": 0.6, "f1_score": 0.6},
+        },
+    )
+    rep_b = EvaluationReport(
+        model_name="Model B",
+        timestamp="2026-10-08 10:00:00",
+        source_location="Location A",
+        scores={"Cat": 0.9, "Fox": 0.7},
+        species_metadata={},
+        species_metrics={
+            "Cat": {"recall": 1.0, "precision": 0.8, "f1_score": 0.9},
+            "Fox": {"recall": 0.8, "precision": 0.6, "f1_score": 0.7},
+        },
+    )
+    df = _build_model_performance_summary([rep_a, rep_b])
+    assert list(df.columns) == ["Model", "Average Recall", "Average Precision", "Average F1 Score"]
+    assert len(df) == 2
+    row_a = df[df["Model"] == "Model A"].iloc[0]
+    assert row_a["Average Recall"] == 0.7
+    assert row_a["Average Precision"] == 0.7
+    assert row_a["Average F1 Score"] == 0.7
+
+    row_b = df[df["Model"] == "Model B"].iloc[0]
+    assert row_b["Average Recall"] == 0.9
+    assert row_b["Average Precision"] == 0.7
+    assert row_b["Average F1 Score"] == 0.8
+
+
+def test_build_model_performance_summary_handles_missing_metrics():
+    # If recall and precision are not available, average recall and precision are None, f1 is computed
+    rep = ("Model Solo", {"Cat": 0.8, "Fox": 0.6})
+    df = _build_model_performance_summary([rep])
+    assert list(df.columns) == ["Model", "Average Recall", "Average Precision", "Average F1 Score"]
+    row = df.iloc[0]
+    assert row["Model"] == "Model Solo"
+    assert row["Average Recall"] is None
+    assert row["Average Precision"] is None
+    assert row["Average F1 Score"] == 0.7
 
 
 def test_model_comparison_extracts_and_populates_species_metadata(tmp_path):
@@ -348,11 +404,15 @@ def test_batch_run_multiple_models_in_set(tmp_path):
         assert r.report_path.parent == set_out
         assert r.report_path.is_file()
 
-    # Comparison report should contain both models and location
+    # Comparison report should contain both models, location, and performance summary table
     comparison_html = results.comparison_report_path.read_text(encoding="utf-8")
     assert "AddaxAI Vic" in comparison_html
     assert "AWC 135" in comparison_html
     assert "Wychitella Reserves, VIC" in comparison_html
+    assert "Model performance summary" in comparison_html
+    assert "<th>Average Recall</th>" in comparison_html
+    assert "<th>Average Precision</th>" in comparison_html
+    assert "<th>Average F1 Score</th>" in comparison_html
 
 
 def test_batch_run_single_model_skips_comparison_report(tmp_path):

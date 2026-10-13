@@ -33,6 +33,7 @@ class EvaluationReport:
     source_location: str
     scores: Dict[str, float]
     species_metadata: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    species_metrics: Dict[str, Dict[str, Optional[float]]] = field(default_factory=dict)
 
 
 class _EvaluationReportParser(HTMLParser):
@@ -43,6 +44,7 @@ class _EvaluationReportParser(HTMLParser):
         self.model_name = ""
         self.timestamp = ""
         self.source_location = ""
+        self.optimal_species_metrics: Dict[str, Dict[str, Optional[float]]] = {}
         self._in_strong = False
         self._strong_parts: List[str] = []
         self._pending_detail = ""
@@ -123,7 +125,10 @@ class _EvaluationReportParser(HTMLParser):
                 continue
             species_index = headers.index("species")
             f1_index = headers.index("f1_score")
+            recall_index = headers.index("recall") if "recall" in headers else None
+            precision_index = headers.index("precision") if "precision" in headers else None
             scores = {}
+            species_metrics = {}
             for row in rows[1:]:
                 if len(row) <= max(species_index, f1_index):
                     raise ValueError(f"Malformed optimal-threshold table in report: {report_path}")
@@ -143,6 +148,31 @@ class _EvaluationReportParser(HTMLParser):
                 if species in scores:
                     raise ValueError(f"Duplicate species '{species}' in report: {report_path}")
                 scores[species] = score
+
+                recall_val: Optional[float] = None
+                if recall_index is not None and len(row) > recall_index and row[recall_index].strip():
+                    try:
+                        parsed_recall = float(row[recall_index])
+                        if 0.0 <= parsed_recall <= 1.0:
+                            recall_val = parsed_recall
+                    except (ValueError, TypeError):
+                        recall_val = None
+
+                precision_val: Optional[float] = None
+                if precision_index is not None and len(row) > precision_index and row[precision_index].strip():
+                    try:
+                        parsed_precision = float(row[precision_index])
+                        if 0.0 <= parsed_precision <= 1.0:
+                            precision_val = parsed_precision
+                    except (ValueError, TypeError):
+                        precision_val = None
+
+                species_metrics[species] = {
+                    "recall": recall_val,
+                    "precision": precision_val,
+                    "f1_score": score,
+                }
+            self.optimal_species_metrics = species_metrics
             return self.model_name, scores
 
         raise ValueError(
@@ -233,6 +263,7 @@ def _read_evaluation_report(report_path: Path) -> EvaluationReport:
         parser.source_location or "Not specified",
         scores,
         metadata,
+        parser.optimal_species_metrics,
     )
 
 
@@ -332,6 +363,79 @@ def _build_summary(
     return pd.DataFrame(rows, columns=columns)
 
 
+def _build_model_performance_summary(
+    reports: Sequence[
+        Union[
+            EvaluationReport,
+            Tuple[str, Dict[str, float]],
+            Tuple[str, Dict[str, float], Dict[str, Dict[str, Any]]],
+            Tuple[
+                str,
+                Dict[str, float],
+                Dict[str, Dict[str, Any]],
+                Dict[str, Dict[str, Optional[float]]],
+            ],
+        ]
+    ]
+) -> pd.DataFrame:
+    """Aggregate per-species scores to calculate average recall, precision, and F1 per model."""
+    rows = []
+    for r in reports:
+        if isinstance(r, EvaluationReport):
+            model_name = r.model_name
+            scores = r.scores
+            species_metrics = r.species_metrics
+        elif isinstance(r, (list, tuple)):
+            model_name = r[0]
+            scores = r[1]
+            if len(r) >= 4 and isinstance(r[3], dict):
+                species_metrics = r[3]
+            elif len(r) >= 3 and isinstance(r[2], dict) and any(
+                isinstance(v, dict) and ("recall" in v or "precision" in v) for v in r[2].values()
+            ):
+                species_metrics = r[2]
+            else:
+                species_metrics = {}
+        else:
+            raise TypeError(f"Unsupported report type: {type(r)}")
+
+        recalls = [
+            m["recall"]
+            for m in species_metrics.values()
+            if isinstance(m, dict) and m.get("recall") is not None
+        ]
+        precisions = [
+            m["precision"]
+            for m in species_metrics.values()
+            if isinstance(m, dict) and m.get("precision") is not None
+        ]
+        f1s = [
+            m["f1_score"]
+            for m in species_metrics.values()
+            if isinstance(m, dict) and m.get("f1_score") is not None
+        ]
+        if not f1s and scores:
+            f1s = [v for v in scores.values() if v is not None]
+
+        avg_recall = round(sum(recalls) / len(recalls), 4) if recalls else None
+        avg_precision = round(sum(precisions) / len(precisions), 4) if precisions else None
+        avg_f1 = round(sum(f1s) / len(f1s), 4) if f1s else None
+
+        rows.append(
+            {
+                "Model": model_name,
+                "Average Recall": avg_recall,
+                "Average Precision": avg_precision,
+                "Average F1 Score": avg_f1,
+            }
+        )
+
+    return pd.DataFrame(
+        rows,
+        columns=["Model", "Average Recall", "Average Precision", "Average F1 Score"],
+    )
+
+
 def create_model_comparison_report(
     reports_folder: Union[str, Path, Sequence[Union[str, Path]]],
     output_folder: Union[str, Path],
@@ -363,11 +467,23 @@ def create_model_comparison_report(
         )
 
     reports = [_read_evaluation_report(path) for path in report_paths]
+    model_summary = _build_model_performance_summary(reports)
+    model_summary_html = model_summary.to_html(
+        index=False,
+        classes="styled-table",
+        border=0,
+        na_rep="N/A",
+        escape=True,
+        float_format=lambda x: f"{x:.4f}",
+    )
     summary = _build_summary(reports)
     summary_html = summary.to_html(
         index=False, classes="styled-table", border=0, na_rep="N/A", escape=True
     )
-    placeholders = {"Comparison_Summary_Table": Placeholder(summary_html, "html")}
+    placeholders = {
+        "Model_Performance_Summary_Table": Placeholder(model_summary_html, "html"),
+        "Comparison_Summary_Table": Placeholder(summary_html, "html"),
+    }
     placeholders.update({name: Placeholder(value) for name, value in _build_test_details(reports).items()})
     template = COMPARISON_TEMPLATE
     body = render_template(template, placeholders)
