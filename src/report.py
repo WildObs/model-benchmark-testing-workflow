@@ -4,6 +4,7 @@ import base64
 import logging
 import re
 from pathlib import Path
+from typing import Optional, Union
 
 import pandas as pd
 
@@ -65,6 +66,7 @@ def write_html_report(
     image_counts: dict,
     timestamp: str,
     run_id: str,
+    output_dir: Optional[Union[str, Path]] = None,
 ) -> Path:
     template_path = resolve_template(config.template, config.templates_path)
     logger.info("Rendering report with template '%s'", template_path.name)
@@ -82,9 +84,10 @@ def write_html_report(
         f'<body><div class="report-container">{embedded_logo_html(config.templates_path)}{body}</div></body></html>'
     )
 
-    Path(config.output_path).mkdir(parents=True, exist_ok=True)
+    target_dir = Path(output_dir) if output_dir else config.set_output_folder
+    target_dir.mkdir(parents=True, exist_ok=True)
     data_source_location = config.data_source_location.strip() or "Not specified"
-    report_path = Path(config.output_path) / (
+    report_path = target_dir / (
         "WildObs_CV_Model_Evaluation_Report_"
         f"{_sanitize_filename_component(data_source_location)}_"
         f"{_sanitize_filename_component(model_name)}_{run_id}.html"
@@ -94,10 +97,17 @@ def write_html_report(
     return report_path
 
 
-def export_misclassified(config: BenchmarkConfig, merged: pd.DataFrame, model_name: str, run_id: str) -> Path:
+def export_misclassified(
+    config: BenchmarkConfig,
+    merged: pd.DataFrame,
+    model_name: str,
+    run_id: str,
+    output_dir: Optional[Union[str, Path]] = None,
+) -> Path:
     errors = merged[merged["true_species"] != merged["pred_species"]]
-    Path(config.output_path).mkdir(parents=True, exist_ok=True)
-    path = Path(config.output_path) / f"Misclassified_Images_{model_name}_{run_id}.csv"
+    target_dir = Path(output_dir) if output_dir else config.set_output_folder
+    target_dir.mkdir(parents=True, exist_ok=True)
+    path = target_dir / f"Misclassified_Images_{model_name}_{run_id}.csv"
     errors.to_csv(path, index=False)
     logger.info("Exported %d misclassified images to %s", len(errors), path)
     return path

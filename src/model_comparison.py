@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import pandas as pd
 
@@ -201,18 +201,33 @@ def _build_summary(reports: List[Tuple[str, Dict[str, float]]]) -> pd.DataFrame:
 
 
 def create_model_comparison_report(
-    reports_folder: Union[str, Path], output_folder: Union[str, Path]
+    reports_folder: Union[str, Path, Sequence[Union[str, Path]]],
+    output_folder: Union[str, Path],
+    run_id: Optional[str] = None,
 ) -> Path:
-    """Create an HTML comparison report from evaluation reports in a folder."""
-    reports_dir = Path(reports_folder).expanduser().resolve()
-    if not reports_dir.is_dir():
-        raise NotADirectoryError(f"Evaluation reports folder does not exist: {reports_dir}")
+    """Create an HTML comparison report from evaluation reports.
 
-    report_paths = sorted(reports_dir.glob(f"{REPORT_PREFIX}*.html"))
+    reports_folder can be:
+    - A folder containing evaluation reports (WildObs_CV_Model_Evaluation_Report_*.html)
+    - A list/sequence of Paths to specific evaluation report files.
+    """
+    if isinstance(reports_folder, (list, tuple, set)):
+        report_paths = [Path(p).expanduser().resolve() for p in reports_folder]
+        for p in report_paths:
+            if not p.is_file():
+                raise FileNotFoundError(f"Evaluation report file not found: {p}")
+        source_desc = "provided"
+    else:
+        reports_dir = Path(reports_folder).expanduser().resolve()
+        if not reports_dir.is_dir():
+            raise NotADirectoryError(f"Evaluation reports folder does not exist: {reports_dir}")
+        report_paths = sorted(reports_dir.glob(f"{REPORT_PREFIX}*.html"))
+        source_desc = f"in {reports_dir}"
+
     if len(report_paths) < 2:
         raise ValueError(
             f"Expected at least two evaluation reports named "
-            f"'{REPORT_PREFIX}*.html' in {reports_dir}, found {len(report_paths)}."
+            f"'{REPORT_PREFIX}*.html' {source_desc}, found {len(report_paths)}."
         )
 
     reports = [_read_evaluation_report(path) for path in report_paths]
@@ -230,7 +245,7 @@ def create_model_comparison_report(
 
     output_dir = Path(output_folder).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = run_id if run_id else datetime.now().strftime("%Y%m%d_%H%M%S")
     report_path = output_dir / f"WildObs_CV_Model_Evaluation_Comparison_Report_{timestamp}.html"
     document = (
         "<!DOCTYPE html><html><head><meta charset=\"utf-8\">"

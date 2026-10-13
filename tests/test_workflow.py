@@ -22,8 +22,8 @@ from src.utils import threshold_label  # noqa: E402
 TEMPLATES = Path(__file__).resolve().parents[1] / "templates"
 
 
-def make_camtrap(folder: Path):
-    folder.mkdir(parents=True)
+def make_camtrap(folder: Path, model_name: str = "test model"):
+    folder.mkdir(parents=True, exist_ok=True)
     pd.DataFrame({
         "deploymentID": ["d1", "d2"],
         "deploymentTags": ["Felis catus", "Vulpes vulpes"],
@@ -39,7 +39,7 @@ def make_camtrap(folder: Path):
         "observationType": ["animal"] * 4,
         "scientificName": ["Felis catus", "Vulpes vulpes", "Vulpes vulpes", "Vulpes vulpes"],
         "classificationProbability": ["0.9", "0.8", "0.95", "0.4"],
-        "classifiedBy": ["test model"] * 4,
+        "classifiedBy": [model_name] * 4,
     }).to_csv(folder / "observations.csv", index=False)
 
 
@@ -261,3 +261,103 @@ def test_model_comparison_report_reads_folder_and_uses_shared_style(tmp_path):
     assert "<strong>Timestamps of input evaluation reports:</strong> 2026-10-08 10:14:05, 2026-10-08 10:20:00" in report
     assert "<strong>Computer Vision (CV) models tested:</strong> Model A, Model B" in report
     assert "<strong>Source location of test images:</strong> Edgbaston Reserve, QLD</p>" in report
+
+
+def test_batch_run_multiple_models_in_set(tmp_path):
+    set_name = "Wychitella_2026_09"
+    set_dir = tmp_path / "in" / set_name
+    make_camtrap(set_dir / "export_model_1", model_name="AddaxAI Vic")
+    make_camtrap(set_dir / "export_model_2", model_name="AWC 135")
+
+    config = BenchmarkConfig(
+        test_set_name=set_name,
+        data_source_location="Wychitella Reserves, VIC",
+        thresholds=[0.5],
+        input_path=tmp_path / "in",
+        output_path=tmp_path / "out",
+        log_path=tmp_path / "logs",
+    )
+    results = run_benchmark(config)
+
+    assert results.set_name == set_name
+    assert len(results.runs) == 2
+    assert sorted(results.model_names) == ["AWC 135", "AddaxAI Vic"]
+    assert results.comparison_report_path is not None
+    assert results.comparison_report_path.is_file()
+    assert results.report_path == results.comparison_report_path
+
+    # Check output directory structure: Output_Reports / set_name
+    set_out = tmp_path / "out" / set_name
+    assert results.comparison_report_path.parent == set_out
+    for r in results.runs:
+        assert r.report_path.parent == set_out
+        assert r.report_path.is_file()
+
+    # Comparison report should contain both models and location
+    comparison_html = results.comparison_report_path.read_text(encoding="utf-8")
+    assert "AddaxAI Vic" in comparison_html
+    assert "AWC 135" in comparison_html
+    assert "Wychitella Reserves, VIC" in comparison_html
+
+
+def test_batch_run_single_model_skips_comparison_report(tmp_path):
+    set_name = "Edgbaston_Single_Model"
+    set_dir = tmp_path / "in" / set_name
+    make_camtrap(set_dir / "export_solo", model_name="Solo Model")
+
+    config = BenchmarkConfig(
+        test_set_name=set_name,
+        thresholds=[0.5],
+        input_path=tmp_path / "in",
+        output_path=tmp_path / "out",
+        log_path=tmp_path / "logs",
+    )
+    results = run_benchmark(config)
+
+    assert results.set_name == set_name
+    assert len(results.runs) == 1
+    assert results.model_names == ["Solo Model"]
+    assert results.comparison_report_path is None
+    assert results.report_path == results.runs[0].report_path
+    assert results.report_path.is_file()
+
+    # Ensure no comparison report was saved in the output directory
+    set_out = tmp_path / "out" / set_name
+    comparison_files = list(set_out.glob("WildObs_CV_Model_Evaluation_Comparison_Report_*.html"))
+    assert len(comparison_files) == 0
+
+
+def test_discover_export_folders_errors(tmp_path):
+    from src.pipeline import discover_export_folders
+
+    # Non-existent set folder
+    with pytest.raises(FileNotFoundError, match="Test set folder not found"):
+        discover_export_folders(tmp_path / "non_existent")
+
+    # Set folder exists but is empty
+    empty_set = tmp_path / "empty_set"
+    empty_set.mkdir()
+    with pytest.raises(FileNotFoundError, match="No Camtrap DP export folders found"):
+        discover_export_folders(empty_set)
+
+    # Set folder has subdirectories without observations.csv
+    invalid_set = tmp_path / "invalid_set"
+    (invalid_set / "sub1").mkdir(parents=True)
+    with pytest.raises(FileNotFoundError, match="No Camtrap DP export folders .* found"):
+        discover_export_folders(invalid_set)
+
+
+def test_create_model_comparison_report_accepts_file_sequence(tmp_path):
+    report_a = tmp_path / "WildObs_CV_Model_Evaluation_Report_Loc_Model_A_2026.html"
+    report_b = tmp_path / "WildObs_CV_Model_Evaluation_Report_Loc_Model_B_2026.html"
+    _write_evaluation_report(report_a, "Model A", [("Cat", "0.85")])
+    _write_evaluation_report(report_b, "Model B", [("Cat", "0.92")])
+
+    out_dir = tmp_path / "out"
+    comparison = create_model_comparison_report([report_a, report_b], out_dir, run_id="test_run")
+    assert comparison.name == "WildObs_CV_Model_Evaluation_Comparison_Report_test_run.html"
+    assert comparison.is_file()
+    content = comparison.read_text(encoding="utf-8")
+    assert "Model A" in content and "Model B" in content
+    assert "0.85" in content and "0.92" in content
+

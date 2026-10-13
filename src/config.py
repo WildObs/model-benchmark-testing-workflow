@@ -18,7 +18,8 @@ class BenchmarkConfig:
     works from the notebook (scripts/) and from the command line.
     """
 
-    input_camtrap_folder_name: str
+    test_set_name: str = ""
+    input_camtrap_folder_name: str = ""
     data_source_location: str = ""
     data_collation_process: str = ""
     thresholds: List[float] = field(default_factory=lambda: list(DEFAULT_THRESHOLDS))
@@ -37,6 +38,11 @@ class BenchmarkConfig:
     log_level: str = "INFO"
 
     def __post_init__(self):
+        if not self.test_set_name and self.input_camtrap_folder_name:
+            self.test_set_name = self.input_camtrap_folder_name
+        elif not self.input_camtrap_folder_name and self.test_set_name:
+            self.input_camtrap_folder_name = self.test_set_name
+
         for name in ("input_path", "output_path", "templates_path", "log_path"):
             setattr(self, name, _resolve(getattr(self, name)))
         self.thresholds = sorted({float(t) for t in self.thresholds})
@@ -44,8 +50,8 @@ class BenchmarkConfig:
         self.validate()
 
     def validate(self) -> None:
-        if not self.input_camtrap_folder_name:
-            raise ValueError("input_camtrap_folder_name must be set.")
+        if not self.test_set_name and not self.input_camtrap_folder_name:
+            raise ValueError("test_set_name must be set.")
         if not self.thresholds:
             raise ValueError("At least one confidence threshold is required.")
         bad = [t for t in self.thresholds if not 0.0 <= t <= 1.0]
@@ -55,8 +61,20 @@ class BenchmarkConfig:
             raise ValueError(f"Invalid log_level: {self.log_level}")
 
     @property
+    def set_name(self) -> str:
+        return self.test_set_name or self.input_camtrap_folder_name
+
+    @property
+    def set_folder(self) -> Path:
+        return Path(self.input_path) / self.set_name
+
+    @property
     def camtrap_folder(self) -> Path:
-        return Path(self.input_path) / self.input_camtrap_folder_name
+        return self.set_folder
+
+    @property
+    def set_output_folder(self) -> Path:
+        return Path(self.output_path) / self.set_name
 
 
 def _resolve(path: Union[str, Path]) -> Path:

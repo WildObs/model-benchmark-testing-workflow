@@ -2,8 +2,9 @@
 
 Examples:
     python scripts/run_benchmark.py --list-templates
-    python scripts/run_benchmark.py wildobs-national-20260428055250 --template minimal
-    python scripts/run_benchmark.py my-export --exclude-sections Limitations Full_Confusion_Matrices
+    python scripts/run_benchmark.py Edgbaston_2026_10
+    python scripts/run_benchmark.py Wychitella_2026_09 --template minimal
+    python scripts/run_benchmark.py Edgbaston_2026_10 --exclude-sections Limitations Full_Confusion_Matrices
 """
 
 import argparse
@@ -19,8 +20,14 @@ from src.templating import list_sections, list_templates, resolve_template  # no
 
 
 def parse_args(argv=None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Benchmark an AI species recognition model using a Camtrap DP export.")
-    parser.add_argument("input_folder", nargs="?", help="Name of the Camtrap DP folder inside the input path")
+    parser = argparse.ArgumentParser(
+        description="Benchmark AI species recognition models across a testing set of Camtrap DP exports."
+    )
+    parser.add_argument(
+        "test_set",
+        nargs="?",
+        help="Name of the test set folder inside the input path (containing one or more Camtrap DP exports)",
+    )
     parser.add_argument("--source-location", default="", help="Where the test images came from")
     parser.add_argument("--collation-process", default="", help="How the test dataset was collated")
     parser.add_argument("--thresholds", nargs="+", type=float, default=DEFAULT_THRESHOLDS, help="Confidence thresholds")
@@ -49,12 +56,12 @@ def main(argv=None) -> int:
             print(f"{name}: {description}\n    sections: {', '.join(sections)}")
         return 0
 
-    if not args.input_folder:
-        print("error: input_folder is required (or use --list-templates)", file=sys.stderr)
+    if not args.test_set:
+        print("error: test_set folder name is required (or use --list-templates)", file=sys.stderr)
         return 2
 
     config = BenchmarkConfig(
-        input_camtrap_folder_name=args.input_folder,
+        test_set_name=args.test_set,
         data_source_location=args.source_location,
         data_collation_process=args.collation_process,
         thresholds=args.thresholds,
@@ -68,8 +75,13 @@ def main(argv=None) -> int:
         log_path=args.log_path,
         log_level=args.log_level,
     )
-    run = run_benchmark(config)
-    print(f"Report saved to: {run.report_path}")
+    result = run_benchmark(config)
+    print(f"Test set: {result.set_name}")
+    print(f"Evaluation reports generated ({len(result.runs)}):")
+    for r in result.runs:
+        print(f"  - {r.model_name}: {r.report_path}")
+    if result.comparison_report_path:
+        print(f"Comparison report saved to: {result.comparison_report_path}")
     return 0
 
 

@@ -35,7 +35,8 @@
 4) Run the uploaded images through the AI species recognition model
 5) Once model processing is complete for all deployments, export the project data in Camtrap DP format
 6) Download and extract (unzip) the exported data to a folder on your local computer
-7) Use the folder path as input to this script
+7) Organise exports into a testing set folder inside `Input_Data/` (e.g. `Input_Data/Edgbaston_2026_10/`). A set contains one or more Camtrap DP export folders for the same set of images processed through different models.
+8) Use the test set folder name as input to the workflow
 
 ## Prerequisites
 
@@ -62,34 +63,56 @@ cd model-benchmark-testing-workflow
 ```
 model-benchmark-testing-workflow/
 ├── scripts/
-│   ├── WildObs-CV-model-benchmark-testing-workflow.ipynb   # notebook: set preferences and run
+│   ├── WildObs-CV-model-benchmark-testing-workflow.ipynb   # notebook: batch test set evaluation & comparison
 │   ├── WildObs-CV-model-comparison.ipynb                   # notebook: compare model reports
 │   └── run_benchmark.py                                    # command line version
 ├── src/                  # functional code (config, data loading, metrics, templating, reports, logging)
 ├── templates/            # report templates (full, minimal, or your own) and stylesheet
 ├── tests/
-├── Input_Data/           # extracted Camtrap DP exports (not tracked)
-├── Output_Reports/       # generated reports (not tracked)
+├── Input_Data/           # test sets containing Camtrap DP exports (not tracked)
+│   ├── Wychitella_2026_09/
+│   │   ├── CamtrapDP_Export_Model_1/
+│   │   └── CamtrapDP_Export_Model_2/
+│   └── Edgbaston_2026_10/
+│       ├── CamtrapDP_Export_Model_1/
+│       └── CamtrapDP_Export_Model_2/
+├── Output_Reports/       # matching set subfolders containing generated reports (not tracked)
+│   ├── Wychitella_2026_09/
+│   │   ├── Evaluation_Report_Model_1.html
+│   │   ├── Evaluation_Report_Model_2.html
+│   │   └── Comparison_Report.html
+│   └── Edgbaston_2026_10/
+│       ├── Evaluation_Report_Model_1.html
+│       ├── Evaluation_Report_Model_2.html
+│       └── Comparison_Report.html
 ├── logs/                 # run logs (not tracked)
 └── requirements.txt
 ```
 
 ## Data Preparation
 1. Log in to the WildObs image management platform
-2. Export your dataset in Camtrap-DP format
-3. Extract the export into a new folder inside `Input_Data/`. The folder must contain `observations.csv`, `media.csv` and `deployments.csv`.
+2. Export your dataset in Camtrap-DP format for each model being tested
+3. Extract the exports into a set subfolder inside `Input_Data/` (e.g. `Input_Data/Edgbaston_2026_10/`). Each export folder must contain `observations.csv`, `media.csv` and `deployments.csv`.
 
 ## Usage
 
 ### Notebook
-Open `scripts/WildObs-CV-model-benchmark-testing-workflow.ipynb`, edit the configuration cell (input folder, thresholds, template, etc.) and run the cells.
+Open `scripts/WildObs-CV-model-benchmark-testing-workflow.ipynb`, edit the configuration cell (`test_set_name`, thresholds, template, etc.) and run the cells.
 
-To compare multiple evaluation reports, open `scripts/WildObs-CV-model-comparison.ipynb`, set the folder containing the generated HTML evaluation reports, and run the notebook. It creates an HTML summary report with each species' F1 score by model and the uniquely best-performing model where applicable.
+A single run generates:
+- An individual model evaluation report for each Camtrap DP export in the set
+- An overall model comparison report for the set (generated automatically when the set contains 2 or more models)
+- An optional CSV of misclassified images for each model
+
+All reports for the set are stored in the matching subfolder in `Output_Reports/<test_set_name>/`.
+
+To independently compare multiple evaluation reports from an existing folder, open `scripts/WildObs-CV-model-comparison.ipynb`, set the test set name or folder, and run the notebook.
 
 ### Command line
 
 ```bash
-python scripts/run_benchmark.py <input_folder_name> --template minimal
+python scripts/run_benchmark.py Edgbaston_2026_10 --template minimal
+python scripts/run_benchmark.py Wychitella_2026_09
 python scripts/run_benchmark.py --list-templates
 python scripts/run_benchmark.py --help
 ```
@@ -105,19 +128,19 @@ Individual sections of any template can be switched off with `exclude_sections` 
 Set `lookup_taxonomy=True` (notebook) or pass `--lookup-taxonomy` (command line) to replace the species list in the report with a taxonomy table (number of images, matched name, taxonomic rank, kingdom to genus, common name) looked up from the Atlas of Living Australia using the [galah](https://galah.ala.org.au/Python/) package. This needs an internet connection and `pip install galah`. Labels with no valid match (such as `blank`) are kept with empty lookup values, and a failed lookup never stops the report.
 
 ## Outputs
-Every run has a timestamp so earlier results are never overwritten.
+Every run has a timestamp so earlier results are never overwritten. Outputs are organized into matching set subfolders:
 
-- `Output_Reports/WildObs_CV_Model_Evaluation_Report_<data_source_location>_<Model_Name>_<TimeStamp>.html`: the HTML report. Spaces and special characters in the location and model name are replaced with underscores.
-- `Output_Reports/Comparisons/WildObs_CV_Model_Evaluation_Comparison_Report_<TimeStamp>.html`: the multi-model comparison report
-- `Output_Reports/Misclassified_Images_<model>_<timestamp>.csv`: records of incorrectly classified images, useful for error analysis (optional)
-- `logs/benchmark_<timestamp>.log`: detailed log of the run, including warnings about data issues such as untagged deployments or images without a matching observation
+- `Output_Reports/<test_set_name>/WildObs_CV_Model_Evaluation_Report_<data_source_location>_<Model_Name>_<TimeStamp>.html`: the HTML evaluation report for each model in the set.
+- `Output_Reports/<test_set_name>/WildObs_CV_Model_Evaluation_Comparison_Report_<TimeStamp>.html`: the multi-model comparison report for the set (generated when the set contains 2 or more models).
+- `Output_Reports/<test_set_name>/Misclassified_Images_<model>_<timestamp>.csv`: records of incorrectly classified images, useful for error analysis (optional).
+- `logs/benchmark_<timestamp>.log`: detailed log of the run, including warnings about data issues such as untagged deployments or images without a matching observation.
 
 ## Example Workflow
-1. Export dataset from WildObs (Camtrap-DP format)
-2. Extract it into `Input_Data/`
+1. Export datasets from WildObs (Camtrap-DP format) for each model evaluated
+2. Extract them into a testing set folder in `Input_Data/` (e.g. `Input_Data/Wychitella_2026_09/`)
 3. Install dependencies
-4. Choose a template and run the notebook or script
-5. Review the report and the misclassified images CSV. Check the log if anything looks unexpected.
+4. Choose a template and run the notebook or command line script specifying the set name
+5. Review the individual evaluation reports, the set comparison report, and the misclassified images CSV. Check the log if anything looks unexpected.
 
 ## Troubleshooting
 

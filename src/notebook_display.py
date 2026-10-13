@@ -16,9 +16,12 @@ MathJax = {
 """
 
 
-def display_report(report_path: Union[str, Path]) -> None:
+def display_report(report_path: Union[str, Path, object]) -> None:
     """Render a saved HTML report inline in the notebook."""
     from IPython.display import HTML, display
+
+    if hasattr(report_path, "report_path"):
+        report_path = getattr(report_path, "report_path")
 
     html_content = Path(report_path).read_text(encoding="utf-8")
     display(HTML(MATHJAX_CONFIG + html_content))
