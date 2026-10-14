@@ -6,7 +6,7 @@ Template syntax
 * ``<!-- BEGIN:Section_Name -->`` ... ``<!-- END:Section_Name -->`` wraps an optional
   section. Sections listed in ``exclude_sections`` are removed. Sections cannot be nested.
 * ``<!-- description: text -->`` (optional) is shown when listing templates.
-* ``\\[ ... \\]`` blocks are passed through untouched so MathJax can render formulas.
+* ``\\[ ... \\]`` blocks are passed through converted to static MathML at render time.
 * Everything else is standard Markdown (tables supported); raw HTML is also allowed.
 """
 
@@ -118,11 +118,23 @@ def render_template(
         token = f"@@HTML_{i}@@"
         body = body.replace(f"<p>{token}</p>", block).replace(token, block)
     for i, block in enumerate(math_blocks):
-        body = body.replace(f"@@MATH_{i}@@", block)
+        body = body.replace(f"@@MATH_{i}@@", _math_to_mathml(block))
 
     unused = sorted(set(placeholders) - set(find_placeholders(source)))
     logger.debug("Placeholders not used by %s: %s", template_path.name, unused)
     return body
+
+
+def _math_to_mathml(block: str) -> str:
+    """Convert a ``\\[ ... \\]`` block to static MathML (no JavaScript needed, so it
+    renders in hosts such as SharePoint that block external scripts)."""
+    try:
+        import latex2mathml.converter
+
+        return latex2mathml.converter.convert(block[2:-2].strip(), display="block")
+    except Exception as exc:
+        logger.warning("Could not convert formula to MathML (%s); leaving as text", exc)
+        return block
 
 
 def _apply_sections(text: str, excluded: set, template_name: str) -> str:

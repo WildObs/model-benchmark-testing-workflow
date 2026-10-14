@@ -13,6 +13,11 @@ body {
     padding: 20px;
 }
 
+math {
+    font-size: 20px;
+    font-weight: bold;
+}
+
 .report-logo {
     display: block;
     max-height: 80px;

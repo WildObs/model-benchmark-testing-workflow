@@ -50,8 +50,6 @@ def embedded_logo_html(templates_dir) -> str:
     return f'<img class="report-logo" alt="WildObs logo" src="data:image/avif;base64,{data}">'
 
 
-MATHJAX = '<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>'
-
 
 def _sanitize_filename_component(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", value).strip("_")
@@ -80,7 +78,7 @@ def write_html_report(
     document = (
         "<!DOCTYPE html><html><head><meta charset=\"utf-8\">"
         f"<title>Model Evaluation Report - {model_name}</title>"
-        f"<style>{embedded_font_css(config.templates_path)}{style}</style>{MATHJAX}</head>"
+        f"<style>{embedded_font_css(config.templates_path)}{style}</style></head>"
         f'<body><div class="report-container">{embedded_logo_html(config.templates_path)}{body}</div></body></html>'
     )
 

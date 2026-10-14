@@ -105,7 +105,7 @@ def test_template_sections_and_placeholders(tmp_path):
     out = render_template(template, placeholders, exclude_sections=["B"])
     assert "Keep &lt;x&gt;" in out
     assert "Drop me" not in out
-    assert "\\text{Recall} = \\frac{TP}{TP + FN}" in out
+    assert "<math" in out and "<mfrac>" in out and "Recall" in out
     assert "<table><tr><td>1</td></tr></table>" in out
     assert "description" not in out
 

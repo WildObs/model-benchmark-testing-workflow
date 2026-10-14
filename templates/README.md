@@ -53,7 +53,7 @@ Users can then drop it without editing the template, e.g. `exclude_sections=["Li
 ### Other features
 
 - `<!-- description: One line summary -->` anywhere in the file is shown when listing templates.
-- Formulas written as `\[ ... \]` are rendered with MathJax.
+- Formulas written as `\[ ... \]` are converted to static MathML when the report is built (no JavaScript, so they display in SharePoint).
 - Styling comes from `report.css`. To style one template differently, add a CSS file with the same name (e.g. `my_report.css`).
 - The WildObs logo (`templates/images/WildObs Logo(cropped+transparent).avif`) is embedded above the first heading of every report, so reports remain a single portable HTML file. Its size is set by `.report-logo` in `report.css`.
 - Adding a new placeholder means adding an entry in `src/report_components.py` and listing it above.

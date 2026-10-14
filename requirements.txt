@@ -1,3 +1,4 @@
 pandas
 markdown
+latex2mathml
 galah  # optional: only needed for lookup_taxonomy
