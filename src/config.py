@@ -28,6 +28,10 @@ class BenchmarkConfig:
     clear_existing_outputs: bool = False  # clear existing reports/outputs in the set folder before generating new ones
     clear_existing: bool = False  # alias for clear_existing_outputs
 
+    # Which observations to analyse: "event" (default; works for all exports) or "media" (bounding-box
+    # observations, only used if every export in the set contains them - otherwise reverts to "event")
+    observation_level: str = "event"
+
     # Report formatting
     template: str = "full"  # template name in templates_path, or a path to a .md file
     exclude_sections: List[str] = field(default_factory=list)
@@ -54,6 +58,7 @@ class BenchmarkConfig:
             setattr(self, name, _resolve(getattr(self, name)))
         self.thresholds = sorted({float(t) for t in self.thresholds})
         self.log_level = self.log_level.upper()
+        self.observation_level = str(self.observation_level).strip().lower()
         self.validate()
 
     def validate(self) -> None:
@@ -66,6 +71,8 @@ class BenchmarkConfig:
             raise ValueError(f"Confidence thresholds must be between 0 and 1, got: {bad}")
         if not isinstance(logging.getLevelName(self.log_level), int):
             raise ValueError(f"Invalid log_level: {self.log_level}")
+        if self.observation_level not in ("event", "media"):
+            raise ValueError(f"observation_level must be 'event' or 'media', got {self.observation_level!r}")
 
     @property
     def set_name(self) -> str:

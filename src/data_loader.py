@@ -33,6 +33,64 @@ def _read_csv(folder: Path, filename: str) -> pd.DataFrame:
     return df
 
 
+OBSERVATION_LEVELS = ("event", "media")
+
+
+def available_observation_levels(observations: pd.DataFrame) -> set:
+    """Observation levels present in an observations table (legacy exports are event-only)."""
+    if "observationLevel" not in observations.columns:
+        return {"event"}
+    levels = observations["observationLevel"].dropna().astype(str).str.strip().str.lower()
+    return set(levels[levels != ""]) or {"event"}
+
+
+def read_observation_levels(folder: Path) -> set:
+    """Read just the observationLevel column of an export's observations.csv."""
+    path = Path(folder) / "observations.csv"
+    header = pd.read_csv(path, nrows=0).columns
+    if "observationLevel" not in header:
+        return {"event"}
+    return available_observation_levels(pd.read_csv(path, usecols=["observationLevel"], dtype=str))
+
+
+def resolve_observation_level(requested: str, export_folders: List[Path]) -> str:
+    """Return the observation level to use for every export in a set.
+
+    Media-level analysis is only used when requested AND every export contains media-level
+    observations; otherwise the set reverts to event-level so reports stay comparable.
+    """
+    requested = requested.lower()
+    if requested == "event":
+        return "event"
+    without_media = [
+        Path(f).name for f in export_folders if "media" not in read_observation_levels(f)
+    ]
+    if without_media:
+        logger.warning(
+            "observation_level='media' requested but %d of %d export(s) have no media-level observations "
+            "(%s); reverting to 'event' for ALL exports so the reports are comparable",
+            len(without_media), len(export_folders), ", ".join(without_media),
+        )
+        return "event"
+    return "media"
+
+
+def select_observation_level(observations: pd.DataFrame, level: str) -> pd.DataFrame:
+    """Keep only event-level or only media-level rows (never both)."""
+    if "observationLevel" not in observations.columns:
+        if level == "media":
+            raise ValueError("observations.csv has no observationLevel column, so media-level observations are unavailable")
+        return observations
+    levels = observations["observationLevel"].fillna("").astype(str).str.strip().str.lower()
+    # Rows with no level are treated as event-level (legacy exports)
+    if level == "event":
+        selected = observations[levels.isin(["event", ""])]
+    else:
+        selected = observations[levels == "media"]
+    logger.info("Using %s-level observations: %d of %d rows", level, len(selected), len(observations))
+    return selected
+
+
 def load_camtrap_data(folder: Path) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Read observations, media and deployments from a Camtrap DP folder."""
     folder = Path(folder)
@@ -70,8 +128,10 @@ def prepare_observations(observations: pd.DataFrame) -> pd.DataFrame:
         .fillna(0.0)
         .astype(float)
     )
+    if "mediaID" not in observations.columns:
+        observations["mediaID"] = pd.NA
     observations = observations[[
-        "eventID", "deploymentID", "observationType",
+        "eventID", "mediaID", "deploymentID", "observationType",
         "scientificName", "classificationProbability", "classifiedBy",
     ]].rename(columns={"classificationProbability": "confidence"})
 
@@ -94,18 +154,30 @@ def get_model_name(observations: pd.DataFrame) -> str:
 
 
 def build_merged_table(
-    observations: pd.DataFrame, media: pd.DataFrame, deployments: pd.DataFrame
+    observations: pd.DataFrame, media: pd.DataFrame, deployments: pd.DataFrame, observation_level: str = "event"
 ) -> pd.DataFrame:
-    """Join media -> observations (via sequenceID) -> deployments, adding true/pred species."""
-    media = media[["mediaID", "mediaComments"]].copy()
+    """Join media -> observations -> deployments, adding true/pred species.
+
+    Event-level observations are joined via the sequenceID in mediaComments; media-level
+    observations are joined directly on mediaID.
+    """
+    media = media[["mediaID", "deploymentID", "mediaComments"]].copy()
     media["sequenceID"] = media["mediaComments"].apply(extract_sequence)
     no_sequence = int(media["sequenceID"].isna().sum())
-    if no_sequence:
+    if observation_level == "event" and no_sequence:
         logger.warning("%d media files have no sequenceID in mediaComments; they will be treated as Blank predictions", no_sequence)
 
     deployments = deployments[["deploymentID", "deploymentTags"]]
 
-    merged = pd.merge(media, observations, left_on="sequenceID", right_on="eventID", how="left")
+    if observation_level == "media":
+        # deploymentID comes from media.csv, so images with no media-level observation keep their true label
+        merged = pd.merge(media, observations.drop(columns=["deploymentID"]), on="mediaID", how="left")
+    else:
+        merged = pd.merge(
+            media.drop(columns=["deploymentID"]),
+            observations.drop(columns=["mediaID"]),
+            left_on="sequenceID", right_on="eventID", how="left",
+        )
     merged = pd.merge(merged, deployments, on="deploymentID", how="left")
 
     merged["true_species"] = _normalise(merged["deploymentTags"])
@@ -141,17 +213,21 @@ def count_images_per_species(media: pd.DataFrame, deployments: pd.DataFrame) -> 
     return {format_species_name(name): int(n) for name, n in counts.items()}
 
 
-def load_benchmark_table(folder: Path):
+def load_benchmark_table(folder: Path, observation_level: str = "event"):
     """Load and merge everything needed for metrics.
 
+    observation_level is "event" or "media"; only that level's observations are used.
     Returns (merged, model_name, species_display_list, image_counts).
     """
+    if observation_level not in OBSERVATION_LEVELS:
+        raise ValueError(f"observation_level must be one of {OBSERVATION_LEVELS}, got {observation_level!r}")
     observations, media, deployments = load_camtrap_data(folder)
+    observations = select_observation_level(observations, observation_level)
     observations = prepare_observations(observations)
     model_name = get_model_name(observations)
     species_display = get_species_display_list(deployments)
     image_counts = count_images_per_species(media, deployments)
-    merged = build_merged_table(observations, media, deployments)
+    merged = build_merged_table(observations, media, deployments, observation_level)
     logger.info(
         "Model: %s | %d images | %d species/labels in deployment tags",
         model_name, len(merged), len(species_display),

@@ -151,6 +151,68 @@ def test_exclude_sections_end_to_end(tmp_path):
     assert "Purpose and intended use" in report
 
 
+def make_mixed_camtrap(folder: Path, model_name: str = "test model"):
+    """Camtrap export with event rows plus media rows that deliberately disagree with them."""
+    make_camtrap(folder, model_name)
+    obs = pd.read_csv(folder / "observations.csv", dtype=str)
+    obs["observationLevel"] = "event"
+    obs["mediaID"] = pd.NA
+    media_rows = pd.DataFrame({
+        "eventID": ["e1", "e2", "e3"],
+        "deploymentID": ["d1", "d1", "d2"],
+        "mediaID": ["m1", "m2", "m3"],
+        "observationLevel": "media",
+        "observationType": "animal",
+        "scientificName": ["Vulpes vulpes"] * 3,
+        "classificationProbability": ["0.9"] * 3,
+        "classifiedBy": model_name,
+    })
+    pd.concat([obs, media_rows], ignore_index=True).to_csv(folder / "observations.csv", index=False)
+
+
+def test_observation_level_selection(tmp_path):
+    from src.data_loader import load_benchmark_table
+
+    mixed = tmp_path / "mixed"
+    make_mixed_camtrap(mixed)
+    event, *_ = load_benchmark_table(mixed, "event")
+    media, *_ = load_benchmark_table(mixed, "media")
+    assert len(event) == 4 and set(event["pred_species"]) == {"felis catus", "vulpes vulpes"}
+    # m4 has no media-level observation: kept with its true label and scored as a blank prediction
+    assert len(media) == 4 and set(media["pred_species"]) == {"vulpes vulpes", "blank"}
+    assert media.set_index("mediaID").loc["m4", "true_species"] == "vulpes vulpes"
+    with pytest.raises(ValueError):
+        load_benchmark_table(mixed, "both")
+
+
+def test_media_level_reverts_to_event_when_any_export_lacks_it(tmp_path):
+    from src.data_loader import resolve_observation_level
+
+    legacy, mixed = tmp_path / "legacy", tmp_path / "mixed"
+    make_camtrap(legacy)
+    make_mixed_camtrap(mixed)
+    assert resolve_observation_level("media", [mixed]) == "media"
+    assert resolve_observation_level("media", [mixed, legacy]) == "event"
+    assert resolve_observation_level("event", [mixed]) == "event"
+
+
+def test_observation_level_config_and_pipeline(tmp_path):
+    with pytest.raises(ValueError):
+        BenchmarkConfig("x", observation_level="both")
+    assert BenchmarkConfig("x").observation_level == "event"
+
+    make_mixed_camtrap(tmp_path / "in" / "set" / "a")
+    make_camtrap(tmp_path / "in" / "set" / "b", model_name="other model")
+    config = BenchmarkConfig(
+        "set", thresholds=[0.5], observation_level="media",
+        input_path=tmp_path / "in", output_path=tmp_path / "out", log_path=tmp_path / "logs",
+    )
+    run = run_benchmark(config)
+    # Reverted to event for both exports: model "test model" scores cat 1 of 2 as in the event data
+    cat = run.runs[0].metrics.results.set_index("species").loc["Felis catus"]
+    assert cat.true_positives == 1
+
+
 def test_taxonomy_table_blank_for_no_match():
     from src.taxonomy import build_taxonomy_table
 

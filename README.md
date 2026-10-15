@@ -127,6 +127,13 @@ Individual sections of any template can be switched off with `exclude_sections` 
 
 Set `lookup_taxonomy=True` (notebook) or pass `--lookup-taxonomy` (command line) to replace the species list in the report with a taxonomy table (number of images, matched name, taxonomic rank, kingdom to genus, common name) looked up from the Atlas of Living Australia using the [galah](https://galah.ala.org.au/Python/) package. This needs an internet connection and `pip install galah`. Labels with no valid match (such as `blank`) are kept with empty lookup values, and a failed lookup never stops the report.
 
+### Event-based or media-based observations
+
+Newer WildObs Camtrap DP exports can optionally include bounding boxes, in which case `observations.csv` contains both `event` and `media` rows in its `observationLevel` column (legacy exports and exports without bounding boxes contain `event` rows only). The workflow analyses one level at a time, never both:
+
+- `observation_level="event"` (default; `--observation-level event`): event-based observations, which every export supports.
+- `observation_level="media"` (`--observation-level media`): media-based observations, joined to images directly by `mediaID`. This is only used if **every** export in the test set contains media-level observations. If any export does not (for example a set mixing old and new exports), the whole set reverts to `event` and a warning is logged, so the reports stay directly comparable. Images with no media-level observation (blank or unclassified events have no bounding box) are scored as `blank` predictions.
+
 ## Outputs
 Every run has a timestamp. To prevent reports from accumulating across multiple runs, set `clear_existing_outputs=True` in the notebook configuration or pass `--clear-existing` on the command line to clear existing reports and outputs in the set folder before generating new ones.
 
