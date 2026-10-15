@@ -117,6 +117,10 @@ python scripts/run_benchmark.py --list-templates
 python scripts/run_benchmark.py --help
 ```
 
+## Interpreting reports for a monitoring program
+
+The `interpret-evaluation-reports` agent skill (`.github\skills\interpret-evaluation-reports\SKILL.md`) reads a set of evaluation reports plus a completed monitoring program form and writes recommendations, uncertainty notes and suggested test improvements. Copy `monitoring_program_forms\_BLANK_TEMPLATE.md`, complete it, and ask the agent to interpret the reports using that form. See `monitoring_program_forms\README.md`.
+
 ## Choosing the report format
 Reports are generated from Markdown templates in `templates/`:
 
