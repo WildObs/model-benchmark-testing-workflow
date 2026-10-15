@@ -33,6 +33,13 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument("--thresholds", nargs="+", type=float, default=DEFAULT_THRESHOLDS, help="Confidence thresholds")
     parser.add_argument("--lookup-taxonomy", action="store_true", help="Show a full taxonomy table (ALA galah, needs internet)")
     parser.add_argument(
+        "--observation-level",
+        choices=["event", "media"],
+        default="event",
+        help="Use event-based (default) or media-based (bounding box) observations, never both. "
+        "'media' reverts to 'event' if any export in the set lacks media-level observations",
+    )
+    parser.add_argument(
         "--export-errors",
         action="store_true",
         default=False,
@@ -85,7 +92,7 @@ def main(argv=None) -> int:
         thresholds=args.thresholds,
         export_errors=args.export_errors,
         lookup_taxonomy=args.lookup_taxonomy,
-        clear_existing_outputs=args.clear_existing_outputs,
+        observation_level=args.observation_level,=args.clear_existing_outputs,
         template=args.template,
         exclude_sections=args.exclude_sections,
         input_path=args.input_path,

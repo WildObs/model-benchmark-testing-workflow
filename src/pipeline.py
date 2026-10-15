@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import List, Optional, Union
 
 from .config import PROJECT_ROOT, BenchmarkConfig
-from .data_loader import load_benchmark_table
+from .data_loader import load_benchmark_table, resolve_observation_level
 from .logging_setup import setup_logging
 from .metrics import BenchmarkMetrics, compute_metrics
 from .model_comparison import create_model_comparison_report
@@ -162,9 +162,13 @@ def run_benchmark(config: BenchmarkConfig) -> BenchmarkBatchRun:
         )
 
         runs: List[BenchmarkRun] = []
+        observation_level = resolve_observation_level(config.observation_level, export_folders)
+        logger.info("Observation level used for all exports: %s", observation_level)
         for export_folder in export_folders:
             logger.info("Processing export: %s", export_folder.name)
-            merged, model_name, species_display, image_counts = load_benchmark_table(export_folder)
+            merged, model_name, species_display, image_counts = load_benchmark_table(
+                export_folder, observation_level
+            )
             metrics = compute_metrics(merged, config.thresholds)
 
             misclassified_path = None
