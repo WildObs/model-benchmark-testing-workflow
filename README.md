@@ -64,6 +64,7 @@ cd model-benchmark-testing-workflow
 model-benchmark-testing-workflow/
 ├── scripts/
 │   ├── WildObs-CV-model-benchmark-testing-workflow.ipynb   # notebook: batch test set evaluation & comparison
+│   ├── WildObs-CV-model-benchmark-testing-form.ipynb       # notebook: same workflow driven by a point-and-click form
 │   ├── WildObs-CV-model-comparison.ipynb                   # notebook: compare model reports
 │   └── run_benchmark.py                                    # command line version
 ├── src/                  # functional code (config, data loading, metrics, templating, reports, logging)
@@ -95,6 +96,9 @@ model-benchmark-testing-workflow/
 3. Extract the exports into a set subfolder inside `Input_Data/` (e.g. `Input_Data/Edgbaston_2026_10/`). Each export folder must contain `observations.csv`, `media.csv` and `deployments.csv`.
 
 ## Usage
+
+### Notebook (form version, no coding)
+Open `scripts/WildObs-CV-model-benchmark-testing-form.ipynb`, run the two cells, and use the form to pick a test set (the form previews the models, image counts and observation levels it finds), enter the report details, set thresholds, observation level and template, and click **Run evaluation**. The report is displayed under the form and saved to `Output_Reports/<test set>`. It needs `ipywidgets` (`pip install ipywidgets`). The form logic lives in `src/ui.py`.
 
 ### Notebook
 Open `scripts/WildObs-CV-model-benchmark-testing-workflow.ipynb`, edit the configuration cell (`test_set_name`, thresholds, template, etc.) and run the cells.
