@@ -15,7 +15,9 @@ from .data_loader import available_observation_levels, get_species_display_list
 from .pipeline import discover_export_folders, run_benchmark
 from .templating import list_templates
 
-NO_SETS = "(no test sets found)"
+def set_options(sets: List[str]) -> list:
+    """Dropdown options with a leading blank entry so nothing is pre-selected."""
+    return [("", None)] + [(s, s) for s in sets]
 
 THRESHOLD_PRESETS = [
     (">0.5", "0.5"),
@@ -133,7 +135,7 @@ def make_config(
     output_path: str = "Output_Reports",
 ) -> BenchmarkConfig:
     """Turn form values into a BenchmarkConfig (raises ValueError with a friendly message)."""
-    if not test_set or test_set == NO_SETS:
+    if not test_set:
         raise ValueError("Choose a test set folder first.")
     return BenchmarkConfig(
         test_set_name=test_set,
@@ -169,7 +171,7 @@ def build_form(project_root: Optional[Path] = None):
         return widget_cls(description=label, style=style, **kwargs)
 
     sets = list_test_sets(input_path)
-    test_set = field(w.Dropdown, "Test set folder", options=sets or [NO_SETS],
+    test_set = field(w.Dropdown, "Test set folder", options=set_options(sets), value=None,
                      tooltip="Folder inside Input_Data containing one or more Camtrap DP exports")
     refresh = w.Button(description="Refresh", icon="refresh", layout=w.Layout(width="100px"))
     preview = w.HTML()
@@ -224,9 +226,12 @@ def build_form(project_root: Optional[Path] = None):
         return w.VBox([w.HTML("<h3>Reports (click to expand)</h3>"), accordion])
 
     def update_preview(*_):
-        if test_set.value == NO_SETS:
+        if not list_test_sets(input_path):
             preview.value = f"<span style='color:#b91c1c'>No test sets found in <code>{html.escape(str(input_path))}</code>. " \
                             "Add a folder of Camtrap DP exports there, then click Refresh.</span>"
+            return
+        if test_set.value is None:
+            preview.value = ""
             return
         try:
             preview.value = describe_set(summarise_set(input_path / test_set.value), level.value)
@@ -239,9 +244,8 @@ def build_form(project_root: Optional[Path] = None):
     def on_refresh(_):
         current = test_set.value
         options = list_test_sets(input_path)
-        test_set.options = options or [NO_SETS]
-        if current in options:
-            test_set.value = current
+        test_set.options = set_options(options)
+        test_set.value = current if current in options else None
         update_preview()
 
     def on_open_folder(button):
