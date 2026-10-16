@@ -282,6 +282,11 @@ def test_ui_form_runs(tmp_path):
     find(ipywidgets.Button, description="Run evaluation").click()
     assert "Done" in status.value
     assert list((root / "Output_Reports" / "set").glob("*.html"))
+    reports = [c for c in form.children if isinstance(c, ipywidgets.VBox) and c.children][-1]
+    accordion = reports.children[0].children[1]
+    n_reports = len(list((root / "Output_Reports" / "set").glob("*.html")))
+    assert len(accordion.children) == n_reports and accordion.selected_index is None
+    accordion.selected_index = 0  # lazily renders the first report (needs a live kernel to capture output)
 
 
 def test_taxonomy_table_blank_for_no_match():

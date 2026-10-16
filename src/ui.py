@@ -196,6 +196,30 @@ def build_form(project_root: Optional[Path] = None):
     open_folder = w.Button(description="Open reports folder", icon="folder-open", layout=w.Layout(width="200px", display="none"))
     open_folder.folder = None
     output = w.Output()
+    reports_box = w.VBox()
+
+    def build_report_accordion(results):
+        """One collapsed section per report; each report is rendered the first time it is expanded."""
+        items = []
+        if results.comparison_report_path:
+            items.append(("Model comparison report", results.comparison_report_path))
+        items += [(f"{r.model_name}", r.report_path) for r in results.runs]
+        outputs = [w.Output() for _ in items]
+        accordion = w.Accordion(children=outputs, selected_index=None)
+        for i, (title, _) in enumerate(items):
+            accordion.set_title(i, title)
+        rendered = set()
+
+        def on_select(change):
+            i = change["new"]
+            if i is None or i in rendered:
+                return
+            rendered.add(i)
+            with outputs[i]:
+                display_report(items[i][1])
+
+        accordion.observe(on_select, "selected_index")
+        return w.VBox([w.HTML("<h3>Reports (click to expand)</h3>"), accordion])
 
     def update_preview(*_):
         if test_set.value == NO_SETS:
@@ -229,6 +253,7 @@ def build_form(project_root: Optional[Path] = None):
 
     def on_run(_):
         output.clear_output()
+        reports_box.children = []
         status.value = ""
         open_folder.layout.display = "none"
         try:
@@ -260,7 +285,7 @@ def build_form(project_root: Optional[Path] = None):
                     print(f"{r.model_name}: {r.report_path}")
                 if results.comparison_report_path:
                     print(f"Comparison report: {results.comparison_report_path}")
-                display_report(results.report_path)
+                reports_box.children = [build_report_accordion(results)]
             finally:
                 run.disabled = False
 
@@ -279,7 +304,7 @@ def build_form(project_root: Optional[Path] = None):
         w.HTML("<h3>3. Configure analysis settings</h3>"), thresholds, level, level_help,
         w.HTML("<h3>4. Select the report format</h3>"), template, template_help,
         advanced,
-        w.HTML("<br>"), run, status, open_folder, output,
+        w.HTML("<br>"), run, status, open_folder, output, reports_box,
     ])
     display(form)
     return form
