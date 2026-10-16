@@ -17,7 +17,7 @@ from .templating import list_templates
 
 def set_options(sets: List[str]) -> list:
     """Dropdown options with a leading blank entry so nothing is pre-selected."""
-    return [("", None)] + [(s, s) for s in sets]
+    return [("", None)] + [(f"/Input_Data/{s}", s) for s in sets]
 
 THRESHOLD_PRESETS = [
     (">0.5", "0.5"),
