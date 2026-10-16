@@ -268,8 +268,9 @@ def test_ui_form_runs(tmp_path):
     assert [label for label, _ in thresholds.options][0] == ">0.5" and len(thresholds.options) == 4
     assert "model_comparison" not in find(ipywidgets.Dropdown, description="Report template").options
     assert find(ipywidgets.RadioButtons).options[0][0] == "Event-based (recommended)"
-    advanced = find(ipywidgets.Accordion)
-    assert advanced.selected_index is None
+    advanced = next(c for c in form.children if isinstance(c, ipywidgets.Accordion) and c.titles == ("Advanced",))
+    log_box = next(c for c in form.children if isinstance(c, ipywidgets.Accordion) and c.titles == ("Log messages",))
+    assert advanced.selected_index is None and log_box.selected_index is None
     export_errors = find(ipywidgets.Checkbox, description="Export misclassified images csv")
     taxonomy = find(ipywidgets.Checkbox, description="Look up taxonomy (needs internet and galah)")
     clear = find(ipywidgets.Checkbox, description="Clear existing outputs for this set first")

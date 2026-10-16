@@ -196,6 +196,8 @@ def build_form(project_root: Optional[Path] = None):
     open_folder = w.Button(description="Open reports folder", icon="folder-open", layout=w.Layout(width="200px", display="none"))
     open_folder.folder = None
     output = w.Output()
+    log_box = w.Accordion(children=[output], selected_index=None, layout=w.Layout(display="none"))
+    log_box.set_title(0, "Log messages")
     reports_box = w.VBox()
 
     def build_report_accordion(results):
@@ -254,6 +256,7 @@ def build_form(project_root: Optional[Path] = None):
     def on_run(_):
         output.clear_output()
         reports_box.children = []
+        log_box.layout.display = "none"
         status.value = ""
         open_folder.layout.display = "none"
         try:
@@ -267,6 +270,8 @@ def build_form(project_root: Optional[Path] = None):
             return
         run.disabled = True
         status.value = "<i>Running... this can take a few minutes for large test sets.</i>"
+        log_box.layout.display = "block"
+        log_box.selected_index = 0
         with output:
             try:
                 results = run_benchmark(config)
@@ -288,6 +293,7 @@ def build_form(project_root: Optional[Path] = None):
                 reports_box.children = [build_report_accordion(results)]
             finally:
                 run.disabled = False
+                log_box.selected_index = None
 
     test_set.observe(update_preview, "value")
     level.observe(update_preview, "value")
@@ -304,7 +310,7 @@ def build_form(project_root: Optional[Path] = None):
         w.HTML("<h3>3. Configure analysis settings</h3>"), thresholds, level, level_help,
         w.HTML("<h3>4. Select the report format</h3>"), template, template_help,
         advanced,
-        w.HTML("<br>"), run, status, open_folder, output, reports_box,
+        w.HTML("<br>"), run, status, open_folder, reports_box, log_box,
     ])
     display(form)
     return form
