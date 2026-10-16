@@ -179,7 +179,7 @@ def build_form(project_root: Optional[Path] = None):
     collation = field(w.Textarea, "Data collation process", placeholder="How the test images were selected",
                       layout=w.Layout(width="650px", height="80px"))
     thresholds = field(w.Dropdown, "Confidence thresholds to include", options=THRESHOLD_PRESETS, value=DEFAULT_THRESHOLD_PRESET)
-    level = field(w.RadioButtons, "Observations Levels to include in the analysis", options=[("Event-based (recommended)", "event"), ("Media-based", "media")],
+    level = field(w.RadioButtons, "Observation Levels to include in the analysis", options=[("Event-based (recommended)", "event"), ("Media-based", "media")],
                   value="event")
     level_help = w.HTML("<i>Media-based is only used if every export contains it; otherwise event-based is used for all.</i>")
 
