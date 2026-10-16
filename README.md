@@ -65,7 +65,6 @@ model-benchmark-testing-workflow/
 ├── scripts/
 │   ├── WildObs-CV-model-benchmark-testing-workflow.ipynb   # notebook: batch test set evaluation & comparison
 │   ├── WildObs-CV-model-benchmark-testing-form.ipynb       # notebook: same workflow driven by a point-and-click form
-│   ├── WildObs-CV-model-comparison.ipynb                   # notebook: compare model reports
 │   └── run_benchmark.py                                    # command line version
 ├── src/                  # functional code (config, data loading, metrics, templating, reports, logging)
 ├── templates/            # report templates (full, minimal, or your own) and stylesheet
@@ -110,7 +109,7 @@ A single run generates:
 
 All reports for the set are stored in the matching subfolder in `Output_Reports/<test_set_name>/`.
 
-To independently compare multiple evaluation reports from an existing folder, open `scripts/WildObs-CV-model-comparison.ipynb`, set the test set name or folder, and run the notebook.
+The batch and form notebooks generate a model comparison report automatically when a test set contains two or more models.
 
 ### Command line
 
