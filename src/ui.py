@@ -10,7 +10,7 @@ import pandas as pd
 from .config import PROJECT_ROOT, BenchmarkConfig
 from .data_loader import available_observation_levels, get_species_display_list
 from .pipeline import discover_export_folders, run_benchmark
-from .templating import list_sections, list_templates, resolve_template
+from .templating import list_templates
 
 NO_SETS = "(no test sets found)"
 
@@ -103,18 +103,15 @@ def describe_set(summaries: List[ExportSummary], requested_level: str) -> str:
         "<th align='left'>Images</th><th align='left'>Observation levels</th><th align='left'>Export folder</th></tr>"
         f"{rows}</table>"
     )
-    species = sorted({sp for s in summaries for sp in s.species})
-    notes = [f"<b>{len(summaries)}</b> export(s) found. Species/labels in deployment tags: {html.escape(', '.join(species))}"]
     used = effective_observation_level(requested_level, summaries)
     if requested_level == "media" and used == "event":
         missing = [s.model for s in summaries if "media" not in s.levels]
-        notes.append(
-            "<span style='color:#b45309'>&#9888; Media-based observations are not available in every export "
-            f"({html.escape(', '.join(missing))} lack them), so <b>event-based</b> observations will be used for all exports.</span>"
+        warning = (
+            "<p><span style='color:#b45309'>&#9888; Media-based observations are not available in every export "
+            f"({html.escape(', '.join(missing))} lack them), so <b>event-based</b> observations will be used for all exports.</span></p>"
         )
-    else:
-        notes.append(f"Observations used: <b>{used}-based</b>.")
-    return table + "<p>" + "<br>".join(notes) + "</p>"
+        return table + warning
+    return table
 
 
 def make_config(
@@ -184,7 +181,6 @@ def build_form(project_root: Optional[Path] = None):
     templates = {name: desc for name, desc in list_templates(templates_path).items() if name != "model_comparison"}
     template = field(w.Dropdown, "Report template", options=list(templates), value="full" if "full" in templates else list(templates)[0])
     template_help = w.HTML()
-    exclude = field(w.SelectMultiple, "Sections to leave out", options=[], rows=6)
     export_errors = field(w.Checkbox, "Export misclassified images csv", value=False, indent=False)
     taxonomy = field(w.Checkbox, "Look up taxonomy (needs internet and galah)", value=True, indent=False)
     clear = field(w.Checkbox, "Clear existing outputs for this set first", value=True, indent=False)
@@ -207,9 +203,6 @@ def build_form(project_root: Optional[Path] = None):
             preview.value = f"<span style='color:#b91c1c'>Could not read this test set: {html.escape(str(exc))}</span>"
 
     def update_template(*_):
-        path = resolve_template(template.value, templates_path)
-        exclude.options = list_sections(path)
-        exclude.value = ()
         template_help.value = f"<i>{html.escape(templates.get(template.value, ''))}</i>"
 
     def on_refresh(_):
@@ -226,7 +219,7 @@ def build_form(project_root: Optional[Path] = None):
         try:
             config = make_config(
                 test_set.value, source.value, collation.value, thresholds.value, level.value, template.value,
-                exclude.value, export_errors.value, taxonomy.value, clear.value, log_level.value,
+                [], export_errors.value, taxonomy.value, clear.value, log_level.value,
                 input_path=str(input_path), output_path=str(root / "Output_Reports"),
             )
         except ValueError as exc:
@@ -265,7 +258,7 @@ def build_form(project_root: Optional[Path] = None):
         w.HTML("<h3>1. Select test set input folder</h3>"), w.HBox([test_set, refresh]), preview,
         w.HTML("<h3>2. Define the report details</h3>"), source, collation,
         w.HTML("<h3>3. Configure analysis settings</h3>"), thresholds, level, level_help,
-        w.HTML("<h3>4. Select the report format</h3>"), template, template_help, exclude,
+        w.HTML("<h3>4. Select the report format</h3>"), template, template_help,
         advanced,
         w.HTML("<br>"), run, status, output,
     ])
