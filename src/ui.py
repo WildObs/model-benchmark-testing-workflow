@@ -7,12 +7,20 @@ from typing import List, Optional
 
 import pandas as pd
 
-from .config import DEFAULT_THRESHOLDS, PROJECT_ROOT, BenchmarkConfig
+from .config import PROJECT_ROOT, BenchmarkConfig
 from .data_loader import available_observation_levels, get_species_display_list
 from .pipeline import discover_export_folders, run_benchmark
 from .templating import list_sections, list_templates, resolve_template
 
 NO_SETS = "(no test sets found)"
+
+THRESHOLD_PRESETS = [
+    (">0.5", "0.5"),
+    ("0.5, 0.6, 0.7, 0.8, 0.9", "0.5, 0.6, 0.7, 0.8, 0.9"),
+    ("0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9", "0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9"),
+    ("0.2, 0.4, 0.6, 0.8", "0.2, 0.4, 0.6, 0.8"),
+]
+DEFAULT_THRESHOLD_PRESET = "0.5, 0.6, 0.7, 0.8, 0.9"
 
 
 @dataclass
@@ -168,21 +176,20 @@ def build_form(project_root: Optional[Path] = None):
     source = field(w.Text, "Data source location", placeholder="e.g. Tarcutta Reserve, NSW")
     collation = field(w.Textarea, "Data collation process", placeholder="How the test images were selected",
                       layout=w.Layout(width="650px", height="80px"))
-    thresholds = field(w.Text, "Confidence thresholds", value=", ".join(str(t) for t in DEFAULT_THRESHOLDS),
-                       tooltip="Comma-separated values between 0 and 1")
-    level = field(w.RadioButtons, "Observations to use", options=[("Event-based (default)", "event"), ("Media-based (bounding boxes)", "media")],
+    thresholds = field(w.Dropdown, "Confidence thresholds", options=THRESHOLD_PRESETS, value=DEFAULT_THRESHOLD_PRESET)
+    level = field(w.RadioButtons, "Observations to use", options=[("Event-based (recommended)", "event"), ("Media-based", "media")],
                   value="event")
     level_help = w.HTML("<i>Media-based is only used if every export contains it; otherwise event-based is used for all.</i>")
 
-    templates = list_templates(templates_path)
+    templates = {name: desc for name, desc in list_templates(templates_path).items() if name != "model_comparison"}
     template = field(w.Dropdown, "Report template", options=list(templates), value="full" if "full" in templates else list(templates)[0])
     template_help = w.HTML()
     exclude = field(w.SelectMultiple, "Sections to leave out", options=[], rows=6)
-    export_errors = field(w.Checkbox, "Export misclassified images CSV", value=False, indent=False)
-    taxonomy = field(w.Checkbox, "Look up taxonomy (needs internet and galah)", value=False, indent=False)
-    clear = field(w.Checkbox, "Clear existing outputs for this set first", value=False, indent=False)
+    export_errors = field(w.Checkbox, "Export misclassified images csv", value=False, indent=False)
+    taxonomy = field(w.Checkbox, "Look up taxonomy (needs internet and galah)", value=True, indent=False)
+    clear = field(w.Checkbox, "Clear existing outputs for this set first", value=True, indent=False)
     log_level = field(w.Dropdown, "Log level", options=["INFO", "DEBUG", "WARNING", "ERROR"], value="INFO")
-    advanced = w.Accordion(children=[w.VBox([log_level])], selected_index=None)
+    advanced = w.Accordion(children=[w.VBox([export_errors, taxonomy, clear, log_level])], selected_index=None)
     advanced.set_title(0, "Advanced")
 
     run = w.Button(description="Run evaluation", button_style="success", icon="play", layout=w.Layout(width="200px"))
@@ -255,11 +262,11 @@ def build_form(project_root: Optional[Path] = None):
     update_preview()
 
     form = w.VBox([
-        w.HTML("<h3>1. Test set</h3>"), w.HBox([test_set, refresh]), preview,
-        w.HTML("<h3>2. Report details</h3>"), source, collation,
-        w.HTML("<h3>3. Analysis settings</h3>"), thresholds, level, level_help,
-        w.HTML("<h3>4. Report format</h3>"), template, template_help, exclude,
-        w.HTML("<h3>5. Options</h3>"), export_errors, taxonomy, clear, advanced,
+        w.HTML("<h3>1. Select test set input folder</h3>"), w.HBox([test_set, refresh]), preview,
+        w.HTML("<h3>2. Define the report details</h3>"), source, collation,
+        w.HTML("<h3>3. Configure analysis settings</h3>"), thresholds, level, level_help,
+        w.HTML("<h3>4. Select the report format</h3>"), template, template_help, exclude,
+        advanced,
         w.HTML("<br>"), run, status, output,
     ])
     display(form)

@@ -263,13 +263,22 @@ def test_ui_form_runs(tmp_path):
             stack.extend(getattr(item, "children", ()))
         raise AssertionError(f"{widget_type} {attrs} not found")
 
-    thresholds = find(ipywidgets.Text, description="Confidence thresholds")
-    status = [c for c in form.children if isinstance(c, ipywidgets.HTML)][-1]
-    thresholds.value = "oops"
-    find(ipywidgets.Button, description="Run evaluation").click()
-    assert "Thresholds must be numbers" in status.value
+    thresholds = find(ipywidgets.Dropdown, description="Confidence thresholds")
+    assert thresholds.value == "0.5, 0.6, 0.7, 0.8, 0.9"
+    assert [label for label, _ in thresholds.options][0] == ">0.5" and len(thresholds.options) == 4
+    assert "model_comparison" not in find(ipywidgets.Dropdown, description="Report template").options
+    assert find(ipywidgets.RadioButtons).options[0][0] == "Event-based (recommended)"
+    advanced = find(ipywidgets.Accordion)
+    assert advanced.selected_index is None
+    export_errors = find(ipywidgets.Checkbox, description="Export misclassified images csv")
+    taxonomy = find(ipywidgets.Checkbox, description="Look up taxonomy (needs internet and galah)")
+    clear = find(ipywidgets.Checkbox, description="Clear existing outputs for this set first")
+    assert (export_errors.value, taxonomy.value, clear.value) == (False, True, True)
+    assert {export_errors, taxonomy, clear} <= set(advanced.children[0].children)
 
-    thresholds.value = "0.5"
+    status = [c for c in form.children if isinstance(c, ipywidgets.HTML)][-1]
+    taxonomy.value = False  # avoids a network lookup in the test
+    thresholds.value = "0.2, 0.4, 0.6, 0.8"
     find(ipywidgets.Button, description="Run evaluation").click()
     assert "Done" in status.value
     assert list((root / "Output_Reports" / "set").glob("*.html"))

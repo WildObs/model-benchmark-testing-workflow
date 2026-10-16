@@ -98,7 +98,7 @@ model-benchmark-testing-workflow/
 ## Usage
 
 ### Notebook (form version, no coding)
-Open `scripts/WildObs-CV-model-benchmark-testing-form.ipynb`, run the two cells, and use the form to pick a test set (the form previews the models, image counts and observation levels it finds), enter the report details, set thresholds, observation level and template, and click **Run evaluation**. The report is displayed under the form and saved to `Output_Reports/<test set>`. It needs `ipywidgets` (`pip install ipywidgets`). The form logic lives in `src/ui.py`.
+Open `scripts/WildObs-CV-model-benchmark-testing-form.ipynb`, run the two cells, and use the form to pick a test set (the form previews the models, image counts and observation levels it finds), enter the report details, choose a threshold preset, observation level and template, and click **Run evaluation** (taxonomy lookup, clearing old outputs, misclassified-image export and log level are under the collapsed **Advanced** section). The report is displayed under the form and saved to `Output_Reports/<test set>`. It needs `ipywidgets` (`pip install ipywidgets`). The form logic lives in `src/ui.py`.
 
 ### Notebook
 Open `scripts/WildObs-CV-model-benchmark-testing-workflow.ipynb`, edit the configuration cell (`test_set_name`, thresholds, template, etc.) and run the cells.
