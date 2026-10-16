@@ -1,6 +1,9 @@
 """Point-and-click form (ipywidgets) for running the benchmark workflow from a notebook."""
 
 import html
+import os
+import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
@@ -190,6 +193,8 @@ def build_form(project_root: Optional[Path] = None):
 
     run = w.Button(description="Run evaluation", button_style="success", icon="play", layout=w.Layout(width="200px"))
     status = w.HTML()
+    open_folder = w.Button(description="Open reports folder", icon="folder-open", layout=w.Layout(width="200px", display="none"))
+    open_folder.folder = None
     output = w.Output()
 
     def update_preview(*_):
@@ -213,9 +218,19 @@ def build_form(project_root: Optional[Path] = None):
             test_set.value = current
         update_preview()
 
+    def on_open_folder(button):
+        try:
+            if hasattr(os, "startfile"):
+                os.startfile(button.folder)
+            else:
+                subprocess.run(["open" if sys.platform == "darwin" else "xdg-open", str(button.folder)], check=False)
+        except Exception as exc:
+            status.value += f"<br><span style='color:#b91c1c'>Could not open the folder: {html.escape(str(exc))}</span>"
+
     def on_run(_):
         output.clear_output()
         status.value = ""
+        open_folder.layout.display = "none"
         try:
             config = make_config(
                 test_set.value, source.value, collation.value, thresholds.value, level.value, template.value,
@@ -234,10 +249,13 @@ def build_form(project_root: Optional[Path] = None):
                 status.value = f"<span style='color:#b91c1c'>&#10060; The run failed: {html.escape(str(exc))}. " \
                                "See the log file in the logs folder for details.</span>"
             else:
+                folder = Path(config.set_output_folder).resolve()
                 status.value = (
                     f"<span style='color:#15803d'>&#9989; Done. {len(results.runs)} evaluation report(s) saved to "
-                    f"<code>{html.escape(str(config.set_output_folder))}</code></span>"
+                    f"<a href='{folder.as_uri()}' target='_blank'>{html.escape(str(folder))}</a></span>"
                 )
+                open_folder.folder = folder
+                open_folder.layout.display = "inline-flex"
                 for r in results.runs:
                     print(f"{r.model_name}: {r.report_path}")
                 if results.comparison_report_path:
@@ -251,6 +269,7 @@ def build_form(project_root: Optional[Path] = None):
     template.observe(update_template, "value")
     refresh.on_click(on_refresh)
     run.on_click(on_run)
+    open_folder.on_click(on_open_folder)
     update_template()
     update_preview()
 
@@ -260,7 +279,7 @@ def build_form(project_root: Optional[Path] = None):
         w.HTML("<h3>3. Configure analysis settings</h3>"), thresholds, level, level_help,
         w.HTML("<h3>4. Select the report format</h3>"), template, template_help,
         advanced,
-        w.HTML("<br>"), run, status, output,
+        w.HTML("<br>"), run, status, open_folder, output,
     ])
     display(form)
     return form
