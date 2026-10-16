@@ -263,7 +263,7 @@ def test_ui_form_runs(tmp_path):
             stack.extend(getattr(item, "children", ()))
         raise AssertionError(f"{widget_type} {attrs} not found")
 
-    thresholds = find(ipywidgets.Dropdown, description="Confidence thresholds")
+    thresholds = find(ipywidgets.Dropdown, description="Confidence thresholds to include")
     assert thresholds.value == "0.5, 0.6, 0.7, 0.8, 0.9"
     assert [label for label, _ in thresholds.options][0] == ">0.5" and len(thresholds.options) == 4
     assert "model_comparison" not in find(ipywidgets.Dropdown, description="Report template").options

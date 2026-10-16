@@ -162,7 +162,7 @@ def build_form(project_root: Optional[Path] = None):
     root = Path(project_root) if project_root else PROJECT_ROOT
     input_path, templates_path = root / "Input_Data", root / "templates"
     layout = w.Layout(width="650px")
-    style = {"description_width": "190px"}
+    style = {"description_width": "260px"}
 
     def field(widget_cls, label, **kwargs):
         kwargs.setdefault("layout", layout)
@@ -176,8 +176,8 @@ def build_form(project_root: Optional[Path] = None):
     source = field(w.Text, "Data source location", placeholder="e.g. Tarcutta Reserve, NSW")
     collation = field(w.Textarea, "Data collation process", placeholder="How the test images were selected",
                       layout=w.Layout(width="650px", height="80px"))
-    thresholds = field(w.Dropdown, "Confidence thresholds", options=THRESHOLD_PRESETS, value=DEFAULT_THRESHOLD_PRESET)
-    level = field(w.RadioButtons, "Observations to use", options=[("Event-based (recommended)", "event"), ("Media-based", "media")],
+    thresholds = field(w.Dropdown, "Confidence thresholds to include", options=THRESHOLD_PRESETS, value=DEFAULT_THRESHOLD_PRESET)
+    level = field(w.RadioButtons, "Observations Levels to include in the analysis", options=[("Event-based (recommended)", "event"), ("Media-based", "media")],
                   value="event")
     level_help = w.HTML("<i>Media-based is only used if every export contains it; otherwise event-based is used for all.</i>")
 
@@ -305,9 +305,9 @@ def build_form(project_root: Optional[Path] = None):
     update_preview()
 
     form = w.VBox([
-        w.HTML("<h3>1. Select test set input folder</h3>"), w.HBox([test_set, refresh]), preview,
-        w.HTML("<h3>2. Define the report details</h3>"), source, collation,
-        w.HTML("<h3>3. Configure analysis settings</h3>"), thresholds, level, level_help,
+        w.HTML("<h3>1. Select the Test Set input folder (containing WildObs camtrapdp data exports)</h3>"), w.HBox([test_set, refresh]), preview,
+        w.HTML("<h3>2. Define the descriptive details for the report</h3>"), source, collation,
+        w.HTML("<h3>3. Configure the analysis settings</h3>"), thresholds, level, level_help,
         w.HTML("<h3>4. Select the report format</h3>"), template, template_help,
         advanced,
         w.HTML("<br>"), run, status, open_folder, reports_box, log_box,
