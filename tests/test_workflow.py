@@ -213,6 +213,89 @@ def test_observation_level_config_and_pipeline(tmp_path):
     assert cat.true_positives == 1
 
 
+def test_ui_helpers(tmp_path):
+    from src.ui import effective_observation_level, list_test_sets, make_config, parse_thresholds, summarise_set
+
+    assert parse_thresholds("0.5, 0.7;0.9") == [0.5, 0.7, 0.9]
+    for bad in ("", "abc", "1.5"):
+        with pytest.raises(ValueError):
+            parse_thresholds(bad)
+
+    make_mixed_camtrap(tmp_path / "in" / "set" / "a")
+    make_camtrap(tmp_path / "in" / "set" / "b", model_name="old model")
+    (tmp_path / "in" / "empty").mkdir()
+    assert list_test_sets(tmp_path / "in") == ["set"]
+
+    summaries = summarise_set(tmp_path / "in" / "set")
+    by_model = {s.model: s for s in summaries}
+    assert by_model["test model"].levels == ["event", "media"] and by_model["test model"].images == 4
+    assert by_model["old model"].levels == ["event"]
+    assert effective_observation_level("media", summaries) == "event"
+    assert effective_observation_level("media", summaries[:1]) == "media"
+
+    with pytest.raises(ValueError):
+        make_config("", "", "", "0.5", "event", "full", [], False, False, False)
+    config = make_config("set", " here ", "", "0.5, 0.8", "media", "full", ["Limitations"], True, False, True,
+                         input_path=str(tmp_path / "in"))
+    assert config.thresholds == [0.5, 0.8] and config.data_source_location == "here"
+    assert config.observation_level == "media" and config.clear_existing_outputs is True
+
+
+def test_ui_form_runs(tmp_path):
+    ipywidgets = pytest.importorskip("ipywidgets")
+    from src.ui import build_form
+
+    root = tmp_path / "proj"
+    make_camtrap(root / "Input_Data" / "set" / "export")
+    (root / "templates").mkdir(parents=True)
+    for src_file in TEMPLATES.iterdir():
+        if src_file.is_file():
+            (root / "templates" / src_file.name).write_bytes(src_file.read_bytes())
+
+    form = build_form(root)
+
+    def find(widget_type, **attrs):
+        stack = list(form.children)
+        while stack:
+            item = stack.pop()
+            if isinstance(item, widget_type) and all(getattr(item, k) == v for k, v in attrs.items()):
+                return item
+            stack.extend(getattr(item, "children", ()))
+        raise AssertionError(f"{widget_type} {attrs} not found")
+
+    test_set = find(ipywidgets.Dropdown, description="Test set folder")
+    assert test_set.value is None
+    find(ipywidgets.Button, description="Run evaluation").click()
+    assert "Choose a test set" in [c for c in form.children if isinstance(c, ipywidgets.HTML)][-1].value
+    test_set.value = "set"
+
+    thresholds = find(ipywidgets.Dropdown, description="Confidence thresholds to include")
+    assert thresholds.value == "0.5, 0.6, 0.7, 0.8, 0.9"
+    assert [label for label, _ in thresholds.options][0] == ">0.5" and len(thresholds.options) == 4
+    assert "model_comparison" not in find(ipywidgets.Dropdown, description="Report template").options
+    assert find(ipywidgets.RadioButtons).options[0][0] == "Event-based (recommended)"
+    advanced = next(c for c in form.children if isinstance(c, ipywidgets.Accordion) and c.titles == ("Advanced",))
+    log_box = next(c for c in form.children if isinstance(c, ipywidgets.Accordion) and c.titles == ("Log messages",))
+    assert advanced.selected_index is None and log_box.selected_index is None
+    export_errors = find(ipywidgets.Checkbox, description="Export misclassified images csv")
+    taxonomy = find(ipywidgets.Checkbox, description="Look up taxonomy (needs internet and galah)")
+    clear = find(ipywidgets.Checkbox, description="Clear existing outputs for this set first")
+    assert (export_errors.value, taxonomy.value, clear.value) == (False, True, True)
+    assert {export_errors, taxonomy, clear} <= set(advanced.children[0].children)
+
+    status = [c for c in form.children if isinstance(c, ipywidgets.HTML)][-1]
+    taxonomy.value = False  # avoids a network lookup in the test
+    thresholds.value = "0.2, 0.4, 0.6, 0.8"
+    find(ipywidgets.Button, description="Run evaluation").click()
+    assert "Done" in status.value
+    assert list((root / "Output_Reports" / "set").glob("*.html"))
+    reports = [c for c in form.children if isinstance(c, ipywidgets.VBox) and c.children][-1]
+    accordion = reports.children[0].children[1]
+    n_reports = len(list((root / "Output_Reports" / "set").glob("*.html")))
+    assert len(accordion.children) == n_reports and accordion.selected_index is None
+    accordion.selected_index = 0  # lazily renders the first report (needs a live kernel to capture output)
+
+
 def test_taxonomy_table_blank_for_no_match():
     from src.taxonomy import build_taxonomy_table
 
