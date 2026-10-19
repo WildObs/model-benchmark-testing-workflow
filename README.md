@@ -6,20 +6,21 @@
 
 ## Setup instructions:
 1) Prepare the testing dataset. Start by organising camera trap images into folders by species on your local computer. The quality of the testing dataset will determine the accuracy of the report generated. Here are a few tips:
-- Use a representive number of images of each species e.g. at least 1000 if possible
+- Use a representive number of images of each species e.g. at least 100 if possible
+- If you have a very large number of images of some species, extract a random sample e.g. 1000 rather than processing every available image. This saves you time and reduces unnecessary system usage.
 - Avoid using images that have been used as part of the model training dataset as these will create a biased result
-- If possible, select a random subset of testing images from a larger pool aiming to get a wide range of images over space and time
 - For the purpose of calculating Recall, include species that are relevant to your monitoring program
 - For the the purpose of calculating Precision, also include images of other species that are commonly detected on the cameras at that location even if they are not relevant to your monitoring. Also include some blank images. Below is an example breakdown:
 
-| Species         | # images | Reason for inclusion                     |
-|:----------------|:---------|:-----------------------------------------|
-| Feral Cat       | 1000     | Target species in monitoring program     |
-| Red Fox         | 1000     | Target species in monitoring program     |
-| European Rabbit | 1000     | Target species in monitoring program     |
-| Kangaroo        | 1000     | Non-target species but abundant at this location. Impact on Precision. |
-| Emu             | 1000     | Non-target species but abundant at this location. Impact on Precision. |
-| Blank           | 1000     | Impact on Precision. |
+| Species                  | # images | Reason for inclusion                     |
+|:-------------------------|:---------|:-----------------------------------------|
+| Felis catus              | 500      | Target species in monitoring program     |
+| Vulpes vulpes            | 500      | Target species in monitoring program     |
+| Oryctolagus cuniculus    | 1000     | Target species in monitoring program     |
+| Osphranter rufus         | 1000     | Non-target species but abundant at this location. Impact on Precision. |
+| Macropus giganteus       | 1000     | Non-target species but abundant at this location. Impact on Precision. |
+| Dromaius novaehollandiae | 1000     | Non-target species but abundant at this location. Impact on Precision. |
+| Blank                    | 1000     | Impact on Precision. |
 
 2) Establish new Project/s in the WildObs WIMP for benchmarking purposes:
 -  You will need a separate Project for each model you are testing. 
@@ -165,13 +166,6 @@ Run the tests with:
 ```bash
 python -m pytest tests
 ```
-## Contributing
-
-Contributions are welcome:
-
-1. Fork the repository
-2. Create a new branch
-3. Submit a pull request
 
 ## License
 
