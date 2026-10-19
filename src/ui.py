@@ -336,7 +336,7 @@ def build_form(project_root: Optional[Path] = None):
     update_template()
     update_preview()
 
-    help_text = load_help(root / "form_help.md")
+    help_text = load_help(templates_path / "tooltips" / "form_help.md")
 
     def heading(key, title):
         return w.HTML(heading_with_help(title, help_text.get(key)))
