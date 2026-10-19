@@ -2,18 +2,46 @@
 
 import html
 import os
+import re
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
+import markdown
 import pandas as pd
 
 from .config import PROJECT_ROOT, BenchmarkConfig
 from .data_loader import available_observation_levels, get_species_display_list
 from .pipeline import discover_export_folders, run_benchmark
 from .templating import list_templates
+
+def load_help(path: Path) -> dict:
+    """Read '## key' sections from a Markdown file into {key: html}. Missing file -> no help."""
+    path = Path(path)
+    if not path.is_file():
+        return {}
+    text = re.sub(r"<!--.*?-->", "", path.read_text(encoding="utf-8"), flags=re.DOTALL)
+    sections = {}
+    for chunk in re.split(r"^##[ \t]+", text, flags=re.MULTILINE)[1:]:
+        key, _, body = chunk.partition("\n")
+        if body.strip():
+            sections[key.strip()] = markdown.markdown(body.strip(), extensions=["fenced_code", "sane_lists"])
+    return sections
+
+
+def heading_with_help(title: str, help_html: Optional[str]) -> str:
+    """Section heading plus a collapsible help block when help text exists."""
+    heading = f"<h3>{title}</h3>"
+    if not help_html:
+        return heading
+    return (
+        f"{heading}<details style='margin:0 0 8px 0'><summary style='cursor:pointer;color:#2563eb'>"
+        f"&#9432; Help</summary><div style='max-width:650px;padding:6px 12px;background:#f3f4f6;"
+        f"border-left:3px solid #2563eb;color:#111827'>{help_html}</div></details>"
+    )
+
 
 def set_options(sets: List[str]) -> list:
     """Dropdown options with a leading blank entry so nothing is pre-selected."""
@@ -308,11 +336,16 @@ def build_form(project_root: Optional[Path] = None):
     update_template()
     update_preview()
 
+    help_text = load_help(root / "form_help.md")
+
+    def heading(key, title):
+        return w.HTML(heading_with_help(title, help_text.get(key)))
+
     form = w.VBox([
-        w.HTML("<h3>1. Select the Test Set input folder (containing WildObs camtrapdp data exports)</h3>"), w.HBox([test_set, refresh]), preview,
-        w.HTML("<h3>2. Define the descriptive details for the report</h3>"), source, collation,
-        w.HTML("<h3>3. Configure the analysis settings</h3>"), thresholds, level, level_help,
-        w.HTML("<h3>4. Select the report format</h3>"), template, template_help,
+        heading("section_1", "1. Select the Test Set input folder (containing WildObs camtrapdp data exports)"), w.HBox([test_set, refresh]), preview,
+        heading("section_2", "2. Define the descriptive details for the report"), source, collation,
+        heading("section_3", "3. Configure the analysis settings"), thresholds, level, level_help,
+        heading("section_4", "4. Select the report format"), template, template_help,
         advanced,
         w.HTML("<br>"), run, status, open_folder, reports_box, log_box,
     ])

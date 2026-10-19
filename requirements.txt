@@ -1,5 +1,5 @@
 pandas
-ipywidgets  # only needed for the form notebook
+ipywidgets
 markdown
 latex2mathml
-galah  # optional: only needed for lookup_taxonomy
+galah
