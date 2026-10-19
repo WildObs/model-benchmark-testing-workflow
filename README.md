@@ -19,6 +19,8 @@
 | Oryctolagus cuniculus    | 1000     | Target species in monitoring program     |
 | Osphranter rufus         | 1000     | Non-target species but abundant at this location. Impact on Precision. |
 | Macropus giganteus       | 1000     | Non-target species but abundant at this location. Impact on Precision. |
+| Notamacropus rufogriseus | 1000     | Non-target species but abundant at this location. Impact on Precision. |
+| Wallabia bicolor         | 1000     | Non-target species but abundant at this location. Impact on Precision. |
 | Dromaius novaehollandiae | 1000     | Non-target species but abundant at this location. Impact on Precision. |
 | Blank                    | 1000     | Impact on Precision. |
 
