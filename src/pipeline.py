@@ -201,6 +201,7 @@ def run_benchmark(config: BenchmarkConfig) -> BenchmarkBatchRun:
                 reports_folder=[r.report_path for r in runs],
                 output_folder=set_output_dir,
                 run_id=run_id,
+                animal_recall={r.model_name: r.metrics.animal_recall for r in runs},
             )
         else:
             logger.info(

@@ -2,7 +2,7 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pandas as pd
 
@@ -14,12 +14,73 @@ PRED_AXIS_LABEL = "predicted_species→\ntrue_species↓"
 SINGLE_ROW_AXIS_LABEL = "predicted_species→\nconfidence_threshold↓"
 
 
+# True labels (deployment tags) that are not animals, so they are excluded from animal recall
+NON_ANIMAL_LABELS = {"blank", "human", "homo sapiens", "person", "people", "vehicle"}
+
+
+@dataclass
+class AnimalRecall:
+    """How well a model detects the presence of animals, ignoring the species it assigned.
+
+    Detector recall: animal images not marked Blank / all animal images.
+    Classifier recall: animal images the detector passed on (not Blank) that were not
+    marked Unclassified / animal images not marked Blank.
+    Overall recall: animal images marked as neither Blank nor Unclassified / all animal images.
+    """
+
+    animal_images: int
+    blank: int
+    unclassified: int
+
+    @property
+    def detected(self) -> int:
+        return self.animal_images - self.blank
+
+    @property
+    def classified(self) -> int:
+        return self.detected - self.unclassified
+
+    @staticmethod
+    def _ratio(numerator: int, denominator: int) -> Optional[float]:
+        return round(numerator / denominator, 4) if denominator > 0 else None
+
+    @property
+    def detector_recall(self) -> Optional[float]:
+        return self._ratio(self.detected, self.animal_images)
+
+    @property
+    def classifier_recall(self) -> Optional[float]:
+        return self._ratio(self.classified, self.detected)
+
+    @property
+    def overall_recall(self) -> Optional[float]:
+        return self._ratio(self.classified, self.animal_images)
+
+
 @dataclass
 class BenchmarkMetrics:
     results: pd.DataFrame
     best_thresholds: pd.DataFrame
     full_confusion_matrices: Dict[str, pd.DataFrame]
     single_row_matrices: Dict[str, pd.DataFrame]
+    animal_recall: Optional[AnimalRecall] = None
+
+
+def compute_animal_recall(merged: pd.DataFrame) -> AnimalRecall:
+    """Count animal images (true label is a species) that the model marked Blank or Unclassified.
+
+    Images with no matching observation are predicted 'blank' by the merge, so they count as Blank.
+    """
+    animals = merged[~merged["true_species"].isin(NON_ANIMAL_LABELS)]
+    blank = int((animals["pred_species"] == "blank").sum())
+    unclassified = int((animals["pred_species"] == "unclassified").sum())
+    result = AnimalRecall(len(animals), blank, unclassified)
+    logger.info(
+        "Animal recall: %d animal images, %d Blank, %d Unclassified (detector=%s classifier=%s overall=%s)",
+        result.animal_images, blank, unclassified,
+        result.detector_recall, result.classifier_recall, result.overall_recall,
+    )
+    return result
 
 
 def compute_metrics(merged: pd.DataFrame, thresholds: List[float]) -> BenchmarkMetrics:
@@ -31,7 +92,7 @@ def compute_metrics(merged: pd.DataFrame, thresholds: List[float]) -> BenchmarkM
     results = results.drop(columns="threshold_value")
     full = compute_full_confusion_matrices(merged, thresholds)
     single = compute_single_row_matrices(merged, species_list, thresholds)
-    return BenchmarkMetrics(results, best, full, single)
+    return BenchmarkMetrics(results, best, full, single, compute_animal_recall(merged))
 
 
 def compute_results_table(merged: pd.DataFrame, species_list: List[str], thresholds: List[float]) -> pd.DataFrame:

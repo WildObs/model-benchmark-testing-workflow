@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.config import BenchmarkConfig  # noqa: E402
 from src.data_loader import extract_sequence  # noqa: E402
-from src.metrics import compute_metrics  # noqa: E402
+from src.metrics import compute_animal_recall, compute_metrics  # noqa: E402
 from src.model_comparison import (  # noqa: E402
     EvaluationReport,
     _EvaluationReportParser,
@@ -349,6 +349,39 @@ def _write_evaluation_report(
         "</body></html>",
         encoding="utf-8",
     )
+
+
+def test_compute_animal_recall_counts_blank_and_unclassified():
+    merged = pd.DataFrame({
+        "true_species": ["deer"] * 6 + ["blank", "blank", "human"],
+        "pred_species": ["deer", "deer", "blank", "blank", "unclassified", "fox", "blank", "deer", "blank"],
+    })
+    recall = compute_animal_recall(merged)
+    assert (recall.animal_images, recall.blank, recall.unclassified) == (6, 2, 1)
+    assert recall.detector_recall == pytest.approx(0.6667, abs=1e-4)
+    assert recall.classifier_recall == pytest.approx(0.75)
+    assert recall.overall_recall == pytest.approx(0.5)
+
+
+def test_compute_animal_recall_without_animals_is_none():
+    recall = compute_animal_recall(pd.DataFrame({"true_species": ["blank"], "pred_species": ["blank"]}))
+    assert recall.detector_recall is None and recall.overall_recall is None
+
+
+def test_model_comparison_report_includes_animal_recall_section(tmp_path):
+    from src.metrics import AnimalRecall
+
+    reports = []
+    for name in ("A", "B"):
+        path = tmp_path / f"WildObs_CV_Model_Evaluation_Report_{name}.html"
+        _write_evaluation_report(path, name, [("Cat", "0.85")])
+        reports.append(path)
+    recall = {"A": AnimalRecall(10, 2, 1), "B": AnimalRecall(10, 0, 0)}
+    out = create_model_comparison_report(reports, tmp_path / "out", animal_recall=recall)
+    content = out.read_text(encoding="utf-8")
+    assert "Animal Recall" in content
+    assert "Detector Model Animal Recall" in content
+    assert "0.8000" in content
 
 
 def test_model_comparison_extracts_optimal_threshold_f1_scores(tmp_path):
