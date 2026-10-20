@@ -69,12 +69,21 @@ class BenchmarkMetrics:
 def compute_animal_recall(merged: pd.DataFrame) -> AnimalRecall:
     """Count animal images (true label is a species) that the model marked Blank or Unclassified.
 
-    Images with no matching observation are predicted 'blank' by the merge, so they count as Blank.
+    The merged table can hold several rows per image (one per observation), so each image is
+    collapsed to a single outcome first: classified if any observation names a species, else
+    Unclassified if any observation is Unclassified, else Blank. Images with no observation
+    are predicted 'blank' by the merge, so they count as Blank.
     """
     animals = merged[~merged["true_species"].isin(NON_ANIMAL_LABELS)]
-    blank = int((animals["pred_species"] == "blank").sum())
-    unclassified = int((animals["pred_species"] == "unclassified").sum())
-    result = AnimalRecall(len(animals), blank, unclassified)
+    pred = animals["pred_species"]
+    outcome = pd.Series("blank", index=animals.index)
+    outcome[pred == "unclassified"] = "unclassified"
+    outcome[~pred.isin(["blank", "unclassified"])] = "classified"
+    rank = outcome.map({"blank": 0, "unclassified": 1, "classified": 2})
+    best = rank.groupby(animals["mediaID"].values).max()
+    blank = int((best == 0).sum())
+    unclassified = int((best == 1).sum())
+    result = AnimalRecall(len(best), blank, unclassified)
     logger.info(
         "Animal recall: %d animal images, %d Blank, %d Unclassified (detector=%s classifier=%s overall=%s)",
         result.animal_images, blank, unclassified,

@@ -80,6 +80,7 @@ def test_report_filename_component_replaces_spaces_and_special_characters():
 
 def test_metrics():
     merged = pd.DataFrame({
+        "mediaID": ["m1", "m2", "m3", "m4"],
         "true_species": ["cat", "cat", "fox", "fox"],
         "pred_species": ["cat", "fox", "fox", "fox"],
         "confidence": [0.9, 0.8, 0.95, 0.4],
@@ -351,8 +352,19 @@ def _write_evaluation_report(
     )
 
 
+def test_compute_animal_recall_counts_each_image_once():
+    merged = pd.DataFrame({
+        "mediaID": ["m1", "m1", "m2", "m3", "m4", "m5", "m6", "m7"],
+        "true_species": ["deer"] * 6 + ["blank", "human"],
+        "pred_species": ["deer", "fox", "blank", "blank", "unclassified", "deer", "blank", "blank"],
+    })
+    recall = compute_animal_recall(merged)
+    assert (recall.animal_images, recall.blank, recall.unclassified) == (5, 2, 1)
+
+
 def test_compute_animal_recall_counts_blank_and_unclassified():
     merged = pd.DataFrame({
+        "mediaID": [f"m{i}" for i in range(9)],
         "true_species": ["deer"] * 6 + ["blank", "blank", "human"],
         "pred_species": ["deer", "deer", "blank", "blank", "unclassified", "fox", "blank", "deer", "blank"],
     })
@@ -364,7 +376,7 @@ def test_compute_animal_recall_counts_blank_and_unclassified():
 
 
 def test_compute_animal_recall_without_animals_is_none():
-    recall = compute_animal_recall(pd.DataFrame({"true_species": ["blank"], "pred_species": ["blank"]}))
+    recall = compute_animal_recall(pd.DataFrame({"mediaID": ["m1"], "true_species": ["blank"], "pred_species": ["blank"]}))
     assert recall.detector_recall is None and recall.overall_recall is None
 
 
