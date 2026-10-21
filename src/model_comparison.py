@@ -436,10 +436,35 @@ def _build_model_performance_summary(
     )
 
 
+def _build_animal_recall_table(animal_recall: Optional[Dict[str, Any]], model_names: List[str]) -> str:
+    """HTML table of detector, classifier and overall animal recall for each model."""
+    if not animal_recall:
+        return "<p><i>Animal recall was not calculated for this comparison.</i></p>"
+    rows = []
+    for name in model_names:
+        r = animal_recall.get(name)
+        if r is None:
+            continue
+        rows.append({
+            "Model": name,
+            "Animal images": r.animal_images,
+            "Marked Blank": r.blank,
+            "Marked Unclassified": r.unclassified,
+            "Detector Model Animal Recall": r.detector_recall,
+            "Classifier Model Animal Recall": r.classifier_recall,
+            "Overall Animal Recall": r.overall_recall,
+        })
+    return pd.DataFrame(rows).to_html(
+        index=False, classes="styled-table", border=0, na_rep="N/A", escape=True,
+        float_format=lambda x: f"{x:.4f}",
+    )
+
+
 def create_model_comparison_report(
     reports_folder: Union[str, Path, Sequence[Union[str, Path]]],
     output_folder: Union[str, Path],
     run_id: Optional[str] = None,
+    animal_recall: Optional[Dict[str, Any]] = None,
 ) -> Path:
     """Create an HTML comparison report from evaluation reports.
 
@@ -483,6 +508,9 @@ def create_model_comparison_report(
     placeholders = {
         "Model_Performance_Summary_Table": Placeholder(model_summary_html, "html"),
         "Comparison_Summary_Table": Placeholder(summary_html, "html"),
+        "Animal_Recall_Table": Placeholder(
+            _build_animal_recall_table(animal_recall, [r.model_name for r in reports]), "html"
+        ),
     }
     placeholders.update({name: Placeholder(value) for name, value in _build_test_details(reports).items()})
     template = COMPARISON_TEMPLATE
