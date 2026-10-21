@@ -10,6 +10,7 @@ Template syntax
 * Everything else is standard Markdown (tables supported); raw HTML is also allowed.
 """
 
+import hashlib
 import html
 import logging
 import re
@@ -153,6 +154,32 @@ def _apply_sections(text: str, excluded: set, template_name: str) -> str:
         return match.group(2)
 
     return SECTION_RE.sub(replace, text)
+
+
+H2_RE = re.compile(r"<h2(?:\s[^>]*)?>(.*?)</h2>", re.DOTALL)
+TAG_RE = re.compile(r"<[^>]+>")
+
+
+def add_navigation(body: str, unique_key: str = "") -> str:
+    """Give every <h2> an id and prepend a sticky menu linking to them.
+
+    Plain HTML anchors (no JavaScript) so it works in SharePoint and offline. ids are
+    prefixed with a short hash of unique_key so several reports on one page don't clash.
+    Reports with fewer than two sections are returned unchanged.
+    """
+    if len(H2_RE.findall(body)) < 2:
+        return body
+    prefix = "s" + hashlib.md5(unique_key.encode("utf-8")).hexdigest()[:6]
+    links: List[str] = []
+
+    def tag(match):
+        index = len(links) + 1
+        anchor = f"{prefix}-{index}"
+        links.append(f'<a href="#{anchor}">{html.escape(html.unescape(TAG_RE.sub("", match.group(1))).strip())}</a>')
+        return f'<h2 id="{anchor}">{match.group(1)}</h2>'
+
+    body = H2_RE.sub(tag, body)
+    return f'<nav class="report-nav" aria-label="Report sections">{"".join(links)}</nav>{body}'
 
 
 def load_style(template_path: Union[str, Path], templates_dir: Union[str, Path]) -> str:

@@ -352,6 +352,19 @@ def _write_evaluation_report(
     )
 
 
+def test_add_navigation_links_every_h2():
+    from src.templating import add_navigation
+
+    body = "<h1>T</h1><h2>Intro</h2><p>x</p><h2>Results &amp; more</h2><p>y</p>"
+    result = add_navigation(body, "k")
+    assert result.startswith('<nav class="report-nav"')
+    assert result.count("<a href=") == 2
+    assert "Results &amp; more</a>" in result
+    ids = [part.split('"')[0] for part in result.split('<h2 id="')[1:]]
+    assert len(ids) == 2 and all(f'href="#{i}"' in result for i in ids)
+    assert add_navigation("<h2>Only</h2>", "k") == "<h2>Only</h2>"
+
+
 def test_compute_animal_recall_counts_each_image_once():
     merged = pd.DataFrame({
         "mediaID": ["m1", "m1", "m2", "m3", "m4", "m5", "m6", "m7"],

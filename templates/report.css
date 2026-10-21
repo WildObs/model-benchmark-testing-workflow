@@ -32,6 +32,44 @@ h1 {
 h2 {
     color: #34495e;
     margin-top: 30px;
+    scroll-margin-top: 60px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.report-nav {
+    --nav-height: 48px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-sizing: border-box;
+    height: var(--nav-height);
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 0 0 2px 0;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border-bottom: 2px solid #34495e;
+}
+
+.report-nav a {
+    flex: 0 0 auto;
+    padding: 5px 12px;
+    border-radius: 14px;
+    background: #f2f2f2;
+    color: #2c3e50;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.report-nav a:hover {
+    background: #34495e;
+    color: #ffffff;
 }
 
 h3 {
@@ -71,4 +109,39 @@ ol {
     top: 0;
     z-index: 2;
     font-weight: bold;
+}
+
+/* Keep sticky table headers below the sticky section menu when one is present */
+.report-container:has(.report-nav) .styled-table th {
+    top: 48px;
+}
+
+/* Tables in a scroll wrapper pin their header (and first column) to the wrapper, which scrolls both ways.
+   The menu offset does not apply because the wrapper, not the page, is the scroll container. */
+.report-container .table-scroll {
+    overflow: auto;
+    max-height: 70vh;
+    margin-bottom: 20px;
+}
+
+.report-container .table-scroll .styled-table {
+    margin-bottom: 0;
+}
+
+.report-container .table-scroll .styled-table th {
+    position: sticky;
+    top: 0;
+}
+
+.report-container .table-scroll .styled-table td:first-child,
+.report-container .table-scroll .styled-table th:first-child {
+    position: sticky;
+    left: 0;
+    background-color: #ffffff;
+    box-shadow: inset -1px 0 0 #cccccc;
+}
+
+.report-container .table-scroll .styled-table th:first-child {
+    background-color: #f2f2f2;
+    z-index: 3;
 }

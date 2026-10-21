@@ -11,7 +11,7 @@ import pandas as pd
 from .config import BenchmarkConfig
 from .report_components import build_placeholders
 from .metrics import BenchmarkMetrics
-from .templating import load_style, render_template, resolve_template
+from .templating import add_navigation, load_style, resolve_template, render_template
 
 logger = logging.getLogger(__name__)
 
@@ -73,6 +73,7 @@ def write_html_report(
         config, model_name, species_display, metrics, image_count, image_counts, timestamp
     )
     body = render_template(template_path, placeholders, config.exclude_sections)
+    body = add_navigation(body, f"{model_name}{timestamp}{run_id}")
     style = load_style(template_path, config.templates_path)
 
     document = (

@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 import pandas as pd
 
 from .report import embedded_font_css, embedded_logo_html
-from .templating import Placeholder, load_style, render_template
+from .templating import Placeholder, add_navigation, load_style, render_template
 
 logger = logging.getLogger(__name__)
 
@@ -515,6 +515,7 @@ def create_model_comparison_report(
     placeholders.update({name: Placeholder(value) for name, value in _build_test_details(reports).items()})
     template = COMPARISON_TEMPLATE
     body = render_template(template, placeholders)
+    body = add_navigation(body, f"comparison{run_id}")
     templates_dir = template.parent
     style = load_style(template, templates_dir)
     fonts = embedded_font_css(templates_dir)

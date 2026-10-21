@@ -20,8 +20,10 @@
 **Data collation process used:** {Data_Collation_Process}
 <!-- END:Test_Details -->
 
+## Interpretation
+
 <!-- BEGIN:Purpose -->
-## Purpose and intended use of this report
+### Purpose and intended use of this report
 
 1. Inform the potential suitability of a model for a given location and set of species relevant to the monitoring program.
 2. Inform the design of a validation workflow (manual human review) to ensure a sufficient level of accuracy can be reached to meet the goals of the monitoring program.
@@ -29,7 +31,7 @@
 <!-- END:Purpose -->
 
 <!-- BEGIN:Limitations -->
-## Limitations
+### Limitations
 
 The accuracy of the results presented in this report is primarily limited by the quality of the test data used. If the input dataset is not representative of real-world conditions, model performance metrics may be misleading. It is important to follow recommended guidelines when constructing a test dataset to ensure it is balanced, representative, and consistent across species and environments.
 
@@ -39,11 +41,11 @@ Finally, the results presented in this report should not be interpreted as defin
 <!-- END:Limitations -->
 
 <!-- BEGIN:Metric_Definitions -->
-## Understanding the Results
+### Understanding the Results
 
 Recall, precision, and F1 score are standard metrics used to evaluate the performance of machine learning models. Each metric has a precise definition and corresponding mathematical formula.
 
-### Recall (Sensitivity)
+#### Recall (Sensitivity)
 
 \[ \text{Recall} = \frac{\text{True Positives}}{\text{True Positives + False Negatives}} \]
 
@@ -53,7 +55,7 @@ Of all the images that actually contain the target species, how many did the mod
 
 **Interpretation:** Quantifying recall helps us to understand how many true detections of a given species might be missed by the model.
 
-### Precision
+#### Precision
 
 \[ \text{Precision} = \frac{\text{True Positives}}{\text{True Positives + False Positives}} \]
 
@@ -63,7 +65,7 @@ Of all the images the model predicts as the target species, how many are actuall
 
 **Interpretation:** High precision means predictions are reliable. Low precision means more false detections.
 
-### F1 Score
+#### F1 Score
 
 \[ \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision + Recall}} \]
 
@@ -73,7 +75,7 @@ A balanced measure that combines both recall and precision.
 <!-- END:Metric_Definitions -->
 
 <!-- BEGIN:Terms_And_Interpretation -->
-### Definition of Terms
+#### Definition of Terms
 
 | Term | Definition | Shorthand definition |
 |:--|:--|:--|
@@ -81,7 +83,7 @@ A balanced measure that combines both recall and precision.
 | **False Positive (FP)** | The model predicts a species, but that species is not actually present. | False alarm |
 | **False Negative (FN)** | The model fails to detect a species that is actually present. | Missed detection |
 
-### How to interpret results
+#### How to interpret results
 
 | Scenario | Interpretation |
 |:--|:--|
@@ -92,7 +94,7 @@ A balanced measure that combines both recall and precision.
 <!-- END:Terms_And_Interpretation -->
 
 <!-- BEGIN:Confusion_Matrix_Explanation -->
-### What is a Confusion Matrix?
+#### What is a Confusion Matrix?
 
 A confusion matrix summarises model performance by comparing the true species labels against the species predicted by the model. In simple terms, the confusion matrix shows what the model classified correctly and where errors occurred, broken down by type of misclassification.
 

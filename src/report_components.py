@@ -18,7 +18,7 @@ def _table(df: pd.DataFrame, border: int = 0) -> str:
 
 
 def _scrollable(df: pd.DataFrame) -> str:
-    return f'<div style="overflow-x:auto;">{_table(df)}</div>'
+    return f'<div class="table-scroll">{_table(df)}</div>'
 
 
 def build_placeholders(
