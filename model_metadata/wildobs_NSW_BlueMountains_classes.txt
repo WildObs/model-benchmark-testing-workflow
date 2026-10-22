@@ -1,0 +1,31 @@
+wildobs_NSW_BlueMountains — 28 classes
+Source: agouti-aimodels/wildobs_NSW_BlueMountains/wildobs_NSW_BlueMountains.labels.txt
+
+Aegotheles cristatus	australian owlet-nightjar
+Alectura lathami	australian brush-turkey
+Cercartetus nanus	eastern pygmy possum
+Colluricincla harmonica	grey shrike-thrush
+Eopsaltria australis	eastern yellow robin
+Felis catus	domestic cat
+Gymnorhina tibicen	australian magpie
+Homo sapiens	human
+Macropus giganteus	eastern grey kangaroo
+Macropus robustus	common wallaroo
+Menura novaehollandiae	superb lyrebird
+Perameles nasuta	long-nosed bandicoot
+Platycercus elegans	crimson rosella
+Pseudocheirus peregrinus	common ringtail possum
+Rattus fuscipes	bush rat
+Rattus rattus	black rat
+Strepera graculina	pied currawong
+Strepera versicolor	grey currawong
+Tachyglossus aculeatus	short-beaked echidna
+Trichosurus cunninghami	mountain brushtail possum
+Trichosurus vulpecula	common brushtail
+Vombatus ursinus	common wombat
+Vulpes vulpes	red fox
+Wallabia bicolor	swamp wallaby
+Zoothera lunulata	bassian thrush
+Antechinus	antechinus species
+Notamacropus rufogriseus	red-necked wallaby
+Rattus	rats

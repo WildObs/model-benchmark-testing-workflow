@@ -1,0 +1,121 @@
+wildobs_TAS — 118 classes
+Source: agouti-aimodels/wildobs_TAS/wildobs_TAS.labels.txt
+
+Acanthorhynchus tenuirostris	eastern spinebill
+Accipiter fasciatus	brown goshawk
+Aegotheles cristatus	australian owlet-nightjar
+Anas castanea	chestnut teal
+Anas superciliosa	pacific black duck
+Anthochaera carunculata	red wattlebird
+Aquila audax	wedge-tailed eagle
+Bos taurus	cattle
+Canis familiaris	domestic dog
+Carduelis carduelis	european goldfinch
+Chenonetta jubata	maned duck
+Colluricincla harmonica	grey shrike-thrush
+Cygnus atratus	black swan
+Dacelo novaeguineae	laughing kookaburra
+Dama dama	fallow deer
+Dasyurus maculatus	spotted-tailed quoll
+Dromaius novaehollandiae	emu
+Egretta novaehollandiae	white-faced heron
+Eopsaltria australis	eastern yellow robin
+Equus caballus	horse
+Eudyptula minor	little penguin
+Falco berigora	brown falcon
+Felis catus	domestic cat
+Gallus gallus	red junglefowl
+Gymnorhina tibicen	australian magpie
+Haliaeetus leucogaster	white-bellied sea-eagle
+Hydromys chrysogaster	common water rat
+Isoodon obesulus	southern brown bandicoot
+Lepus europaeus	european hare
+Leucosarcia melanoleuca	wonga pigeon
+Lewinia pectoralis	lewins rail
+Macropus giganteus	eastern grey kangaroo
+Malurus cyaneus	superb fairy-wren
+Manorina melanocephala	noisy miner
+Menura novaehollandiae	superb lyrebird
+Mus musculus	house mouse
+Numida meleagris	helmeted guineafowl
+Oryctolagus cuniculus	european rabbit
+Ovis aries	domestic sheep
+Pachycephala olivacea	olive whistler
+Passer domesticus	house sparrow
+Pavo cristatus	indian peafowl
+Perameles nasuta	long-nosed bandicoot
+Petaurus breviceps	sugar glider
+Petroica phoenicea	flame robin
+Petroica rodinogaster	pink robin
+Phaps chalcoptera	common bronzewing
+Phaps elegans	brush bronzewing
+Phascolarctos cinereus	koala
+Phylidonyris novaehollandiae	new holland honeyeater
+Platycercus elegans	crimson rosella
+Platycercus eximius	eastern rosella
+Porphyrio melanotus	australian swamphen
+Pseudocheirus peregrinus	common ringtail possum
+Psophodes olivaceus	eastern whipbird
+Rattus fuscipes	bush rat
+Rattus lutreolus	australian swamp rat
+Rattus norvegicus	brown rat
+Rattus rattus	black rat
+Rhipidura albiscapa	grey fantail
+Rusa unicolor	sambar
+Strepera fuliginosa	black currawong
+Strepera graculina	pied currawong
+Strepera versicolor	grey currawong
+Sturnus vulgaris	common starling
+Sus scrofa	wild boar
+Tachyglossus aculeatus	short-beaked echidna
+Trichosurus vulpecula	common brushtail
+Turdus merula	common blackbird
+Vanellus miles	masked lapwing
+Varanus varius	lace monitor
+Vombatus ursinus	common wombat
+Vulpes vulpes	red fox
+Wallabia bicolor	swamp wallaby
+Zoothera lunulata	bassian thrush
+Zosterops lateralis	silvereye
+Acanthiza	acanthiza species
+Acanthornis magnus	acanthornis magnus
+Amphibolurus muricatus	jacky dragon
+Antechinus	antechinus species
+Anthus australis	anthus australis
+Arctocephalus pusillus	brown fur seal
+Ardenna griseus	sooty shearwater
+Axis porcinus	indian hog deer
+Bettongia gaimardi	tasmanian bettong
+Calamanthus fuliginosus	striated calamanthus
+Canis dingo	dingo
+Capra hircus	domestic goat
+Carinascincus	carinascincus genus
+Cercartetus	cercartetus species
+Cereopsis novaehollandiae	cape barren goose
+Circus approximans	swamp harrier
+Corvus tasmanicus	forest raven
+Coturnix ypsilophora	swamp quail
+Dasyurus viverrinus	eastern quoll
+Elapidae	elapidae family
+Insecta	insect sp.
+Melanodryas vittata	dusky robin
+Melithreptus validirostris	strong-billed honeyeater
+Nesoptilotis flavicollis	yellow-throated honeyeater
+Ninox	ninox genus
+Notamacropus rufogriseus	red-necked wallaby
+Ornithorhynchus anatinus	platypus
+Perameles gunnii	eastern barred bandicoot
+Phylidonyris pyrrhopterus	crescent honeyeater
+Platycercus caledonicus	green rosella
+Potorous tridactylus	long-nosed potoroo
+Pseudomys higginsi	long-tailed pseudomys
+Sarcophilus harrisii	tasmanian devil
+Sericornis humilis	tasmanian scrubwren
+Sminthopsis leucopus	white-footed dunnart
+Stagonopleura bella	beautiful firetail
+Thylogale billardierii	tasmanian pademelon
+Tiliqua nigrolutea	blotched blue-tongued lizard
+Tribonyx mortierii	tasmanian nativehen
+Turnix varius	painted button-quail
+Vespertilionidae	vespertilionidae family
+Zanda funerea	yellow-tailed black-cockatoo
