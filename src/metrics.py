@@ -92,11 +92,15 @@ def compute_animal_recall(merged: pd.DataFrame) -> AnimalRecall:
     return result
 
 
-def compute_metrics(merged: pd.DataFrame, thresholds: List[float]) -> BenchmarkMetrics:
+def compute_metrics(
+    merged: pd.DataFrame, thresholds: List[float], match_map: Optional[Dict[str, set]] = None
+) -> BenchmarkMetrics:
+    """match_map ({true label: extra predicted labels counted as correct}) only affects recall,
+    precision and F1; the confusion matrices always show the exact predictions."""
     species_list = sorted(merged["true_species"].dropna().unique())
     logger.info("Computing metrics for %d species x %d thresholds", len(species_list), len(thresholds))
 
-    results = compute_results_table(merged, species_list, thresholds)
+    results = compute_results_table(merged, species_list, thresholds, match_map)
     best = compute_best_thresholds(results)
     results = results.drop(columns="threshold_value")
     full = compute_full_confusion_matrices(merged, thresholds)
@@ -133,17 +137,26 @@ def restrict_metrics_to_species(metrics: BenchmarkMetrics, merged: pd.DataFrame,
     )
 
 
-def compute_results_table(merged: pd.DataFrame, species_list: List[str], thresholds: List[float]) -> pd.DataFrame:
+def compute_results_table(
+    merged: pd.DataFrame,
+    species_list: List[str],
+    thresholds: List[float],
+    match_map: Optional[Dict[str, set]] = None,
+) -> pd.DataFrame:
     rows = []
+    match_map = match_map or {}
     for species in species_list:
         is_true = merged["true_species"] == species
-        is_pred = merged["pred_species"] == species
+        accepted = match_map.get(species, set())
+        is_pred = merged["pred_species"].isin({species} | accepted)
+        # images truly of an accepted lower taxon are not false positives for the higher taxon
+        not_covered = ~merged["true_species"].isin(accepted)
         for threshold in thresholds:
             passes = merged["confidence"] >= threshold
 
             tp = int((is_true & is_pred & passes).sum())
             fn = int((is_true & (~is_pred | ~passes)).sum())
-            fp = int((~is_true & is_pred & passes).sum())
+            fp = int((~is_true & not_covered & is_pred & passes).sum())
 
             recall = tp / (tp + fn) if (tp + fn) > 0 else 0
             precision = tp / (tp + fp) if (tp + fp) > 0 else 0

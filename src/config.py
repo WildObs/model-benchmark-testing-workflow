@@ -38,6 +38,10 @@ class BenchmarkConfig:
     # Report only these species (names as shown in the report); empty means all species tested
     species_subset: List[str] = field(default_factory=list)
 
+    # Let a higher-ranking input label (e.g. an order) match model predictions of lower-ranking
+    # taxa within it when calculating recall, precision and F1 (uses ALA galah; needs internet)
+    allow_higher_taxon_matching: bool = False
+
     # Folders
     input_path: Union[str, Path] = "Input_Data"
     output_path: Union[str, Path] = "Output_Reports"

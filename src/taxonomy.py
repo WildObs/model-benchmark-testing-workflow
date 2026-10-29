@@ -61,6 +61,70 @@ def build_taxonomy_table(species_labels: List[str], image_counts=None, search_ta
     return table
 
 
+RANK_ORDER = ["kingdom", "phylum", "class", "order", "family", "genus", "species"]
+
+
+def _lineage(match: dict) -> dict:
+    """{rank: lowercase name} for a galah match, including the matched taxon at its own rank."""
+    lineage = {}
+    for rank in RANK_ORDER:
+        value = match.get(rank)
+        if value is not None and not pd.isna(value) and str(value).strip():
+            lineage[rank] = str(value).strip().lower()
+    rank = str(match.get("rank", "")).strip().lower()
+    name = match.get("scientificName")
+    if rank in RANK_ORDER and name is not None and not pd.isna(name):
+        lineage[rank] = str(name).strip().lower()
+    return lineage
+
+
+def build_match_map(true_labels, predicted_labels, search_taxa=None) -> dict:
+    """Which predicted labels count as correct for each higher-rank true label.
+
+    A true label with an ALA rank above species (e.g. order 'Lagomorpha') accepts any predicted
+    label whose ALA classification falls inside it (e.g. 'Oryctolagus cuniculus'). Labels are
+    lowercase, as in the merged table. Returns {true_label: {accepted predicted labels}},
+    containing only true labels that accept something beyond themselves.
+    """
+    if search_taxa is None:
+        try:
+            import galah
+        except ImportError:
+            logger.warning("The 'galah' package is not installed (pip install galah); using exact taxonomy matches only")
+            return {}
+        search_taxa = galah.search_taxa
+
+    higher = {}
+    for label in true_labels:
+        match = _lookup_one(label, search_taxa)
+        rank = str(match.get("rank", "")).strip().lower()
+        lineage = _lineage(match)
+        if rank in RANK_ORDER and rank != "species" and rank in lineage:
+            higher[label] = (rank, lineage[rank])
+    if not higher:
+        logger.info("No higher-ranking taxonomy labels found in the test data; exact matching applies")
+        return {}
+
+    predicted = {}
+    for label in predicted_labels:
+        if label in ("blank", "unclassified"):
+            continue
+        match = _lookup_one(label, search_taxa)
+        predicted[label] = (str(match.get("rank", "")).strip().lower(), _lineage(match))
+
+    match_map = {}
+    for label, (rank, name) in higher.items():
+        accepted = {
+            pred for pred, (pred_rank, lineage) in predicted.items()
+            if pred != label and lineage.get(rank) == name
+            and pred_rank in RANK_ORDER and RANK_ORDER.index(pred_rank) > RANK_ORDER.index(rank)
+        }
+        if accepted:
+            match_map[label] = accepted
+            logger.info("'%s' (%s) will also accept predictions: %s", label, rank, sorted(accepted))
+    return match_map
+
+
 def _blank_table(species_labels: List[str], image_counts: dict) -> pd.DataFrame:
     table = pd.DataFrame({"Species (or label)": species_labels, "Number of images": [image_counts.get(s, 0) for s in species_labels]})
     for column in TAXONOMY_COLUMNS:

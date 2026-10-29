@@ -162,6 +162,7 @@ def make_config(
     input_path: str = "Input_Data",
     output_path: str = "Output_Reports",
     species_subset: Optional[List[str]] = None,
+    allow_higher_taxon_matching: bool = False,
 ) -> BenchmarkConfig:
     """Turn form values into a BenchmarkConfig (raises ValueError with a friendly message).
 
@@ -178,6 +179,7 @@ def make_config(
         template=template,
         exclude_sections=list(exclude_sections),
         species_subset=list(species_subset or []),
+        allow_higher_taxon_matching=allow_higher_taxon_matching,
         export_errors=export_errors,
         lookup_taxonomy=lookup_taxonomy,
         clear_existing_outputs=clear_existing,
@@ -212,6 +214,12 @@ def build_form(project_root: Optional[Path] = None):
     collation = field(w.Textarea, "Data collation process", placeholder="How the test images were selected",
                       layout=w.Layout(width="650px", height="80px"))
     thresholds = field(w.Dropdown, "Confidence thresholds to include", options=THRESHOLD_PRESETS, value=DEFAULT_THRESHOLD_PRESET)
+    taxon_matching = field(w.RadioButtons, "Taxonomy matching preferences",
+                           options=[("Restrict to exact matches of taxonomy name", "exact"),
+                                    ("Allow higher ranking input taxonomies to match to lower ranking taxonomies predicted by model", "higher")],
+                           value="exact")
+    taxon_help = w.HTML("<i>Higher-ranking matching uses ALA galah (needs internet). It affects recall, precision and F1 only; "
+                        "confusion matrices always show the exact predictions.</i>")
     level = field(w.RadioButtons, "Observation Levels to include in the analysis", options=[("Event-based (recommended)", "event"), ("Media-based", "media")],
                   value="event")
     level_help = w.HTML("<i>Media-based is only used if every export contains it; otherwise event-based is used for all.</i>")
@@ -329,6 +337,7 @@ def build_form(project_root: Optional[Path] = None):
                 [], export_errors.value, taxonomy.value, clear.value, log_level.value,
                 input_path=str(input_path), output_path=str(root / "Output_Reports"),
                 species_subset=subset,
+                allow_higher_taxon_matching=taxon_matching.value == "higher",
             )
         except ValueError as exc:
             status.value = f"<span style='color:#b91c1c'>&#10060; {html.escape(str(exc))}</span>"
@@ -379,7 +388,7 @@ def build_form(project_root: Optional[Path] = None):
     form = w.VBox([
         heading("section_1", "1. Select the Test Set input folder (containing WildObs camtrapdp data exports)"), w.HBox([test_set, refresh]), preview,
         heading("section_2", "2. Define the descriptive details for the report"), source, collation,
-        heading("section_3", "3. Configure the analysis settings"), thresholds, level, level_help,
+        heading("section_3", "3. Configure the analysis settings"), thresholds, taxon_matching, taxon_help, level, level_help,
         heading("section_4", "4. Select the report format"), template, template_help,
                 species_mode, species_select, species_help,
                 advanced,

@@ -164,6 +164,42 @@ def test_species_subset_unknown_species_fails(tmp_path):
         run_benchmark(config)
 
 
+def test_higher_taxon_matching_metrics():
+    from src.taxonomy import build_match_map
+
+    taxa = {
+        "lagomorpha": {"scientificName": "LAGOMORPHA", "rank": "order", "kingdom": "Animalia", "order": "Lagomorpha"},
+        "oryctolagus cuniculus": {"scientificName": "Oryctolagus cuniculus", "rank": "species",
+                                  "order": "Lagomorpha", "genus": "Oryctolagus", "species": "Oryctolagus cuniculus"},
+        "vulpes vulpes": {"scientificName": "Vulpes vulpes", "rank": "species", "order": "Carnivora",
+                          "species": "Vulpes vulpes"},
+    }
+
+    def fake_search(taxa=None):
+        return pd.DataFrame([taxa_map[taxa[0]]]) if taxa[0] in taxa_map else pd.DataFrame()
+
+    taxa_map = taxa
+    merged = pd.DataFrame({
+        "true_species": ["lagomorpha", "lagomorpha", "vulpes vulpes", "oryctolagus cuniculus"],
+        "pred_species": ["oryctolagus cuniculus", "vulpes vulpes", "vulpes vulpes", "oryctolagus cuniculus"],
+        "confidence": [0.9] * 4,
+        "mediaID": list("abcd"),
+    })
+    match_map = build_match_map(sorted(merged.true_species.unique()), sorted(merged.pred_species.unique()), fake_search)
+    assert match_map == {"lagomorpha": {"oryctolagus cuniculus"}}
+
+    def row(metrics, name):
+        return metrics.results.query("species == @name").iloc[0]
+
+    exact = compute_metrics(merged, [0.5])
+    assert row(exact, "Lagomorpha").recall == 0
+    loose = compute_metrics(merged, [0.5], match_map)
+    assert (row(loose, "Lagomorpha").recall, row(loose, "Lagomorpha").precision) == (0.5, 1.0)
+    # the specific species is unaffected, and the confusion matrix stays exact
+    assert row(loose, "Oryctolagus cuniculus").false_positives == row(exact, "Oryctolagus cuniculus").false_positives == 1
+    assert loose.full_confusion_matrices[">=0.5"].equals(exact.full_confusion_matrices[">=0.5"])
+
+
 def test_exclude_sections_end_to_end(tmp_path):
     make_camtrap(tmp_path / "in" / "export")
     config = BenchmarkConfig(
@@ -298,6 +334,7 @@ def test_ui_form_runs(tmp_path):
     assert thresholds.value == "0.5, 0.6, 0.7, 0.8, 0.9"
     assert [label for label, _ in thresholds.options][0] == ">0.5" and len(thresholds.options) == 4
     assert "model_comparison" not in find(ipywidgets.Dropdown, description="Report template").options
+    assert find(ipywidgets.RadioButtons, description="Taxonomy matching preferences").value == "exact"
     assert find(ipywidgets.RadioButtons, description="Observation Levels to include in the analysis").options[0][0] == "Event-based (recommended)"
     mode = find(ipywidgets.RadioButtons, description="Species subset")
     species = find(ipywidgets.SelectMultiple, description="Species to include")

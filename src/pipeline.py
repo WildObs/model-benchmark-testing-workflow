@@ -14,6 +14,7 @@ from .logging_setup import setup_logging
 from .metrics import BenchmarkMetrics, compute_metrics, filter_species, restrict_metrics_to_species
 from .model_comparison import create_model_comparison_report
 from .report import export_misclassified, write_html_report
+from .taxonomy import build_match_map
 
 logger = logging.getLogger(__name__)
 
@@ -169,7 +170,13 @@ def run_benchmark(config: BenchmarkConfig) -> BenchmarkBatchRun:
             merged, model_name, species_display, image_counts = load_benchmark_table(
                 export_folder, observation_level
             )
-            metrics = compute_metrics(merged, config.thresholds)
+            match_map = None
+            if config.allow_higher_taxon_matching:
+                match_map = build_match_map(
+                    sorted(merged["true_species"].dropna().unique()),
+                    sorted(merged["pred_species"].dropna().unique()),
+                )
+            metrics = compute_metrics(merged, config.thresholds, match_map)
 
             if config.species_subset:
                 wanted = {s.lower() for s in config.species_subset}
