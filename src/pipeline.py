@@ -11,7 +11,7 @@ from typing import List, Optional, Union
 from .config import PROJECT_ROOT, BenchmarkConfig
 from .data_loader import load_benchmark_table, resolve_observation_level
 from .logging_setup import setup_logging
-from .metrics import BenchmarkMetrics, compute_metrics
+from .metrics import BenchmarkMetrics, compute_metrics, filter_species, restrict_metrics_to_species
 from .model_comparison import create_model_comparison_report
 from .report import export_misclassified, write_html_report
 
@@ -170,6 +170,19 @@ def run_benchmark(config: BenchmarkConfig) -> BenchmarkBatchRun:
                 export_folder, observation_level
             )
             metrics = compute_metrics(merged, config.thresholds)
+
+            if config.species_subset:
+                wanted = {s.lower() for s in config.species_subset}
+                present = {s for s in species_display if s.lower() in wanted}
+                if not present:
+                    raise ValueError(
+                        f"None of the selected species were found in export '{export_folder.name}': {config.species_subset}"
+                    )
+                logger.info("Restricting report to %d selected species: %s", len(present), sorted(present))
+                metrics = restrict_metrics_to_species(metrics, merged, config.species_subset)
+                merged = filter_species(merged, config.species_subset)
+                species_display = [s for s in species_display if s in present]
+                image_counts = {k: v for k, v in image_counts.items() if k in present}
 
             misclassified_path = None
             if config.export_errors:

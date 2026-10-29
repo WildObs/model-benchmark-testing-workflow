@@ -161,8 +161,12 @@ def make_config(
     log_level: str = "INFO",
     input_path: str = "Input_Data",
     output_path: str = "Output_Reports",
+    species_subset: Optional[List[str]] = None,
 ) -> BenchmarkConfig:
-    """Turn form values into a BenchmarkConfig (raises ValueError with a friendly message)."""
+    """Turn form values into a BenchmarkConfig (raises ValueError with a friendly message).
+
+    species_subset is None/empty for all species, otherwise the species to report on.
+    """
     if not test_set:
         raise ValueError("Choose a test set folder first.")
     return BenchmarkConfig(
@@ -173,6 +177,7 @@ def make_config(
         observation_level=observation_level,
         template=template,
         exclude_sections=list(exclude_sections),
+        species_subset=list(species_subset or []),
         export_errors=export_errors,
         lookup_taxonomy=lookup_taxonomy,
         clear_existing_outputs=clear_existing,
@@ -214,6 +219,13 @@ def build_form(project_root: Optional[Path] = None):
     templates = {name: desc for name, desc in list_templates(templates_path).items() if name != "model_comparison"}
     template = field(w.Dropdown, "Report template", options=list(templates), value="full" if "full" in templates else list(templates)[0])
     template_help = w.HTML()
+    species_mode = field(w.RadioButtons, "Species subset",
+                         options=[("Include results for all species tested", "all"),
+                                  ("Include results for a subset of the species tested", "subset")], value="all")
+    species_select = field(w.SelectMultiple, "Species to include", options=[], rows=8,
+                           layout=w.Layout(width="650px", display="none"))
+    species_help = w.HTML("<i>Hold Ctrl (or Cmd) to select more than one species.</i>",
+                          layout=w.Layout(display="none"))
     export_errors = field(w.Checkbox, "Export misclassified images csv", value=False, indent=False)
     taxonomy = field(w.Checkbox, "Look up taxonomy (needs internet and galah)", value=True, indent=False)
     clear = field(w.Checkbox, "Clear existing outputs for this set first", value=True, indent=False)
@@ -252,6 +264,23 @@ def build_form(project_root: Optional[Path] = None):
 
         accordion.observe(on_select, "selected_index")
         return w.VBox([w.HTML("<h3>Reports (click to expand)</h3>"), accordion])
+
+    def update_species_options():
+        """Species list is built from the selected test set's data (union across exports)."""
+        previous = set(species_select.value)
+        names = []
+        if test_set.value is not None:
+            try:
+                names = sorted({sp for s in summarise_set(input_path / test_set.value) for sp in s.species})
+            except Exception:
+                names = []
+        species_select.options = names
+        species_select.value = tuple(n for n in names if n in previous)
+
+    def update_species_visibility(*_):
+        display = "block" if species_mode.value == "subset" else "none"
+        species_select.layout.display = display
+        species_help.layout.display = display
 
     def update_preview(*_):
         if not list_test_sets(input_path):
@@ -292,10 +321,14 @@ def build_form(project_root: Optional[Path] = None):
         status.value = ""
         open_folder.layout.display = "none"
         try:
+            subset = list(species_select.value) if species_mode.value == "subset" else []
+            if species_mode.value == "subset" and not subset:
+                raise ValueError("Select at least one species, or choose to include all species tested.")
             config = make_config(
                 test_set.value, source.value, collation.value, thresholds.value, level.value, template.value,
                 [], export_errors.value, taxonomy.value, clear.value, log_level.value,
                 input_path=str(input_path), output_path=str(root / "Output_Reports"),
+                species_subset=subset,
             )
         except ValueError as exc:
             status.value = f"<span style='color:#b91c1c'>&#10060; {html.escape(str(exc))}</span>"
@@ -328,6 +361,8 @@ def build_form(project_root: Optional[Path] = None):
                 log_box.selected_index = None
 
     test_set.observe(update_preview, "value")
+    test_set.observe(lambda _: update_species_options(), "value")
+    species_mode.observe(update_species_visibility, "value")
     level.observe(update_preview, "value")
     template.observe(update_template, "value")
     refresh.on_click(on_refresh)
@@ -346,7 +381,8 @@ def build_form(project_root: Optional[Path] = None):
         heading("section_2", "2. Define the descriptive details for the report"), source, collation,
         heading("section_3", "3. Configure the analysis settings"), thresholds, level, level_help,
         heading("section_4", "4. Select the report format"), template, template_help,
-        advanced,
+                species_mode, species_select, species_help,
+                advanced,
         w.HTML("<br>"), run, status, open_folder, reports_box, log_box,
     ])
     display(form)

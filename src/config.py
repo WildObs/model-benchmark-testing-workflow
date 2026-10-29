@@ -35,6 +35,8 @@ class BenchmarkConfig:
     # Report formatting
     template: str = "full"  # template name in templates_path, or a path to a .md file
     exclude_sections: List[str] = field(default_factory=list)
+    # Report only these species (names as shown in the report); empty means all species tested
+    species_subset: List[str] = field(default_factory=list)
 
     # Folders
     input_path: Union[str, Path] = "Input_Data"
@@ -57,6 +59,7 @@ class BenchmarkConfig:
         for name in ("input_path", "output_path", "templates_path", "log_path"):
             setattr(self, name, _resolve(getattr(self, name)))
         self.thresholds = sorted({float(t) for t in self.thresholds})
+        self.species_subset = [str(s).strip() for s in self.species_subset if str(s).strip()]
         self.log_level = self.log_level.upper()
         self.observation_level = str(self.observation_level).strip().lower()
         self.validate()

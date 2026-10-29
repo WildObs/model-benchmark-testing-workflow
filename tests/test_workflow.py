@@ -140,6 +140,30 @@ def test_end_to_end(tmp_path, template, has_limitations):
     assert run.log_path.is_file()
 
 
+def test_species_subset_end_to_end(tmp_path):
+    make_camtrap(tmp_path / "in" / "export")
+    config = BenchmarkConfig(
+        "export", thresholds=[0.5], species_subset=["Felis catus"], export_errors=True,
+        input_path=tmp_path / "in", output_path=tmp_path / "out", log_path=tmp_path / "logs",
+    )
+    run = run_benchmark(config)
+    report = run.report_path.read_text(encoding="utf-8")
+    assert "Felis catus" in report
+    # Vulpes vulpes is still listed as a (mis)prediction, but has no results of its own
+    assert set(run.metrics.results["species"]) == {"Felis catus"}
+    assert set(run.metrics.single_row_matrices) == {"Felis catus"}
+
+
+def test_species_subset_unknown_species_fails(tmp_path):
+    make_camtrap(tmp_path / "in" / "export")
+    config = BenchmarkConfig(
+        "export", thresholds=[0.5], species_subset=["Nothing here"],
+        input_path=tmp_path / "in", output_path=tmp_path / "out", log_path=tmp_path / "logs",
+    )
+    with pytest.raises(ValueError, match="None of the selected species"):
+        run_benchmark(config)
+
+
 def test_exclude_sections_end_to_end(tmp_path):
     make_camtrap(tmp_path / "in" / "export")
     config = BenchmarkConfig(
@@ -274,7 +298,15 @@ def test_ui_form_runs(tmp_path):
     assert thresholds.value == "0.5, 0.6, 0.7, 0.8, 0.9"
     assert [label for label, _ in thresholds.options][0] == ">0.5" and len(thresholds.options) == 4
     assert "model_comparison" not in find(ipywidgets.Dropdown, description="Report template").options
-    assert find(ipywidgets.RadioButtons).options[0][0] == "Event-based (recommended)"
+    assert find(ipywidgets.RadioButtons, description="Observation Levels to include in the analysis").options[0][0] == "Event-based (recommended)"
+    mode = find(ipywidgets.RadioButtons, description="Species subset")
+    species = find(ipywidgets.SelectMultiple, description="Species to include")
+    assert species.options == ("Felis catus", "Vulpes vulpes") and species.layout.display == "none"
+    mode.value = "subset"
+    assert species.layout.display == "block"
+    find(ipywidgets.Button, description="Run evaluation").click()
+    assert "Select at least one species" in [c for c in form.children if isinstance(c, ipywidgets.HTML)][-1].value
+    mode.value = "all"
     advanced = next(c for c in form.children if isinstance(c, ipywidgets.Accordion) and c.titles == ("Advanced",))
     log_box = next(c for c in form.children if isinstance(c, ipywidgets.Accordion) and c.titles == ("Log messages",))
     assert advanced.selected_index is None and log_box.selected_index is None

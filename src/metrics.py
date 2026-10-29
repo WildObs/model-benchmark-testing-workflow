@@ -104,6 +104,35 @@ def compute_metrics(merged: pd.DataFrame, thresholds: List[float]) -> BenchmarkM
     return BenchmarkMetrics(results, best, full, single, compute_animal_recall(merged))
 
 
+def filter_species(merged: pd.DataFrame, species: List[str]) -> pd.DataFrame:
+    """Rows whose true species is in the given list (matched case-insensitively)."""
+    wanted = {s.strip().lower() for s in species}
+    return merged[merged["true_species"].isin(wanted)]
+
+
+def restrict_metrics_to_species(metrics: BenchmarkMetrics, merged: pd.DataFrame, species: List[str]) -> BenchmarkMetrics:
+    """Cut metrics computed on the full test set down to the chosen species.
+
+    Per-species figures (including precision) keep the full test set as context; only the
+    reported rows change. Animal recall is recomputed over the selected species' images.
+    """
+    wanted = {format_species_name(s.strip().lower()) for s in species}
+    subset = filter_species(merged, species)
+    full = {}
+    for label, matrix in metrics.full_confusion_matrices.items():
+        rows = matrix[matrix[PRED_AXIS_LABEL].isin(wanted)].reset_index(drop=True)
+        counts = rows.drop(columns=PRED_AXIS_LABEL)
+        # drop predictions that never occur for the selected species
+        full[label] = rows[[PRED_AXIS_LABEL] + list(counts.columns[(counts != 0).any()])]
+    return BenchmarkMetrics(
+        results=metrics.results[metrics.results["species"].isin(wanted)].reset_index(drop=True),
+        best_thresholds=metrics.best_thresholds[metrics.best_thresholds["species"].isin(wanted)].reset_index(drop=True),
+        full_confusion_matrices=full,
+        single_row_matrices={k: v for k, v in metrics.single_row_matrices.items() if k in wanted},
+        animal_recall=compute_animal_recall(subset) if len(subset) else None,
+    )
+
+
 def compute_results_table(merged: pd.DataFrame, species_list: List[str], thresholds: List[float]) -> pd.DataFrame:
     rows = []
     for species in species_list:
