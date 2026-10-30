@@ -163,6 +163,7 @@ def make_config(
     output_path: str = "Output_Reports",
     species_subset: Optional[List[str]] = None,
     allow_higher_taxon_matching: bool = False,
+    export_subset: Optional[List[str]] = None,
 ) -> BenchmarkConfig:
     """Turn form values into a BenchmarkConfig (raises ValueError with a friendly message).
 
@@ -178,6 +179,7 @@ def make_config(
         observation_level=observation_level,
         template=template,
         exclude_sections=list(exclude_sections),
+        export_subset=list(export_subset or []),
         species_subset=list(species_subset or []),
         allow_higher_taxon_matching=allow_higher_taxon_matching,
         export_errors=export_errors,
@@ -210,6 +212,11 @@ def build_form(project_root: Optional[Path] = None):
                      tooltip="Folder inside Input_Data containing one or more Camtrap DP exports")
     refresh = w.Button(description="Refresh", icon="refresh", layout=w.Layout(width="100px"))
     preview = w.HTML()
+    model_mode = field(w.RadioButtons, "Model subset",
+                       options=[("Include all available input files", "all"),
+                                ("Select a subset of the available input files", "subset")], value="all")
+    model_select = field(w.SelectMultiple, "Input files to include", options=[], rows=6,
+                         layout=w.Layout(width="650px", display="none"))
     source = field(w.Text, "Data source location", placeholder="e.g. Tarcutta Reserve, NSW")
     collation = field(w.Textarea, "Data collation process", placeholder="How the test images were selected",
                       layout=w.Layout(width="650px", height="80px"))
@@ -285,6 +292,21 @@ def build_form(project_root: Optional[Path] = None):
         species_select.options = names
         species_select.value = tuple(n for n in names if n in previous)
 
+    def update_model_options():
+        """Input files (export folders) are listed from the selected test set, labelled by model."""
+        previous = set(model_select.value)
+        options = []
+        if test_set.value is not None:
+            try:
+                options = [(f"{s.model} ({s.folder})", s.folder) for s in summarise_set(input_path / test_set.value)]
+            except Exception:
+                options = []
+        model_select.options = options
+        model_select.value = tuple(v for _, v in options if v in previous)
+
+    def update_model_visibility(*_):
+        model_select.layout.display = "block" if model_mode.value == "subset" else "none"
+
     def update_species_visibility(*_):
         display = "block" if species_mode.value == "subset" else "none"
         species_select.layout.display = display
@@ -329,6 +351,9 @@ def build_form(project_root: Optional[Path] = None):
         status.value = ""
         open_folder.layout.display = "none"
         try:
+            files = list(model_select.value) if model_mode.value == "subset" else []
+            if model_mode.value == "subset" and not files:
+                raise ValueError("Select at least one input file, or choose to include all available input files.")
             subset = list(species_select.value) if species_mode.value == "subset" else []
             if species_mode.value == "subset" and not subset:
                 raise ValueError("Select at least one species, or choose to include all species tested.")
@@ -337,6 +362,7 @@ def build_form(project_root: Optional[Path] = None):
                 [], export_errors.value, taxonomy.value, clear.value, log_level.value,
                 input_path=str(input_path), output_path=str(root / "Output_Reports"),
                 species_subset=subset,
+                export_subset=files,
                 allow_higher_taxon_matching=taxon_matching.value == "higher",
             )
         except ValueError as exc:
@@ -371,6 +397,8 @@ def build_form(project_root: Optional[Path] = None):
 
     test_set.observe(update_preview, "value")
     test_set.observe(lambda _: update_species_options(), "value")
+    test_set.observe(lambda _: update_model_options(), "value")
+    model_mode.observe(update_model_visibility, "value")
     species_mode.observe(update_species_visibility, "value")
     level.observe(update_preview, "value")
     template.observe(update_template, "value")
@@ -386,7 +414,7 @@ def build_form(project_root: Optional[Path] = None):
         return w.HTML(heading_with_help(title, help_text.get(key)))
 
     form = w.VBox([
-        heading("section_1", "1. Select the Test Set input folder (containing WildObs camtrapdp data exports)"), w.HBox([test_set, refresh]), preview,
+        heading("section_1", "1. Select the Test Set input folder (containing WildObs camtrapdp data exports)"), w.HBox([test_set, refresh]), preview, model_mode, model_select,
         heading("section_2", "2. Define the descriptive details for the report"), source, collation,
         heading("section_3", "3. Configure the analysis settings"), thresholds, taxon_matching, taxon_help, level, level_help,
         heading("section_4", "4. Select the report format"), template, template_help,

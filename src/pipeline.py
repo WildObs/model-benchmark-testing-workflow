@@ -156,6 +156,13 @@ def run_benchmark(config: BenchmarkConfig) -> BenchmarkBatchRun:
         set_output_dir.mkdir(parents=True, exist_ok=True)
 
         export_folders = discover_export_folders(config.set_folder)
+        if config.export_subset:
+            available = [p.name for p in export_folders]
+            missing = [n for n in config.export_subset if n not in available]
+            if missing:
+                raise ValueError(f"Selected input file(s) not found in set '{config.set_name}': {missing}. Available: {available}")
+            export_folders = [p for p in export_folders if p.name in config.export_subset]
+            logger.info("Restricting run to %d selected export(s): %s", len(export_folders), [p.name for p in export_folders])
         logger.info(
             "Found %d Camtrap DP export folder(s) in set '%s'",
             len(export_folders),

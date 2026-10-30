@@ -38,6 +38,9 @@ class BenchmarkConfig:
     # Report only these species (names as shown in the report); empty means all species tested
     species_subset: List[str] = field(default_factory=list)
 
+    # Only evaluate these export folders (names inside the test set folder); empty means all exports
+    export_subset: List[str] = field(default_factory=list)
+
     # Let a higher-ranking input label (e.g. an order) match model predictions of lower-ranking
     # taxa within it when calculating recall, precision and F1 (uses ALA galah; needs internet)
     allow_higher_taxon_matching: bool = False
@@ -63,6 +66,7 @@ class BenchmarkConfig:
         for name in ("input_path", "output_path", "templates_path", "log_path"):
             setattr(self, name, _resolve(getattr(self, name)))
         self.thresholds = sorted({float(t) for t in self.thresholds})
+        self.export_subset = [str(s).strip() for s in self.export_subset if str(s).strip()]
         self.species_subset = [str(s).strip() for s in self.species_subset if str(s).strip()]
         self.log_level = self.log_level.upper()
         self.observation_level = str(self.observation_level).strip().lower()

@@ -200,6 +200,18 @@ def test_higher_taxon_matching_metrics():
     assert loose.full_confusion_matrices[">=0.5"].equals(exact.full_confusion_matrices[">=0.5"])
 
 
+def test_export_subset_end_to_end(tmp_path):
+    make_camtrap(tmp_path / "in" / "set" / "a", "model a")
+    make_camtrap(tmp_path / "in" / "set" / "b", "model b")
+    kwargs = dict(thresholds=[0.5], input_path=tmp_path / "in", output_path=tmp_path / "out", log_path=tmp_path / "logs")
+    both = run_benchmark(BenchmarkConfig("set", **kwargs))
+    assert both.model_names == ["model a", "model b"] and both.comparison_report_path
+    one = run_benchmark(BenchmarkConfig("set", export_subset=["b"], **kwargs))
+    assert one.model_names == ["model b"] and one.comparison_report_path is None
+    with pytest.raises(ValueError, match="not found"):
+        run_benchmark(BenchmarkConfig("set", export_subset=["zzz"], **kwargs))
+
+
 def test_exclude_sections_end_to_end(tmp_path):
     make_camtrap(tmp_path / "in" / "export")
     config = BenchmarkConfig(
@@ -336,6 +348,15 @@ def test_ui_form_runs(tmp_path):
     assert "model_comparison" not in find(ipywidgets.Dropdown, description="Report template").options
     assert find(ipywidgets.RadioButtons, description="Taxonomy matching preferences").value == "exact"
     assert find(ipywidgets.RadioButtons, description="Observation Levels to include in the analysis").options[0][0] == "Event-based (recommended)"
+    model_mode = find(ipywidgets.RadioButtons, description="Model subset")
+    files = find(ipywidgets.SelectMultiple, description="Input files to include")
+    assert model_mode.value == "all" and files.layout.display == "none"
+    assert files.options == (("test model (export)", "export"),)
+    model_mode.value = "subset"
+    assert files.layout.display == "block"
+    find(ipywidgets.Button, description="Run evaluation").click()
+    assert "Select at least one input file" in [c for c in form.children if isinstance(c, ipywidgets.HTML)][-1].value
+    model_mode.value = "all"
     mode = find(ipywidgets.RadioButtons, description="Species subset")
     species = find(ipywidgets.SelectMultiple, description="Species to include")
     assert species.options == ("Felis catus", "Vulpes vulpes") and species.layout.display == "none"
