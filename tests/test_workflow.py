@@ -212,6 +212,48 @@ def test_export_subset_end_to_end(tmp_path):
         run_benchmark(BenchmarkConfig("set", export_subset=["zzz"], **kwargs))
 
 
+def test_custom_substitutions():
+    from src.taxonomy import build_custom_match_map, merge_match_maps
+    from src.ui import parse_substitutions
+
+    assert parse_substitutions(" Leporidae, Lepus europaeus ;,") == ["Leporidae", "Lepus europaeus"]
+    taxa_map = {
+        "lepus europaeus": {"scientificName": "Lepus europaeus", "rank": "species", "family": "Leporidae",
+                            "genus": "Lepus", "species": "Lepus europaeus"},
+        "oryctolagus cuniculus": {"scientificName": "Oryctolagus cuniculus", "rank": "species", "family": "Leporidae",
+                                  "genus": "Oryctolagus", "species": "Oryctolagus cuniculus"},
+        "vulpes vulpes": {"scientificName": "Vulpes vulpes", "rank": "species", "family": "Canidae",
+                          "species": "Vulpes vulpes"},
+        "leporidae": {"scientificName": "LEPORIDAE", "rank": "family", "family": "Leporidae"},
+    }
+
+    def fake_search(taxa=None):
+        return pd.DataFrame([taxa_map[taxa[0]]]) if taxa[0] in taxa_map else pd.DataFrame()
+
+    preds = ["lepus europaeus", "oryctolagus cuniculus", "vulpes vulpes", "blank"]
+    got = build_custom_match_map({"Sylvilagus": ["Leporidae"], "Cat": ["Vulpes vulpes"]}, preds, fake_search)
+    assert got == {"sylvilagus": {"lepus europaeus", "oryctolagus cuniculus"}, "cat": {"vulpes vulpes"}}
+    assert merge_match_maps({"a": {"x"}}, {"a": {"y"}}, None) == {"a": {"x", "y"}}
+
+    merged = pd.DataFrame({
+        "true_species": ["sylvilagus"] * 2, "pred_species": ["lepus europaeus", "vulpes vulpes"],
+        "confidence": [0.9, 0.9], "mediaID": ["a", "b"],
+    })
+    result = compute_metrics(merged, [0.5], got).results.iloc[0]
+    assert result.recall == 0.5
+
+
+def test_custom_substitutions_end_to_end(tmp_path):
+    make_camtrap(tmp_path / "in" / "export")
+    config = BenchmarkConfig(
+        "export", thresholds=[0.5], custom_matches={"Felis catus": ["Vulpes vulpes"]},
+        input_path=tmp_path / "in", output_path=tmp_path / "out", log_path=tmp_path / "logs",
+    )
+    run = run_benchmark(config)
+    cat = run.metrics.results.query("species == 'Felis catus'").iloc[0]
+    assert cat.recall == 1.0
+
+
 def test_exclude_sections_end_to_end(tmp_path):
     make_camtrap(tmp_path / "in" / "export")
     config = BenchmarkConfig(
@@ -348,6 +390,9 @@ def test_ui_form_runs(tmp_path):
     assert "model_comparison" not in find(ipywidgets.Dropdown, description="Report template").options
     assert find(ipywidgets.RadioButtons, description="Taxonomy matching preferences").value == "exact"
     assert find(ipywidgets.RadioButtons, description="Observation Levels to include in the analysis").options[0][0] == "Event-based (recommended)"
+    toggle = find(ipywidgets.Checkbox, description="Specify acceptable substitutions for each input species")
+    texts = [find(ipywidgets.Text, description=n) for n in ("Felis catus", "Vulpes vulpes")]
+    assert not toggle.value and len(texts) == 2
     model_mode = find(ipywidgets.RadioButtons, description="Model subset")
     files = find(ipywidgets.SelectMultiple, description="Input files to include")
     assert model_mode.value == "all" and files.layout.display == "none"

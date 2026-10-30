@@ -125,6 +125,58 @@ def build_match_map(true_labels, predicted_labels, search_taxa=None) -> dict:
     return match_map
 
 
+def build_custom_match_map(custom: dict, predicted_labels, search_taxa=None) -> dict:
+    """Which predicted labels count as correct for each true label, from user-specified substitutions.
+
+    custom is {true label: [acceptable substitutions]} (any taxonomic rank, any case). A prediction
+    is accepted if it equals a substitution, or (via ALA galah) falls inside that taxon, e.g. the
+    substitution 'Leporidae' accepts 'Lepus europaeus'. Without galah only exact names match.
+    """
+    custom = {k.strip().lower(): [s.strip().lower() for s in v if s.strip()] for k, v in custom.items()}
+    custom = {k: v for k, v in custom.items() if v}
+    if not custom:
+        return {}
+    if search_taxa is None:
+        try:
+            import galah
+            search_taxa = galah.search_taxa
+        except ImportError:
+            logger.warning("The 'galah' package is not installed; custom substitutions will match exact names only")
+
+    lineages = {}
+    if search_taxa is not None:
+        for label in predicted_labels:
+            if label not in ("blank", "unclassified"):
+                lineages[label] = set(_lineage(_lookup_one(label, search_taxa)).values())
+
+    match_map = {}
+    for label, subs in custom.items():
+        wanted = set(subs)
+        if search_taxa is not None:
+            for sub in subs:
+                resolved = _lookup_one(sub, search_taxa).get("scientificName")
+                if resolved is not None and not pd.isna(resolved):
+                    wanted.add(str(resolved).strip().lower())
+        accepted = {
+            pred for pred in predicted_labels
+            if pred != label and (pred in wanted or lineages.get(pred, set()) & wanted)
+        }
+        if accepted:
+            match_map[label] = accepted
+            logger.info("'%s' will also accept predictions (custom substitutions): %s", label, sorted(accepted))
+        else:
+            logger.info("No predictions matched the custom substitutions %s for '%s'", subs, label)
+    return match_map
+
+
+def merge_match_maps(*maps) -> dict:
+    merged = {}
+    for m in maps:
+        for label, accepted in (m or {}).items():
+            merged.setdefault(label, set()).update(accepted)
+    return merged
+
+
 def _blank_table(species_labels: List[str], image_counts: dict) -> pd.DataFrame:
     table = pd.DataFrame({"Species (or label)": species_labels, "Number of images": [image_counts.get(s, 0) for s in species_labels]})
     for column in TAXONOMY_COLUMNS:

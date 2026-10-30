@@ -3,7 +3,7 @@
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Union
+from typing import Dict, List, Union
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -45,6 +45,9 @@ class BenchmarkConfig:
     # taxa within it when calculating recall, precision and F1 (uses ALA galah; needs internet)
     allow_higher_taxon_matching: bool = False
 
+    # Acceptable substitutions per input label, e.g. {"Lagomorpha": ["Leporidae"]}; any taxonomic rank
+    custom_matches: Dict[str, List[str]] = field(default_factory=dict)
+
     # Folders
     input_path: Union[str, Path] = "Input_Data"
     output_path: Union[str, Path] = "Output_Reports"
@@ -66,6 +69,11 @@ class BenchmarkConfig:
         for name in ("input_path", "output_path", "templates_path", "log_path"):
             setattr(self, name, _resolve(getattr(self, name)))
         self.thresholds = sorted({float(t) for t in self.thresholds})
+        self.custom_matches = {
+            str(k).strip(): [str(s).strip() for s in v if str(s).strip()]
+            for k, v in self.custom_matches.items()
+            if str(k).strip() and any(str(s).strip() for s in v)
+        }
         self.export_subset = [str(s).strip() for s in self.export_subset if str(s).strip()]
         self.species_subset = [str(s).strip() for s in self.species_subset if str(s).strip()]
         self.log_level = self.log_level.upper()

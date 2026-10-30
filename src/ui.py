@@ -80,6 +80,11 @@ def parse_thresholds(text: str) -> List[float]:
     return values
 
 
+def parse_substitutions(text: str) -> List[str]:
+    """'Leporidae, Lepus europaeus' -> ['Leporidae', 'Lepus europaeus']."""
+    return [p.strip() for p in re.split(r"[,;\n]", text) if p.strip()]
+
+
 def list_test_sets(input_path: Path) -> List[str]:
     """Folders inside the input path that contain at least one Camtrap DP export."""
     input_path = Path(input_path)
@@ -164,6 +169,7 @@ def make_config(
     species_subset: Optional[List[str]] = None,
     allow_higher_taxon_matching: bool = False,
     export_subset: Optional[List[str]] = None,
+    custom_matches: Optional[dict] = None,
 ) -> BenchmarkConfig:
     """Turn form values into a BenchmarkConfig (raises ValueError with a friendly message).
 
@@ -182,6 +188,7 @@ def make_config(
         export_subset=list(export_subset or []),
         species_subset=list(species_subset or []),
         allow_higher_taxon_matching=allow_higher_taxon_matching,
+        custom_matches=dict(custom_matches or {}),
         export_errors=export_errors,
         lookup_taxonomy=lookup_taxonomy,
         clear_existing_outputs=clear_existing,
@@ -227,6 +234,12 @@ def build_form(project_root: Optional[Path] = None):
                            value="exact")
     taxon_help = w.HTML("<i>Higher-ranking matching uses ALA galah (needs internet). It affects recall, precision and F1 only; "
                         "confusion matrices always show the exact predictions.</i>")
+    custom_toggle = field(w.Checkbox, "Specify acceptable substitutions for each input species", value=False, indent=False)
+    custom_box = w.VBox(layout=w.Layout(display="none"))
+    custom_inputs = {}
+    custom_help = w.HTML("<i>Enter comma-separated taxon names (any rank, e.g. a genus, family or order) that "
+                         "the model may predict instead of each input species. Names are checked against ALA galah.</i>",
+                         layout=w.Layout(display="none"))
     level = field(w.RadioButtons, "Observation Levels to include in the analysis", options=[("Event-based (recommended)", "event"), ("Media-based", "media")],
                   value="event")
     level_help = w.HTML("<i>Media-based is only used if every export contains it; otherwise event-based is used for all.</i>")
@@ -292,6 +305,26 @@ def build_form(project_root: Optional[Path] = None):
         species_select.options = names
         species_select.value = tuple(n for n in names if n in previous)
 
+    def update_custom_inputs():
+        """One text box per input species in the selected test set (entries are kept across refreshes)."""
+        previous = {name: box.value for name, box in custom_inputs.items()}
+        names = []
+        if test_set.value is not None:
+            try:
+                names = sorted({sp for s in summarise_set(input_path / test_set.value) for sp in s.species})
+            except Exception:
+                names = []
+        custom_inputs.clear()
+        for name in names:
+            custom_inputs[name] = w.Text(value=previous.get(name, ""), description=name, style=style,
+                                         placeholder="e.g. Leporidae, Lepus europaeus", layout=layout)
+        custom_box.children = list(custom_inputs.values())
+
+    def update_custom_visibility(*_):
+        display = "block" if custom_toggle.value else "none"
+        custom_box.layout.display = display
+        custom_help.layout.display = display
+
     def update_model_options():
         """Input files (export folders) are listed from the selected test set, labelled by model."""
         previous = set(model_select.value)
@@ -355,6 +388,9 @@ def build_form(project_root: Optional[Path] = None):
             if model_mode.value == "subset" and not files:
                 raise ValueError("Select at least one input file, or choose to include all available input files.")
             subset = list(species_select.value) if species_mode.value == "subset" else []
+            custom_matches = {}
+            if custom_toggle.value:
+                custom_matches = {name: parse_substitutions(box.value) for name, box in custom_inputs.items()}
             if species_mode.value == "subset" and not subset:
                 raise ValueError("Select at least one species, or choose to include all species tested.")
             config = make_config(
@@ -364,6 +400,7 @@ def build_form(project_root: Optional[Path] = None):
                 species_subset=subset,
                 export_subset=files,
                 allow_higher_taxon_matching=taxon_matching.value == "higher",
+                custom_matches=custom_matches,
             )
         except ValueError as exc:
             status.value = f"<span style='color:#b91c1c'>&#10060; {html.escape(str(exc))}</span>"
@@ -397,6 +434,8 @@ def build_form(project_root: Optional[Path] = None):
 
     test_set.observe(update_preview, "value")
     test_set.observe(lambda _: update_species_options(), "value")
+    test_set.observe(lambda _: update_custom_inputs(), "value")
+    custom_toggle.observe(update_custom_visibility, "value")
     test_set.observe(lambda _: update_model_options(), "value")
     model_mode.observe(update_model_visibility, "value")
     species_mode.observe(update_species_visibility, "value")
@@ -416,7 +455,7 @@ def build_form(project_root: Optional[Path] = None):
     form = w.VBox([
         heading("section_1", "1. Select the Test Set input folder (containing WildObs camtrapdp data exports)"), w.HBox([test_set, refresh]), preview, model_mode, model_select,
         heading("section_2", "2. Define the descriptive details for the report"), source, collation,
-        heading("section_3", "3. Configure the analysis settings"), thresholds, taxon_matching, taxon_help, level, level_help,
+        heading("section_3", "3. Configure the analysis settings"), thresholds, taxon_matching, taxon_help, custom_toggle, custom_help, custom_box, level, level_help,
         heading("section_4", "4. Select the report format"), template, template_help,
                 species_mode, species_select, species_help,
                 advanced,
